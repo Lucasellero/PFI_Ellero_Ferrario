@@ -1,78 +1,38 @@
-\chapter{Estado del Arte}
+\chapter{Introducción}
 
-\emph{El siguiente capítulo presenta un ejemplo de Estado del Arte. Se puede observar el uso de referencias bibliográficas, la estructura del contenido y el estilo de redacción académica esperado.}
+El envejecimiento de la población es uno de los fenómenos más significativos de la Argentina contemporánea. El aumento de la esperanza de vida y las mejoras sostenidas en las condiciones de salud han permitido que hoy más de 7,4 millones de personas tengan 60 años o más, representando el 15,7\% de la población total, y las proyecciones indican que esa proporción superará el 20\% hacia 2040 \parencite{INDEC2024}. Vivir más años y con mayor autonomía es el resultado de décadas de avances en salud pública, nutrición y calidad de vida.
 
-Este cap\'{\i}tulo asume cierta familiaridad con c\'alculo lambda y computaci\'on cu\'antica. Si este no es el caso del lector, se sugiere leer primero el cap\'{\i}tulo 2 y luego el presente cap\'{\i}tulo.
+Sin embargo, este cambio demográfico trae consigo nuevas realidades familiares y sociales que aún no encuentran respuesta adecuada. El 24\% de las personas mayores de 65 años vive sola en Argentina \parencite{INDEC2022}, y quienes conviven con sus hijos o parientes tampoco cuentan necesariamente con supervisión continua: los hijos que cuidan a sus padres mayores son, en la mayoría de los casos, personas de mediana edad con sus propias familias y trabajos. Esta situación genera una brecha de información cotidiana muy difícil de cerrar: los familiares no saben si el adulto mayor comió, si se levantó a la hora habitual, o si algo cambió en su rutina.
 
-En 1982, Richard Feynman destac\'o que la computaci\'on cl\'asica no alcanza para crear simulaciones de forma eficiente \parencite{Feynman1982}, debido
-a la propia construcci\'on de las computadoras cl\'asicas.
-La simulaci\'on de interacciones entre \(N\) part\'{\i}culas a nivel cu\'antico presenta una complejidad de orden exponencial de los recursos necesarios en la computaci\'on cl\'asica y esto no sucede si lo hici\'eramos directamente con una computadora con propiedades cu\'anticas.
+Esta incertidumbre no es menor si se considera que los adultos mayores que viven solos o sin supervisión durante el día están expuestos a riesgos concretos y silenciosos. El deterioro de la salud muchas veces comienza a través de cambios sutiles en la rutina diaria ---levantarse más tarde, reducir la actividad, saltarse comidas--- que, de ser detectados a tiempo, permitirían actuar antes de que se conviertan en una emergencia. En los casos más críticos, las caídas representan uno de los eventos de mayor impacto: afectan a aproximadamente el 30\% de los adultos mayores independientes cada año \parencite{MinisterioDeSalud}. Sin presencia física o algún mecanismo de observación continua, tanto el deterioro silencioso como los eventos agudos pasan inadvertidos hasta que ya es tarde para actuar.
 
-La computaci\'on cu\'antica puede ser vista como un modelo de computaci\'on para la mec\'anica cu\'antica. La idea es considerar
-los estados de las part\'{\i}culas como estados del sistema computacional, y su evoluci\'on como un proceso de c\'omputo. Como tal,
-puede ser estudiado desde la teor\'{\i}a de lenguajes de programaci\'on, y desde all\'{\i}, la teor\'{\i}a de tipos. Tener una teor\'{\i}a
-de tipos completa para la computaci\'on cu\'antica induce nuevas conexiones con l\'ogica, siguiendo el isomorfismo de Curry-Howard \parencite{SorensenUrzyczyn2006}. Finalmente, este camino redundar\'a en una l\'ogica formal de la mec\'anica cu\'antica, fundamentada
-por las ciencias de la computaci\'on.
+Las alternativas tecnológicas disponibles hoy en día no resuelven este problema de fondo. Los dispositivos wearables y los botones de pánico requieren que el adulto mayor los use activamente y de forma constante, lo que choca con una realidad documentada: una parte significativa de los adultos mayores en Argentina tiene dificultades para incorporar nuevas tecnologías \parencite{INDEC2020}. A esto se suma que muchos adultos mayores rechazan el uso de dispositivos que perciben como intrusivos o que generan preocupaciones sobre su privacidad \parencite{Infobae2025}. El resultado es que las soluciones existentes funcionan bien en teoría, pero tienen bajas tasas de adopción y sostenimiento en la práctica. Frente a este panorama, la alternativa viable es un sistema que opere de forma completamente pasiva, sin requerir ninguna acción por parte del adulto mayor, y es precisamente la visión artificial la tecnología que hace posible ese enfoque.
 
-Una de las soluciones m\'as importantes presentadas por la computaci\'on cu\'antica fue dada por Peter Shor,
-en 1994 \parencite{Shor1994}. La importancia del algoritmo de Shor es la utilizaci\'on de la transformada r\'apida cu\'antica de Fourier, que tiene aplicaciones en much\'{\i}simas \'areas. Por ejemplo, permite la descomposici\'on en factores de un n\'umero, de vital importancia
-para romper la criptograf\'{\i}a de clave p\'ublica. Otro algoritmo de gran importancia es el algoritmo de Grover \parencite{Grover1996},
-por Lov K. Grover en 1996, que permite la b\'usqueda de un valor en una secuencia no ordenada, por ejemplo, para todas las combinaciones de mol\'eculas hasta dar con una que cumpla una propiedad en particular.
+El presente proyecto propone una respuesta concreta a este problema. Se desarrolla un sistema de monitoreo no invasivo para adultos mayores en entornos domésticos, pensado especialmente para aquellas familias que, por distancia o por las exigencias de su vida cotidiana, no pueden estar presentes junto al adulto mayor a su cargo. El sistema opera de forma completamente pasiva y autónoma: no requiere ninguna intervención por parte del adulto mayor, no utiliza dispositivos que deban portarse, y todo el procesamiento de video se realiza de manera local en el hogar, garantizando que los registros visuales no salgan del domicilio.
 
-En principio estos algoritmos se describen en t\'erminos de circuitos.
-En la b\'usqueda de un lenguaje de programaci\'on que permita abstraer los conceptos,
-un concepto que nace es el de \emph{control cl\'asico}, el cual se basa
-en dirigir instrucciones a una computadora cu\'antica desde una computadora cl\'asica. Las primeras nociones de
-este manejo las da Peter Selinger en el a\~no 2004 \parencite{Selinger2004} basado en la idea de qRAM de Knill \parencite{Knill1996},
-el cual propone que es necesario un conjunto de instrucciones de alto nivel que se abstraigan del hardware,
-con un flujo de control cl\'asico.
+El sistema integra dos módulos principales. El primero analiza el video de cámaras IP en tiempo real para detectar eventos críticos como caídas o inmovilidad prolongada. El segundo construye y actualiza de forma continua una línea base de comportamiento personalizada para cada individuo, permitiendo identificar desvíos significativos en la rutina diaria que podrían indicar un deterioro en el estado de salud. Solo los eventos detectados se transmiten a la nube para notificar a la familia a través de una aplicación móvil.
 
-De este tipo de control es como nace Quipper \parencite{GreenEtAl2013}, un lenguaje
-embebido creado en 2013, que utiliza Haskell como el lenguaje de programaci\'on mediante
-la importaci\'on de librer\'{\i}as, lo que lo clasifica como lenguaje funcional. Se clasifica como
-escalable y expresivo de orden superior.
+% Párrafo de estructura del informe - completar con las secciones finales acordadas
+El presente informe se organiza de la siguiente manera. En la sección de Antecedentes se desarrolla el marco teórico que sustenta el proyecto y el análisis del estado del arte. En la sección de Descripción se especifica el sistema desarrollado. En Metodología de Desarrollo se detalla el proceso de construcción y las tecnologías utilizadas. En Pruebas Realizadas se presentan los ensayos efectuados sobre el prototipo funcional. Finalmente, en la sección de Discusión se analizan los resultados obtenidos, seguido de las Conclusiones del trabajo.
 
-En el a\~no 2017, se publica QWIRE, un lenguaje de programaci\'on cu\'antica creado para escribir en alto nivel la
-programaci\'on de circuitos cu\'anticos, interpretando a estos como superoperadores en matrices de densidad \parencite{PaykinRandZdancewic2017} (similar a Quipper).
+\section{Objetivos}
 
-Tambi\'en existen lenguajes cu\'anticos imperativos, como QCL (que permite al usuario definir sus propios
-operadores y funciones con una sintaxis parecida a C), o el m\'as reciente Q\# de Microsoft (que lee y
-devuelve datos cl\'asicos) nombrado as\'{\i} en referencia a C\#, dado que se accede mediante este \'ultimo.
+\subsection*{Objetivo general}
 
-Otro tipo de control es el control cu\'antico, introducido por Altenkirch y Grattage
-\parencite{AltenkirchGrattage2005},
-donde se propone un c\'alculo que no necesite de un control indirecto de la computadora cu\'antica, sino que se
-pueda usar directamente en la misma. En 2019, se propone una extensi\'on cu\'antica al \(\lambda\)-c\'alculo (Lineal)
-m\'as expresivo \parencite{DiazcaroEtAl2019}, en el paradigma de control cu\'antico, basado en la t\'ecnica de la realizabilidad \parencite{Kleene1945}. Lineal~\parencite{ArrighiDowek2017} fue uno de los primeros lenguajes que tuvo como objetivo desarrollar un c\'alculo lambda de control cu\'antico. Es un c\'alculo lambda sin tipos extendido con superposiciones lineales arbitrarias. Las reglas de reescritura garantizan la confluencia y se toma una forma can\'onica como forma normal de los t\'erminos. Para evitar la clonaci\'on, se considera una estrategia {\em call-by-base}: se puede aplicar una abstracci\'on \(\lambda x.t\) a una superposici\'on de valores \((\alpha.v+\beta.w)\) que producen \(\alpha. (\lambda x.t)v+\beta.(\lambda x.t)w\). De esta manera, no s\'olo se evita la clonaci\'on, sino que adem\'as todas las abstracciones son lineales por construcci\'on. Esto permite expresar matrices y vectores y, por tanto, programas cu\'anticos, pero tambi\'en mapas no unitarios y, por supuesto, vectores no normalizados.
+Desarrollar un sistema de monitoreo no invasivo para adultos mayores en entornos domésticos, basado en visión artificial y aprendizaje adaptativo del comportamiento, que permita a sus familiares mantenerse informados sobre su estado y rutina diaria, y recibir alertas ante situaciones de riesgo, sin requerir ninguna intervención activa por parte del adulto mayor.
 
-\begin{center}
-	\ldots Texto \ldots
-\end{center}
+\subsection*{Objetivos específicos}
 
-De las extensiones del \(\lambda\)-c\'alculo, Lambda-\(S\) \parencite{DiazcaroDowekRinaldi2019, DiazcaroMalherbe2024} presenta un sistema de tipos capaz de distinguir
-entre un estado superpuesto y un qubit con un estado no superpuesto respecto a una base dada. En esta tesis se propone
-una extensi\'on a Lambda-\(S\) para permitir identificar valores duplicables en m\'as de una base de medici\'on.
+\begin{itemize}
+    \item Implementar un módulo de análisis de video en tiempo real capaz de detectar caídas e inmovilidad prolongada a partir de modelos de estimación de poses.
+    \item Desarrollar un módulo de aprendizaje adaptativo que construya y actualice de forma continua una línea base de comportamiento personalizada por individuo, permitiendo identificar desvíos significativos en la rutina diaria.
+    \item Garantizar el procesamiento local del video en el hogar, de modo que los registros visuales no salgan del domicilio, preservando la privacidad del adulto mayor.
+    \item Diseñar e implementar una aplicación móvil que notifique a los familiares ante eventos detectados y permita el acceso a reportes periódicos sobre el estado y la rutina del adulto mayor.
+    \item Validar el sistema en un entorno doméstico controlado mediante escenarios simulados que permitan evaluar la efectividad de la detección.
+\end{itemize}
 
-Lambda-\(S\) est\'a enfocado en la propiedad cu\'antica conocida como superposici\'on. Su sistema de tipos puede distinguir entre estados superpuestos, respecto a una base dada, y estados de dicha base. Este sistema de tipos representa un dual de la l\'ogica lineal \parencite{DiazcaroMalherbe2020}.
+\section{Alcance}
 
-En \(\lambda\)-calculo, aplicar el t\'ermino \(\lambda x.(x \otimes x)\), que expresa una funci\'on no lineal, a un t\'ermino \(u\) produce el t\'ermino \((\lambda x.(x \otimes x))u\), que se eval\'ua a \(u
-	\otimes u\). Pero \enquote{clonar} este vector, es decir, el t\'ermino \(u\), est\'a prohibido en la computaci\'on cu\'antica.
-Varias extensiones cu\'anticas al \(\lambda\)-c\'alculo tratan este problema de diferentes maneras.
+El proyecto abarca el diseño e implementación de un prototipo funcional compuesto por dos módulos: un módulo de análisis de video en tiempo real basado en YOLO para detectar poses, caídas e inmovilidad, y un módulo de aprendizaje adaptativo que construye y actualiza la línea base de rutina de cada usuario. El procesamiento se realiza localmente en una controladora, comunicada con cámaras IP, garantizando la privacidad de los videos. Solo los eventos detectados se envían a la nube para notificaciones y análisis. Se incluye una aplicación móvil para la visualización de alertas y reportes. El sistema se valida en un entorno doméstico controlado con escenarios simulados.
 
-Una manera es prohibir la construcci\'on del t\'ermino \(\lambda x.(x \otimes x)\), usando un sistema de tipos inspirado en la l\'ogica lineal
-\parencite{Girard1987,Abramsky1993}, lo que, por ejemplo, deriv\'o en c\'alculos l\'ogico-lineales 
-\parencite{	AltenkirchGrattage2005,
-	SelingerValiron2009,
-	GreenEtAl2013,
-	PaganiSelingerValiron2014,
-	Zorzi2016}.
-
-\begin{center}
-	\ldots Texto \ldots
-\end{center}
-
-Esto deriv\'o ulteriormente en una sem\'antica categ\'orica para el lenguaje, donde los t\'erminos del lenguaje son interpretados en una categor\'{\i}a cartesiana \textbf{Set}, mientras que las operaciones ocurren en una categor\'{\i}a aditiva monoidal \textbf{Vec}, a donde se transportan usando una \emph{adjunci\'on} entre ambas categor\'{\i}as \parencite{DiazcaroMalherbe2024, DiazcaroMalherbe2020}.
-
-Este lenguaje permite expresar algoritmos cu\'anticos con una informaci\'on muy precisa sobre los datos cu\'anticos procesados por esos algoritmos. Sin embargo, dado que ya se cuenta con un lenguaje que puede decidir cu\'ando un qubit est\'a en una base computacional, y cu\'ando podr\'{\i}a no estarlo, sin necesidad de medir, sino simplemente por haber seguido su evoluci\'on a lo largo del algoritmo, es interesante extender dicha t\'ecnica a otras bases, que es lo que hacemos en esta tesis.
-
-% Generalmente, uno puede poner acá un breve párrafo sobre la estructura de la tesis, explicando qué se verá en cada capítulo, y dicha explicación de a lo sumo una línea de largo. Consultar con los docentes de la PFI previamente.
+No se incluye integración con sistemas médicos externos, ni producción a escala comercial. Tampoco se contempla el soporte para múltiples adultos mayores simultáneos en distintos hogares, ni la integración con servicios de emergencia o atención médica profesional.
