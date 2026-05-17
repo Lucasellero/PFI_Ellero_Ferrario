@@ -2,23 +2,36 @@
 
 \section{Marco Teórico}
 
-% Desarrollar el marco teórico que sustenta el proyecto.
-% Incluir conceptos de visión artificial, estimación de poses, detección de caídas,
-% aprendizaje adaptativo del comportamiento, etc.
+En esta sección se desarrollan los conceptos y fundamentos teóricos que sustentan el proyecto, abarcando tanto el contexto del envejecimiento poblacional como las tecnologías sobre las que se apoya la solución propuesta.
 
-Completar.
+\subsection{El envejecimiento como fenómeno demográfico y sus implicancias}
 
-\section{Estado del Arte}
+El envejecimiento de la población constituye uno de los fenómenos demográficos más significativos de la Argentina contemporánea. Según datos del Censo Nacional 2022, el 15,7\% de la población argentina tiene 60 años o más, y se espera que ese porcentaje supere el 20\% hacia 2040 \parencite{INDEC2022}. Proyectado a futuro, la proporción de personas de 65 años y más pasará del 12\% actual al 16,4\% en 2040, mientras que la población de 0 a 14 años se reducirá del 22\% al 14\%, marcando un punto de inflexión en el que Argentina tendrá más adultos mayores que niños \parencite{INDEC2024}.
 
-% Analizar soluciones existentes: wearables, botones de pánico, sistemas de visión artificial,
-% asistentes de voz, sensores ambientales, etc.
-% Comparar con la propuesta del proyecto.
+Este fenómeno se enmarca dentro del concepto de envejecimiento activo, definido por la Organización Mundial de la Salud (OMS) como el proceso de optimización de las oportunidades de salud, participación y seguridad con el fin de mejorar la calidad de vida a medida que las personas envejecen \parencite{OMS2002}. Dentro de este marco, la calidad de vida de las personas mayores se ve determinada en gran medida por su capacidad para mantener la autonomía y la independencia, entendidas como la habilidad de tomar decisiones propias y de realizar las actividades cotidianas sin requerir intervención permanente de terceros. La detección temprana de cambios en el estado funcional se convierte, desde esta perspectiva, en una herramienta central para sostener esa autonomía el mayor tiempo posible.
 
-Completar.
+Sin embargo, vivir más años no siempre implica hacerlo en condiciones de plena independencia ni con redes de contención adecuadas. En cuanto a las modalidades de convivencia, los datos del INDEC revelan un panorama heterogéneo. El 46\% de las personas de 60 años y más vive en hogares multigeneracionales, compartiendo el domicilio con hijos u otros familiares \parencite{INDEC2024}. Sin embargo, una proporción creciente vive sola: en 2022 se registraron 1.261.800 hogares unipersonales de adultos mayores de 65 años, frente a los 843.427 de 2010, lo que representa un crecimiento del 50\% en doce años \parencite{INDEC2022}. En el extremo opuesto, una minoría reside en instituciones geriátricas, modalidad reservada principalmente para casos de deterioro cognitivo avanzado o dependencia severa.
 
-\section{User Research}
+Esta distribución es relevante para el proyecto porque el segmento de mayor interés no es el que ya reside en una institución ---donde existe supervisión profesional continua--- sino aquel que vive solo o con supervisión parcial de familiares que trabajan y no pueden estar presentes de forma permanente. El envejecimiento proyectado incrementará la demanda de cuidados domiciliarios y servicios sociales especializados \parencite{INDEC2024}, una demanda que los sistemas actuales no están en condiciones de absorber y que requiere soluciones tecnológicas capaces de operar de forma autónoma en el entorno del hogar.
 
-% Describir las entrevistas realizadas con familiares de adultos mayores.
-% Objetivos, metodología, resultados y conclusiones del research.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Piramide_INDEC}
+    \caption{Estructura de la población por sexo y grupo de edad. Total del país. Años 1914 y 2022. Fuente: INDEC (2024).}
+    \label{fig:piramide_indec}
+\end{figure}
 
-Completar.
+\subsection{Caídas e inmovilidad: impacto clínico y epidemiológico}
+
+Los riesgos concretos que enfrenta el adulto mayor que vive solo o con supervisión parcial no siempre son visibles ni previsibles. Entre ellos, las caídas se destacan como uno de los eventos de mayor frecuencia e impacto. En Argentina, aproximadamente el 30\% de los adultos mayores que viven de forma independiente sufre al menos una caída al año, y este porcentaje se eleva al 50\% en los mayores de 80 años \parencite{MinisterioDeSalud}. Estas cifras cobran mayor peso si se considera que la mayoría de los episodios ocurre dentro del propio domicilio, en el entorno donde el adulto mayor debería sentirse más seguro \parencite{MinisterioDeSalud}.
+
+Las consecuencias inmediatas pueden ser físicas ---fracturas, golpes, lesiones en partes blandas--- pero las consecuencias funcionales y psicológicas son con frecuencia más duraderas y difíciles de revertir. Una caída puede dar lugar al denominado síndrome post-caída: una pérdida de confianza para moverse, miedo constante a volver a caer y una restricción progresiva de la actividad física que, paradójicamente, debilita aún más al adulto mayor y aumenta el riesgo de nuevas caídas, generando un ciclo difícil de interrumpir \parencite{MinisterioDeSalud}, tal como se ilustra en la Figura \ref{fig:ciclo_postcaida}.
+
+La inmovilidad prolongada representa un riesgo independiente y silencioso. Cuando un adulto mayor cae y permanece en el suelo durante un período extendido sin posibilidad de pedir ayuda ---situación frecuente tanto en quienes viven solos como en quienes están sin supervisión durante el día--- la situación puede derivar en una emergencia médica. Es precisamente este escenario el que justifica la necesidad de un sistema capaz de detectar no solo el evento de la caída sino también la inmovilidad anormal que la sigue, y notificar a los familiares en tiempo real.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/Sindrome_Post_Caida}
+    \caption{Ciclo del síndrome post-caída. Elaboración propia.}
+    \label{fig:ciclo_postcaida}
+\end{figure}
