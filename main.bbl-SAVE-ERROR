@@ -1,0 +1,811 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nyt/global//global/global/global}
+    \entry{Covinsky2020}{article}{}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=c6779e5c34721fae88bda4f479dd9f9a}{%
+           family={Covinsky},
+           familyi={C\bibinitperiod},
+           given={Kenneth},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{1233b4c3bec0ced045dcdf36624b0672}
+      \strng{fullhash}{1233b4c3bec0ced045dcdf36624b0672}
+      \strng{fullhashraw}{1233b4c3bec0ced045dcdf36624b0672}
+      \strng{bibnamehash}{1233b4c3bec0ced045dcdf36624b0672}
+      \strng{authorbibnamehash}{1233b4c3bec0ced045dcdf36624b0672}
+      \strng{authornamehash}{1233b4c3bec0ced045dcdf36624b0672}
+      \strng{authorfullhash}{1233b4c3bec0ced045dcdf36624b0672}
+      \strng{authorfullhashraw}{1233b4c3bec0ced045dcdf36624b0672}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{BMC Geriatrics}
+      \field{title}{Tracking personalized functional health in older adults using geriatric assessments}
+      \field{year}{2020}
+      \verb{urlraw}
+      \verb https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7576843/
+      \endverb
+      \verb{url}
+      \verb https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7576843/
+      \endverb
+    \endentry
+    \entry{INDEC2020}{misc}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=733000f2fafacade84a35ad9f81edd37}{%
+           family={{INDEC}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{fullhash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{fullhashraw}{733000f2fafacade84a35ad9f81edd37}
+      \strng{bibnamehash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{authorbibnamehash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{authornamehash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{authorfullhash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{authorfullhashraw}{733000f2fafacade84a35ad9f81edd37}
+      \field{extraname}{1}
+      \field{sortinit}{I}
+      \field{sortinithash}{8d291c51ee89b6cd86bf5379f0b151d8}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Instituto Nacional de Estadística y Censos de la República Argentina}
+      \field{title}{Acceso y uso de tecnologías de la información y la comunicación. Encuesta Permanente de Hogares}
+      \field{urlday}{16}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2020}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.indec.gob.ar
+      \endverb
+      \verb{url}
+      \verb https://www.indec.gob.ar
+      \endverb
+    \endentry
+    \entry{INDEC2022}{misc}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=733000f2fafacade84a35ad9f81edd37}{%
+           family={{INDEC}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{fullhash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{fullhashraw}{733000f2fafacade84a35ad9f81edd37}
+      \strng{bibnamehash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{authorbibnamehash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{authornamehash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{authorfullhash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{authorfullhashraw}{733000f2fafacade84a35ad9f81edd37}
+      \field{extraname}{2}
+      \field{sortinit}{I}
+      \field{sortinithash}{8d291c51ee89b6cd86bf5379f0b151d8}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Instituto Nacional de Estadística y Censos de la República Argentina}
+      \field{title}{Censo Nacional de Población, Hogares y Viviendas 2022}
+      \field{urlday}{16}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2022}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.indec.gob.ar/indec/web/Nivel4-Tema-2-21-130
+      \endverb
+      \verb{url}
+      \verb https://www.indec.gob.ar/indec/web/Nivel4-Tema-2-21-130
+      \endverb
+    \endentry
+    \entry{INDEC2024}{misc}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=733000f2fafacade84a35ad9f81edd37}{%
+           family={{INDEC}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{fullhash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{fullhashraw}{733000f2fafacade84a35ad9f81edd37}
+      \strng{bibnamehash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{authorbibnamehash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{authornamehash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{authorfullhash}{733000f2fafacade84a35ad9f81edd37}
+      \strng{authorfullhashraw}{733000f2fafacade84a35ad9f81edd37}
+      \field{extraname}{3}
+      \field{sortinit}{I}
+      \field{sortinithash}{8d291c51ee89b6cd86bf5379f0b151d8}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Instituto Nacional de Estadística y Censos de la República Argentina}
+      \field{title}{Dosier estadístico de personas mayores 2024}
+      \field{urlday}{16}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.indec.gob.ar/ftp/cuadros/poblacion/dosier_personas_mayores_2024.pdf
+      \endverb
+      \verb{url}
+      \verb https://www.indec.gob.ar/ftp/cuadros/poblacion/dosier_personas_mayores_2024.pdf
+      \endverb
+    \endentry
+    \entry{Infobae2025}{misc}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=67c02f59c769ce0df2c15d009aeb31ce}{%
+           family={{Infobae}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{67c02f59c769ce0df2c15d009aeb31ce}
+      \strng{fullhash}{67c02f59c769ce0df2c15d009aeb31ce}
+      \strng{fullhashraw}{67c02f59c769ce0df2c15d009aeb31ce}
+      \strng{bibnamehash}{67c02f59c769ce0df2c15d009aeb31ce}
+      \strng{authorbibnamehash}{67c02f59c769ce0df2c15d009aeb31ce}
+      \strng{authornamehash}{67c02f59c769ce0df2c15d009aeb31ce}
+      \strng{authorfullhash}{67c02f59c769ce0df2c15d009aeb31ce}
+      \strng{authorfullhashraw}{67c02f59c769ce0df2c15d009aeb31ce}
+      \field{sortinit}{I}
+      \field{sortinithash}{8d291c51ee89b6cd86bf5379f0b151d8}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Las preocupaciones por la privacidad llevan a que personas mayores desconecten dispositivos médicos vitales}
+      \field{urlday}{16}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.infobae.com/generacion-silver/2025/12/17/las-preocupaciones-por-la-privacidad-llevan-a-que-personas-mayores-desconecten-dispositivos-medicos-vitales/
+      \endverb
+      \verb{url}
+      \verb https://www.infobae.com/generacion-silver/2025/12/17/las-preocupaciones-por-la-privacidad-llevan-a-que-personas-mayores-desconecten-dispositivos-medicos-vitales/
+      \endverb
+    \endentry
+    \entry{Joseph2025}{article}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=498dd1d0ab78723320d7704ca47df5ee}{%
+           family={Joseph},
+           familyi={J\bibinitperiod},
+           given={Jeena},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{498dd1d0ab78723320d7704ca47df5ee}
+      \strng{fullhash}{498dd1d0ab78723320d7704ca47df5ee}
+      \strng{fullhashraw}{498dd1d0ab78723320d7704ca47df5ee}
+      \strng{bibnamehash}{498dd1d0ab78723320d7704ca47df5ee}
+      \strng{authorbibnamehash}{498dd1d0ab78723320d7704ca47df5ee}
+      \strng{authornamehash}{498dd1d0ab78723320d7704ca47df5ee}
+      \strng{authorfullhash}{498dd1d0ab78723320d7704ca47df5ee}
+      \strng{authorfullhashraw}{498dd1d0ab78723320d7704ca47df5ee}
+      \field{sortinit}{J}
+      \field{sortinithash}{b2f54a9081ace9966a7cb9413811edb4}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Frontiers in Digital Health}
+      \field{title}{Designing for dignity: ethics of {AI} surveillance in older adult care}
+      \field{year}{2025}
+      \verb{doi}
+      \verb 10.3389/fdgth.2025.1643238
+      \endverb
+    \endentry
+    \entry{Katz1963}{article}{}{}
+      \name{author}{5}{}{%
+        {{un=0,uniquepart=base,hash=18f6ee6eafc8af8b914ba238bbefc010}{%
+           family={Katz},
+           familyi={K\bibinitperiod},
+           given={Sidney},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=8fa18081d8ee38bd993413cdda080d8b}{%
+           family={Ford},
+           familyi={F\bibinitperiod},
+           given={Amasa\bibnamedelima B.},
+           giveni={A\bibinitperiod\bibinitdelim B\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=1abf22f66b4663bd30e5468d429e620c}{%
+           family={Moskowitz},
+           familyi={M\bibinitperiod},
+           given={Roland\bibnamedelima W.},
+           giveni={R\bibinitperiod\bibinitdelim W\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=36ec383a4580130f9a907656169f8873}{%
+           family={Jackson},
+           familyi={J\bibinitperiod},
+           given={Beverly\bibnamedelima A.},
+           giveni={B\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=259d95767be024cd094d81887609b89f}{%
+           family={Jaffe},
+           familyi={J\bibinitperiod},
+           given={Marjorie\bibnamedelima W.},
+           giveni={M\bibinitperiod\bibinitdelim W\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{878174ba1cd34355e4e0eef55342d3a7}
+      \strng{fullhash}{102645d5ea5158faab27f31a8a294390}
+      \strng{fullhashraw}{102645d5ea5158faab27f31a8a294390}
+      \strng{bibnamehash}{102645d5ea5158faab27f31a8a294390}
+      \strng{authorbibnamehash}{102645d5ea5158faab27f31a8a294390}
+      \strng{authornamehash}{878174ba1cd34355e4e0eef55342d3a7}
+      \strng{authorfullhash}{102645d5ea5158faab27f31a8a294390}
+      \strng{authorfullhashraw}{102645d5ea5158faab27f31a8a294390}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{JAMA}
+      \field{number}{12}
+      \field{title}{Studies of illness in the aged. The index of {ADL}: a standardized measure of biological and psychosocial function}
+      \field{volume}{185}
+      \field{year}{1963}
+      \field{pages}{914\bibrangedash 919}
+      \range{pages}{6}
+    \endentry
+    \entry{LamBoot2025}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=08859aef57a1e508f9e23ea2882e4fe8}{%
+           family={Lam},
+           familyi={L\bibinitperiod},
+           given={Justin},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=e21ec8b7e0e3dcb462e09c5c759a6954}{%
+           family={Boot},
+           familyi={B\bibinitperiod},
+           given={Walter},
+           giveni={W\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{da8f30da01a1f93c9ead91e27ff73a3a}
+      \strng{fullhash}{2268c15b665335ed54c45e832fb803c9}
+      \strng{fullhashraw}{2268c15b665335ed54c45e832fb803c9}
+      \strng{bibnamehash}{2268c15b665335ed54c45e832fb803c9}
+      \strng{authorbibnamehash}{2268c15b665335ed54c45e832fb803c9}
+      \strng{authornamehash}{da8f30da01a1f93c9ead91e27ff73a3a}
+      \strng{authorfullhash}{2268c15b665335ed54c45e832fb803c9}
+      \strng{authorfullhashraw}{2268c15b665335ed54c45e832fb803c9}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Innovation in Aging}
+      \field{title}{Privacy, Proficiency, and the Promise of Wearables: Insights from Focus Groups with Older Adults}
+      \field{year}{2025}
+      \verb{doi}
+      \verb 10.1093/geroni/igaf122.2812
+      \endverb
+    \endentry
+    \entry{Lawton1969}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=e72c88a2574b3f755d9b7b71e3869f01}{%
+           family={Lawton},
+           familyi={L\bibinitperiod},
+           given={M.\bibnamedelimi Powell},
+           giveni={M\bibinitperiod\bibinitdelim P\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=9d592fbb62864e6ba7b78671eb933025}{%
+           family={Brody},
+           familyi={B\bibinitperiod},
+           given={Elaine\bibnamedelima M.},
+           giveni={E\bibinitperiod\bibinitdelim M\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{843b884ee4f961fe0e90433e594ad9f0}
+      \strng{fullhash}{123d50d9e15c2d546375fab76906d77d}
+      \strng{fullhashraw}{123d50d9e15c2d546375fab76906d77d}
+      \strng{bibnamehash}{123d50d9e15c2d546375fab76906d77d}
+      \strng{authorbibnamehash}{123d50d9e15c2d546375fab76906d77d}
+      \strng{authornamehash}{843b884ee4f961fe0e90433e594ad9f0}
+      \strng{authorfullhash}{123d50d9e15c2d546375fab76906d77d}
+      \strng{authorfullhashraw}{123d50d9e15c2d546375fab76906d77d}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{The Gerontologist}
+      \field{number}{3}
+      \field{title}{Assessment of older people: self-maintaining and instrumental activities of daily living}
+      \field{volume}{9}
+      \field{year}{1969}
+      \field{pages}{179\bibrangedash 186}
+      \range{pages}{8}
+    \endentry
+    \entry{Lin2014}{article}{}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=08f925fe4692d130a1d7cb7d94483351}{%
+           family={Lin},
+           familyi={L\bibinitperiod},
+           given={Tsung-Yi},
+           giveni={T\bibinithyphendelim Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=d980bc6930f008a0fb5fa667785f2309}{%
+           family={Maire},
+           familyi={M\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=044d1db5259b74e4975282f599d8e767}{%
+           family={Belongie},
+           familyi={B\bibinitperiod},
+           given={Serge},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3b7e00bc88d7aca4d4d5ddb8c252e36c}
+      \strng{fullhash}{72b744e79c74738c617fd08b4f3d7e36}
+      \strng{fullhashraw}{72b744e79c74738c617fd08b4f3d7e36}
+      \strng{bibnamehash}{72b744e79c74738c617fd08b4f3d7e36}
+      \strng{authorbibnamehash}{72b744e79c74738c617fd08b4f3d7e36}
+      \strng{authornamehash}{3b7e00bc88d7aca4d4d5ddb8c252e36c}
+      \strng{authorfullhash}{72b744e79c74738c617fd08b4f3d7e36}
+      \strng{authorfullhashraw}{72b744e79c74738c617fd08b4f3d7e36}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{European Conference on Computer Vision (ECCV)}
+      \field{title}{Microsoft {COCO}: Common Objects in Context}
+      \field{year}{2014}
+      \verb{doi}
+      \verb 10.1007/978-3-319-10602-1_48
+      \endverb
+    \endentry
+    \entry{MinisterioDeSalud}{misc}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=2371fa6c93c39dd3d770bba75a370878}{%
+           family={{Ministerio de Salud de la Nación Argentina}},
+           familyi={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{2371fa6c93c39dd3d770bba75a370878}
+      \strng{fullhash}{2371fa6c93c39dd3d770bba75a370878}
+      \strng{fullhashraw}{2371fa6c93c39dd3d770bba75a370878}
+      \strng{bibnamehash}{2371fa6c93c39dd3d770bba75a370878}
+      \strng{authorbibnamehash}{2371fa6c93c39dd3d770bba75a370878}
+      \strng{authornamehash}{2371fa6c93c39dd3d770bba75a370878}
+      \strng{authorfullhash}{2371fa6c93c39dd3d770bba75a370878}
+      \strng{authorfullhashraw}{2371fa6c93c39dd3d770bba75a370878}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Las caídas en las personas mayores y cómo prevenirlas}
+      \field{urlday}{16}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{s.f.}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.argentina.gob.ar/sites/default/files/caidas_en_personas_mayores.pdf
+      \endverb
+      \verb{url}
+      \verb https://www.argentina.gob.ar/sites/default/files/caidas_en_personas_mayores.pdf
+      \endverb
+    \endentry
+    \entry{MunozEsquivel2023}{article}{}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=598d420207f0f82c146125ebd785543e}{%
+           family={Muñoz\bibnamedelima Esquivel},
+           familyi={M\bibinitperiod\bibinitdelim E\bibinitperiod},
+           given={Karla},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=9c069eb405600b26addf2c56933d8843}{%
+           family={Gillespie},
+           familyi={G\bibinitperiod},
+           given={James},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=8625c753265a307bed17df2f9f15208a}{%
+           family={Kelly},
+           familyi={K\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=864cd7a201829dd0c6b3e31deceb5e36}{%
+           family={Condell},
+           familyi={C\bibinitperiod},
+           given={Joan},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{87cdebe4465a8049729084a6bad67ee5}
+      \strng{fullhash}{900a0a44fbb8ada4d59cb3c3a3af5efc}
+      \strng{fullhashraw}{900a0a44fbb8ada4d59cb3c3a3af5efc}
+      \strng{bibnamehash}{900a0a44fbb8ada4d59cb3c3a3af5efc}
+      \strng{authorbibnamehash}{900a0a44fbb8ada4d59cb3c3a3af5efc}
+      \strng{authornamehash}{87cdebe4465a8049729084a6bad67ee5}
+      \strng{authorfullhash}{900a0a44fbb8ada4d59cb3c3a3af5efc}
+      \strng{authorfullhashraw}{900a0a44fbb8ada4d59cb3c3a3af5efc}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{JMIR Aging}
+      \field{title}{Factors Influencing Continued Wearable Device Use in Older Adult Populations: Quantitative Study}
+      \field{volume}{6}
+      \field{year}{2023}
+      \field{pages}{e36807}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.2196/36807
+      \endverb
+    \endentry
+    \entry{OMS2002}{misc}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=5b1551aad81d4130cd5a1bb90cf506c1}{%
+           family={{Organización Mundial de la Salud}},
+           familyi={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{5b1551aad81d4130cd5a1bb90cf506c1}
+      \strng{fullhash}{5b1551aad81d4130cd5a1bb90cf506c1}
+      \strng{fullhashraw}{5b1551aad81d4130cd5a1bb90cf506c1}
+      \strng{bibnamehash}{5b1551aad81d4130cd5a1bb90cf506c1}
+      \strng{authorbibnamehash}{5b1551aad81d4130cd5a1bb90cf506c1}
+      \strng{authornamehash}{5b1551aad81d4130cd5a1bb90cf506c1}
+      \strng{authorfullhash}{5b1551aad81d4130cd5a1bb90cf506c1}
+      \strng{authorfullhashraw}{5b1551aad81d4130cd5a1bb90cf506c1}
+      \field{sortinit}{O}
+      \field{sortinithash}{2cd7140a07aea5341f9e2771efe90aae}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Revista Española de Geriatría y Gerontología, 37(S2), 74-105}
+      \field{title}{Envejecimiento activo: un marco político}
+      \field{urlday}{16}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2002}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.who.int/ageing/publications/active/es/
+      \endverb
+      \verb{url}
+      \verb https://www.who.int/ageing/publications/active/es/
+      \endverb
+    \endentry
+    \entry{PercyCampbell2024}{article}{}{}
+      \name{author}{6}{}{%
+        {{un=0,uniquepart=base,hash=a4dbbae489c131270e17ac649fb19b70}{%
+           family={Percy\bibnamedelima Campbell},
+           familyi={P\bibinitperiod\bibinitdelim C\bibinitperiod},
+           given={Jessica},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=5ea37e8383dc66e876cada461526f489}{%
+           family={Buchan},
+           familyi={B\bibinitperiod},
+           given={Jacob},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=41a25a6ef4bd32efb94038ef6f9cc216}{%
+           family={Chu},
+           familyi={C\bibinitperiod},
+           given={Charlene\bibnamedelima H.},
+           giveni={C\bibinitperiod\bibinitdelim H\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=da1cc082e6d993545a78b72af94e614f}{%
+           family={Bianchi},
+           familyi={B\bibinitperiod},
+           given={Andria},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=faae719891a104bbd5fdd7089e6114d2}{%
+           family={Hoey},
+           familyi={H\bibinitperiod},
+           given={Jesse},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=f2e752ca9269da0f277ca175878f734c}{%
+           family={Khan},
+           familyi={K\bibinitperiod},
+           given={Shehroz\bibnamedelima S.},
+           giveni={S\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{0db3398e0b4f54a46ce503b21c34b228}
+      \strng{fullhash}{44d5a2e9366af4379fc91cecccc51ee8}
+      \strng{fullhashraw}{44d5a2e9366af4379fc91cecccc51ee8}
+      \strng{bibnamehash}{44d5a2e9366af4379fc91cecccc51ee8}
+      \strng{authorbibnamehash}{44d5a2e9366af4379fc91cecccc51ee8}
+      \strng{authornamehash}{0db3398e0b4f54a46ce503b21c34b228}
+      \strng{authorfullhash}{44d5a2e9366af4379fc91cecccc51ee8}
+      \strng{authorfullhashraw}{44d5a2e9366af4379fc91cecccc51ee8}
+      \field{sortinit}{P}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{JMIR mHealth and uHealth}
+      \field{title}{User Perception of Smart Home Surveillance Among Adults Aged 50 Years and Older: Scoping Review}
+      \field{volume}{12}
+      \field{year}{2024}
+      \field{pages}{e48526}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.2196/48526
+      \endverb
+    \endentry
+    \entry{Raza2022}{inproceedings}{}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=48f40823d6145aac0cd393ba9b2a8975}{%
+           family={Raza},
+           familyi={R\bibinitperiod},
+           given={Ali},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=c7d264a3bf79e49933eb59d404c48b23}{%
+           family={Yousaf},
+           familyi={Y\bibinitperiod},
+           given={Muhammad\bibnamedelima Haroon},
+           giveni={M\bibinitperiod\bibinitdelim H\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=549aa6cbf389028f5af6cb6a666fcc00}{%
+           family={Velastin},
+           familyi={V\bibinitperiod},
+           given={Sergio\bibnamedelima A.},
+           giveni={S\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{bf54979081f4533472e94d797f27af6f}
+      \strng{fullhash}{eb46204159f376c20468b3b52b1c5192}
+      \strng{fullhashraw}{eb46204159f376c20468b3b52b1c5192}
+      \strng{bibnamehash}{eb46204159f376c20468b3b52b1c5192}
+      \strng{authorbibnamehash}{eb46204159f376c20468b3b52b1c5192}
+      \strng{authornamehash}{bf54979081f4533472e94d797f27af6f}
+      \strng{authorfullhash}{eb46204159f376c20468b3b52b1c5192}
+      \strng{authorfullhashraw}{eb46204159f376c20468b3b52b1c5192}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2022 12th International Conference on Pattern Recognition Systems (ICPRS)}
+      \field{title}{Human Fall Detection using {YOLO}: A Real-Time and {AI}-on-the-Edge Perspective}
+      \field{year}{2022}
+      \verb{doi}
+      \verb 10.1109/ICPRS54038.2022.9854070
+      \endverb
+    \endentry
+    \entry{Salimi2022}{article}{}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=ba7369faf01fc789c7d891eaff62018e}{%
+           family={Salimi},
+           familyi={S\bibinitperiod},
+           given={Mohammad},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=d1bf86782ac831e93a6f0e929e9c8913}{%
+           family={Ziaratban},
+           familyi={Z\bibinitperiod},
+           given={Majid},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=1360cac2bcce421d6ce61cc6b080a780}{%
+           family={Farahi},
+           familyi={F\bibinitperiod},
+           given={Seyed\bibnamedelimb Mohammad\bibnamedelima Mehdi},
+           giveni={S\bibinitperiod\bibinitdelim M\bibinitperiod\bibinitdelim M\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{b0f25796cf0cdfc8a194b0842b38d7a3}
+      \strng{fullhash}{f289afb551f88683d7e563d6293b76ee}
+      \strng{fullhashraw}{f289afb551f88683d7e563d6293b76ee}
+      \strng{bibnamehash}{f289afb551f88683d7e563d6293b76ee}
+      \strng{authorbibnamehash}{f289afb551f88683d7e563d6293b76ee}
+      \strng{authornamehash}{b0f25796cf0cdfc8a194b0842b38d7a3}
+      \strng{authorfullhash}{f289afb551f88683d7e563d6293b76ee}
+      \strng{authorfullhashraw}{f289afb551f88683d7e563d6293b76ee}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{2022 12th International Conference on Pattern Recognition Systems (ICPRS)}
+      \field{title}{Fall Detection Based on Human Pose Estimation Using Deep Neural Network}
+      \field{year}{2022}
+      \verb{doi}
+      \verb 10.1109/ICPRS54038.2022.9854070
+      \endverb
+    \endentry
+    \entry{Applebaum2024}{article}{}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=0ef169e6f24bdce71e4c1e99a708238c}{%
+           family={Tavares},
+           familyi={T\bibinitperiod},
+           given={Rita},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{dbfe419daa91e7450d16c0bbb23a700c}
+      \strng{fullhash}{dbfe419daa91e7450d16c0bbb23a700c}
+      \strng{fullhashraw}{dbfe419daa91e7450d16c0bbb23a700c}
+      \strng{bibnamehash}{dbfe419daa91e7450d16c0bbb23a700c}
+      \strng{authorbibnamehash}{dbfe419daa91e7450d16c0bbb23a700c}
+      \strng{authornamehash}{dbfe419daa91e7450d16c0bbb23a700c}
+      \strng{authorfullhash}{dbfe419daa91e7450d16c0bbb23a700c}
+      \strng{authorfullhashraw}{dbfe419daa91e7450d16c0bbb23a700c}
+      \field{sortinit}{T}
+      \field{sortinithash}{9af77f0292593c26bde9a56e688eaee9}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Scientific Reports}
+      \field{title}{Exploring trajectories of functional decline and recovery among older adults: a data-driven approach}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.nature.com/articles/s41598-024-56606-0
+      \endverb
+      \verb{url}
+      \verb https://www.nature.com/articles/s41598-024-56606-0
+      \endverb
+    \endentry
+    \entry{Tchalla2024}{article}{}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=6332bbdc9ce53691272389306f5481c6}{%
+           family={Tchalla},
+           familyi={T\bibinitperiod},
+           given={Achille},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{0acbd1665f86a0c760fcf8fe289de722}
+      \strng{fullhash}{0acbd1665f86a0c760fcf8fe289de722}
+      \strng{fullhashraw}{0acbd1665f86a0c760fcf8fe289de722}
+      \strng{bibnamehash}{0acbd1665f86a0c760fcf8fe289de722}
+      \strng{authorbibnamehash}{0acbd1665f86a0c760fcf8fe289de722}
+      \strng{authornamehash}{0acbd1665f86a0c760fcf8fe289de722}
+      \strng{authorfullhash}{0acbd1665f86a0c760fcf8fe289de722}
+      \strng{authorfullhashraw}{0acbd1665f86a0c760fcf8fe289de722}
+      \field{sortinit}{T}
+      \field{sortinithash}{9af77f0292593c26bde9a56e688eaee9}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of the American Medical Directors Association}
+      \field{title}{Effectiveness Evaluation of Smart Home Technology in Preventing and Detecting Falls in Community and Residential Care Settings for Older Adults: A Systematic Review and Meta-Analysis}
+      \field{year}{2024}
+      \verb{doi}
+      \verb 10.1016/j.jamda.2024.105231
+      \endverb
+    \endentry
+    \entry{Tirziu2025}{article}{}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=a5ded251d532eda03da343c0392ed867}{%
+           family={Tîrziu},
+           familyi={T\bibinitperiod},
+           given={Andrei-Mihai},
+           giveni={A\bibinithyphendelim M\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{a268de60a18146e9c47d9370c989fb11}
+      \strng{fullhash}{a268de60a18146e9c47d9370c989fb11}
+      \strng{fullhashraw}{a268de60a18146e9c47d9370c989fb11}
+      \strng{bibnamehash}{a268de60a18146e9c47d9370c989fb11}
+      \strng{authorbibnamehash}{a268de60a18146e9c47d9370c989fb11}
+      \strng{authornamehash}{a268de60a18146e9c47d9370c989fb11}
+      \strng{authorfullhash}{a268de60a18146e9c47d9370c989fb11}
+      \strng{authorfullhashraw}{a268de60a18146e9c47d9370c989fb11}
+      \field{sortinit}{T}
+      \field{sortinithash}{9af77f0292593c26bde9a56e688eaee9}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Sensors}
+      \field{number}{10}
+      \field{title}{Real-Time Human Pose Estimation for Elderly Monitoring Using {YOLOv11-Pose}}
+      \field{volume}{25}
+      \field{year}{2025}
+      \field{pages}{3013}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.3390/s25103013
+      \endverb
+    \endentry
+    \entry{Ye2024}{inproceedings}{}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=e7009935fb83dfdf3c868840384b204a}{%
+           family={Ye},
+           familyi={Y\bibinitperiod},
+           given={Zhenyu},
+           giveni={Z\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{7dcca03da1bc13ed01ead165f3829707}
+      \strng{fullhash}{7dcca03da1bc13ed01ead165f3829707}
+      \strng{fullhashraw}{7dcca03da1bc13ed01ead165f3829707}
+      \strng{bibnamehash}{7dcca03da1bc13ed01ead165f3829707}
+      \strng{authorbibnamehash}{7dcca03da1bc13ed01ead165f3829707}
+      \strng{authornamehash}{7dcca03da1bc13ed01ead165f3829707}
+      \strng{authorfullhash}{7dcca03da1bc13ed01ead165f3829707}
+      \strng{authorfullhashraw}{7dcca03da1bc13ed01ead165f3829707}
+      \field{sortinit}{Y}
+      \field{sortinithash}{fd67ad5a9ef0f7456bdd9aab10fe1495}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 2024 International Conference on Data Analysis and Machine Learning (DAML)}
+      \field{title}{Fall Detection for Elderly People Using Pose Estimation and {YOLO}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://ieeexplore.ieee.org/document/11435892
+      \endverb
+      \verb{url}
+      \verb https://ieeexplore.ieee.org/document/11435892
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
