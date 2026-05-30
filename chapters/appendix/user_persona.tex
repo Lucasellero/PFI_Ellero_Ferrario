@@ -1,0 +1,176 @@
+% ============================================================
+%  USER PERSONA — PFI Ellero & Ferrario
+%  Requiere en main.tex:
+%    \usepackage[many]{tcolorbox}
+%    \usepackage{multicol}
+%    \usepackage{tikz}
+%    \usetikzlibrary{calc}
+% ============================================================
+
+\definecolor{upHeader}{RGB}{26, 58, 90}
+\definecolor{upAccent}{RGB}{52, 120, 180}
+\definecolor{upLight}{RGB}{232, 240, 248}
+\definecolor{upGray}{RGB}{248, 248, 250}
+\definecolor{upMuted}{RGB}{100, 100, 110}
+\definecolor{upRed}{RGB}{160, 40, 40}
+\definecolor{upGreen}{RGB}{35, 110, 60}
+
+\newcommand{\upItem}[2]{%
+  \noindent{\color{#1}\textbullet}\ {\small #2}\par\vspace{2pt}}
+
+% ══════════════════════════════════════════════════════════════
+%  DATOS  ←  EDITAR AQUÍ
+% ══════════════════════════════════════════════════════════════
+\newcommand{\upNombre}{Valeria G.}
+\newcommand{\upEdad}{47 años}
+\newcommand{\upOcupacion}{Docente de escuela primaria}
+\newcommand{\upUbicacion}{Buenos Aires, Argentina}
+\newcommand{\upRol}{Familiar cuidadora a distancia}
+\newcommand{\upArquetipo}{Mamá de dos hijos y un adulto a cargo}
+
+\newcommand{\upContexto}{Su madre de 76 años vive sola en otro barrio con deterioro
+cognitivo leve: está activa pero olvida cosas y no maneja tecnología.
+Valeria trabaja como docente, cría a dos hijos y comparte el cuidado
+con sus hermanos visitándola día por medio.}
+
+\newcommand{\upCita}{``Necesitaría algo que me haga sentir más cerca de ella, sin que ella tenga que hacer nada.''}
+
+\newcommand{\upObjetivos}{%
+  \upItem{upGreen}{Saber que su madre está bien sin llamarla constantemente.}
+  \upItem{upGreen}{Recibir alerta ante caída o inactividad prolongada.}
+  \upItem{upGreen}{No requerir que el adulto mayor use dispositivos.}
+  \upItem{upGreen}{Coordinarse con sus hermanos con info objetiva.}}
+
+\newcommand{\upFrustraciones}{%
+  \upItem{upRed}{El celular es el único canal y no siempre es atendido.}
+  \upItem{upRed}{No existen soluciones accesibles y fáciles de instalar.}
+  \upItem{upRed}{Siente culpa e incertidumbre cuando no puede estar presente.}
+  \upItem{upRed}{Le genera dudas instalar cámaras por la privacidad.}}
+
+\newcommand{\upComportamientos}{%
+  \upItem{upAccent}{Llama a su madre a la mañana y a la tarde-noche, todos los días.}
+  \upItem{upAccent}{Coordina visitas con sus hermanos para cubrir toda la semana.}
+  \upItem{upAccent}{Piensa en momentos clave: si se levantó, si cocinó, si comió.}
+  \upItem{upAccent}{Consideró instalar cámaras pero no encontró solución que la convenza.}}
+
+\newcommand{\upEvidencia}{Construida a partir de encuesta (n\,=\,62; 82\,\% de cuidadores
+con 45~años o más; 63\,\% con preocupación máxima; 50\,\% del adulto mayor vive solo;
+84\,\% calificó el sistema con 4~o~5 sobre~5) y entrevista semiestructurada
+con familiar cuidadora a distancia (2025).}
+
+% ══════════════════════════════════════════════════════════════
+%  TARJETA
+% ══════════════════════════════════════════════════════════════
+\anexo{User Persona}
+
+{\singlespacing\setlength{\parskip}{0pt}
+
+% ── 1. CABECERA ─────────────────────────────────────────────
+\begin{tcolorbox}[
+  enhanced, sharp corners,
+  colback=upHeader, colframe=upHeader,
+  boxrule=0pt,
+  left=8pt, right=8pt, top=8pt, bottom=8pt,
+  before skip=0pt, after skip=0pt,
+]
+  \begin{minipage}[c]{1.8cm}
+    \begin{tikzpicture}
+      \fill[upLight] (0,0) circle (0.78cm);
+      \fill[upAccent] (0,0.31cm) circle (0.25cm);
+      \begin{scope}
+        \clip (0,0) circle (0.78cm);
+        \fill[upAccent, rounded corners=2pt]
+          (-0.32cm,-0.12cm) rectangle (0.32cm,-1cm);
+      \end{scope}
+      \draw[white, line width=0.7pt] (0,0) circle (0.78cm);
+    \end{tikzpicture}
+  \end{minipage}%
+  \hspace{10pt}%
+  \begin{minipage}[c]{\dimexpr\linewidth-2.4cm\relax}
+    {\large\bfseries\color{white}\upNombre}\\[2pt]
+    {\small\color{white!80}\upEdad\ \ |\ \ \upOcupacion}\\[2pt]
+    {\small\color{white!70}\upUbicacion}\\[2pt]
+    {\small\itshape\color{white!65}Rol: \upRol}\\[1pt]
+    {\footnotesize\itshape\color{white!45}«\upArquetipo»}
+  \end{minipage}
+\end{tcolorbox}
+
+% ── 2. CITA ─────────────────────────────────────────────────
+\begin{tcolorbox}[
+  enhanced, sharp corners,
+  colback=upLight, colframe=upHeader,
+  boxrule=0pt,
+  borderline west={3pt}{0pt}{upAccent},
+  left=10pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=0pt, after skip=0pt,
+]
+  {\normalsize\itshape\color{upHeader}\upCita}
+\end{tcolorbox}
+
+% ── 3. TRES COLUMNAS ────────────────────────────────────────
+\begin{tcolorbox}[
+  enhanced, sharp corners,
+  colback=white, colframe=upHeader,
+  boxrule=0.8pt,
+  top=6pt, bottom=6pt, left=6pt, right=2pt,
+  before skip=0pt, after skip=0pt,
+]
+  \begin{minipage}[t]{0.36\linewidth}
+    \hspace{4pt}{\small\bfseries\color{upHeader}Contexto y~rol}\par\vspace{3pt}
+    \hspace{4pt}\begin{minipage}{\dimexpr\linewidth-8pt\relax}
+      {\footnotesize\upContexto}
+    \end{minipage}
+  \end{minipage}%
+  \textcolor{upHeader!25}{\vrule width 0.6pt}%
+  \begin{minipage}[t]{0.29\linewidth}
+    \hspace{4pt}{\small\bfseries\color{upGreen}Objetivos}\par\vspace{3pt}
+    \hspace{4pt}\begin{minipage}{\dimexpr\linewidth-8pt\relax}
+      \upObjetivos
+    \end{minipage}
+  \end{minipage}%
+  \textcolor{upHeader!25}{\vrule width 0.6pt}%
+  \begin{minipage}[t]{0.29\linewidth}
+    \hspace{4pt}{\small\bfseries\color{upRed}Frustraciones}\par\vspace{3pt}
+    \hspace{4pt}\begin{minipage}{\dimexpr\linewidth-8pt\relax}
+      \upFrustraciones
+    \end{minipage}
+  \end{minipage}
+\end{tcolorbox}
+
+% ── 4. COMPORTAMIENTOS ──────────────────────────────────────
+\begin{tcolorbox}[
+  enhanced, sharp corners,
+  colback=white, colframe=upHeader,
+  boxrule=0.8pt,
+  top=6pt, bottom=4pt,
+  before skip=0pt, after skip=0pt,
+]
+  {\small\bfseries\color{upAccent}Comportamientos y hábitos}\par\vspace{2pt}
+  \begin{tabular*}{\linewidth}{@{}p{0.49\linewidth}@{\hspace{4pt}}p{0.49\linewidth}@{}}
+    \upItem{upAccent}{Llama a su madre a la mañana y a la tarde-noche, todos los días.} &
+    \upItem{upAccent}{Piensa en momentos clave: si se levantó, si cocinó, si comió.} \\[2pt]
+    \upItem{upAccent}{Coordina visitas con sus hermanos para cubrir toda la semana.} &
+    \upItem{upAccent}{Consideró instalar cámaras pero no encontró solución que la convenza.} \\
+  \end{tabular*}
+\end{tcolorbox}
+
+% ── 5. EVIDENCIA ────────────────────────────────────────────
+\begin{tcolorbox}[
+  enhanced, sharp corners,
+  colback=upGray, colframe=upHeader,
+  boxrule=0.8pt,
+  top=5pt, bottom=5pt,
+  before skip=0pt, after skip=0pt,
+]
+  {\footnotesize\bfseries\color{upMuted}Basada en evidencia empírica:}\par\vspace{2pt}
+  {\footnotesize\itshape\color{upMuted}\upEvidencia}
+\end{tcolorbox}
+
+} % fin \singlespacing
+
+\vspace{0.2cm}
+\noindent{\footnotesize\color{upMuted}\itshape\raggedright
+Síntesis arquetípica construida a partir de datos empíricos. No representa a un individuo real.
+Referencias: Cooper,~A., Reimann,~R., Cronin,~D. y Noessel,~C.\ (2014).
+\textit{About Face: The Essentials of Interaction Design} (4.\textsuperscript{a}~ed.). Wiley.
+--- Pruitt,~J. y Adlin,~T.\ (2006). \textit{The Persona Lifecycle}. Morgan Kaufmann.\par}
