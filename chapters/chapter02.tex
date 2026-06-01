@@ -111,6 +111,37 @@ Esta arquitectura ha sido validada específicamente en el contexto del cuidado d
 Más allá de la privacidad, el \textit{edge computing} ofrece ventajas concretas para el tipo de aplicación que propone este proyecto. Al no depender de una conexión a internet para funcionar, el sistema mantiene su capacidad de detección incluso ante cortes de conectividad, lo que es especialmente relevante en el hogar de un adulto mayor que vive solo. La respuesta es además inmediata: un evento como una caída se detecta y notifica en tiempo real sin el retardo que introduce la transmisión y el procesamiento remoto. Por último, el costo operativo es significativamente menor que el de soluciones basadas en la nube, ya que no requiere infraestructura de servidores ni suscripciones a servicios de procesamiento. La madurez actual del hardware embebido de bajo costo hace que todo esto sea viable sin necesidad de equipamiento especializado \parencite{Surantha2025}.
 
 
+\section{Estado del Arte}
+
+\subsection{Introducción a la revisión}
+
+La presente revisión del estado del arte fue estructurada en torno a cinco preguntas de investigación que guiaron tanto la selección de trabajos como la organización de los hallazgos:
+
+\begin{itemize}
+    \item \textbf{(RQ1)} ¿Qué enfoques basados en visión artificial logran detectar caídas e inmovilidad prolongada en tiempo real con latencia y precisión adecuadas para entornos domésticos?
+    \item \textbf{(RQ2a)} ¿Qué métodos existen para clasificar la actividad específica que realiza una persona a partir de secuencias temporales de keypoints o features visuales?
+    \item \textbf{(RQ2b)} ¿Qué métodos existen para construir y actualizar una línea base de comportamiento individual y detectar desvíos significativos, y qué evidencia clínica respalda su relevancia?
+    \item \textbf{(RQ3)} ¿Cómo resuelven los trabajos existentes la tensión entre monitoreo continuo por cámara y la privacidad del usuario?
+    \item \textbf{(RQ4)} ¿Qué soluciones despliegan inferencia en dispositivos embebidos con recursos computacionales limitados?
+\end{itemize}
+
+A partir de estas preguntas se formula una quinta, de carácter sintético \textbf{(RQ5)}: ¿existe algún sistema que combine estos cuatro pilares en un único prototipo doméstico orientado al adulto mayor?
+
+La búsqueda fue realizada en IEEE Xplore, Springer, Elsevier, ACM Digital Library y Google Scholar, complementada con arXiv para trabajos recientes de 2025. Se aplicaron los siguientes criterios de inclusión: publicaciones entre 2018 y 2025, con excepción de referencias seminales del campo; fuentes indexadas en las bases mencionadas; trabajos que aborden al menos uno de los ejes definidos por las RQs; sistemas basados en visión artificial o sensores no invasivos sin wearables; y estudios con evaluación empírica que reporten resultados cuantitativos. Fueron excluidos los trabajos basados exclusivamente en wearables o sensores fisiológicos, los sistemas de audio sin componente visual, y los trabajos puramente teóricos sin validación experimental.
+
+\subsection{Detección de eventos agudos mediante visión artificial (RQ1)}
+
+La detección de caídas en adultos mayores mediante visión artificial constituye el eje más consolidado de la literatura. La revisión sistemática de \textcite{Tay2024} mapea el campo e identifica a las redes convolucionales profundas y los modelos YOLO como los enfoques dominantes para detección en tiempo real desde cámara RGB, superando en velocidad y generalización a los métodos clásicos basados en extracción manual de features.
+
+Dentro de esta línea, varios trabajos recientes proponen variantes de YOLO específicamente optimizadas para fall detection. \textcite{Hussain2024} logran un mAP de 0.995 con YOLOv5 aplicando técnicas de data augmentation avanzado, estableciendo un benchmark de precisión para el problema. \textcite{Salimi2024} extienden el enfoque incorporando estimación de pose con YOLOv7-W6-Pose, obteniendo detección en tiempo real a partir del análisis de posición y movimiento de keypoints corporales, aunque requiriendo GPU de alto rendimiento para su ejecución. En la misma dirección, \textcite{Yang2025} proponen una variante de YOLOv5s con mecanismos de atención CBAM y fusión de features multiescala BiFPN, logrando una mejora del 2.7\% en accuracy sobre la línea base en el dataset Le2i y mejorando especialmente la detección de targets distantes o parcialmente ocluidos. \textcite{Wang2025} abordan el problema desde el ángulo de la eficiencia computacional con LFD-YOLO, una variante ligera que mantiene alta precisión reduciendo significativamente la cantidad de parámetros, validando la viabilidad de YOLO optimizado para dispositivos con recursos limitados.
+
+Un trabajo de particular relevancia para el presente proyecto es el de \textcite{Akib2025}, que demuestra la viabilidad de ejecutar YOLOv5nu en una Raspberry Pi 4B para detección de caídas en tiempo real con doble alerta, usando descriptores de velocidad vertical, aspect ratio y ángulo de orientación sobre los keypoints detectados. Si bien la Raspberry Pi 4B utilizada en ese trabajo es menos potente que la Raspberry Pi 5 del presente sistema, el trabajo establece empíricamente que el stack YOLO sobre hardware embebido de bajo costo es una opción viable para entornos domésticos.
+
+Más allá de las caídas, la detección de inmovilidad prolongada ha recibido menor atención en la literatura. \textcite{ChenFisher2024} proponen MISO, un sistema liviano basado en cámara RGB-D para detección en tiempo real de inactividad en adultos mayores que viven solos, sin wearables, validado en entornos domésticos reales con baja iluminación y variación de vistas de cámara. Su limitación principal es la dependencia de cámara con sensor de profundidad, lo que incrementa el costo y complejidad de instalación respecto de cámaras IP RGB estándar.
+
+Un patrón transversal emerge de estos trabajos: la gran mayoría se focaliza exclusivamente en la detección del evento agudo ---la caída--- sin considerar el contexto comportamental del individuo ni integrar módulos de aprendizaje de rutinas. Asimismo, varios de los sistemas de mayor precisión requieren GPU dedicada para inferencia, lo que los hace inviables para despliegue doméstico en hardware de bajo costo. Estas limitaciones motivan los ejes de investigación que se desarrollan en las secciones siguientes.
+
+
 \section{User Research}
 
 Con el objetivo de validar la problemática identificada y comprender las necesidades de los usuarios potenciales del sistema, se llevó a cabo un proceso de investigación mediante dos herramientas complementarias: una encuesta de alcance cuantitativo y una entrevista semiestructurada de carácter cualitativo.
