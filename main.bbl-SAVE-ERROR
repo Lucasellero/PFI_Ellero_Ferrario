@@ -19,7 +19,7 @@
 
 \refsection{0}
   \datalist[entry]{nyt/global//global/global/global}
-    \entry{Covinsky2020}{article}{}{}
+    \entry{Mishra2020}{article}{}{}
       \true{moreauthor}
       \true{morelabelname}
       \name{author}{1}{}{%
@@ -699,7 +699,7 @@
       \verb https://www.nature.com/articles/s41598-024-56606-0
       \endverb
     \endentry
-    \entry{Tchalla2024}{article}{}{}
+    \entry{YeohLui2025}{article}{}{}
       \true{moreauthor}
       \true{morelabelname}
       \name{author}{1}{}{%
