@@ -1,5 +1,33 @@
 \chapter{Descripción}\label{chapter03}
 
-% Especificar el sistema desarrollado: arquitectura, requerimientos y componentes principales.
+\section{User Research}
 
-Completar.
+Con el objetivo de validar la problemática identificada y comprender las necesidades de los usuarios potenciales del sistema, se llevó a cabo un proceso de investigación mediante dos herramientas complementarias: una encuesta de alcance cuantitativo y una entrevista semiestructurada de carácter cualitativo.
+
+\subsection{Encuesta}
+
+Se diseñó y distribuyó una encuesta orientada a comprender el perfil del cuidador familiar de adultos mayores, sus niveles de preocupación, las soluciones que utilizan hoy y su percepción ante el sistema propuesto. Se obtuvieron 75 respuestas válidas en un período de dos semanas (Figura~\ref{fig:encuesta_general}). Los resultados completos se presentan en el Anexo~\ref{anexo:encuesta}.
+
+El perfil que emerge es claro. La mayoría de los cuidadores tiene entre 45 y 54~años (61\,\%), con un 19\,\% adicional de 55~años o más (Figura~\ref{fig:encuesta_q1}). Son personas en plena vida activa, con responsabilidades laborales y familiares propias, que dedican menos de 10~horas semanales de atención directa al adulto mayor (82\,\%) (Figura~\ref{fig:encuesta_q2}). No son cuidadores de tiempo completo; cuidan desde la distancia, en paralelo a todo lo demás.
+
+La situación del adulto mayor que cuidan refuerza esta tensión. El 53\,\% vive solo de forma permanente y un 41\,\% queda solo con cierta frecuencia (Figura~\ref{fig:encuesta_q3}). En casi la totalidad de los casos hay períodos regulares en los que el adulto mayor está sin nadie presente.
+
+El nivel de preocupación que expresan es alto. El 63\,\% indicó los valores más elevados de la escala al ser consultados sobre su tranquilidad cuando no están presentes (Figura~\ref{fig:encuesta_q4}). La situación que más los inquieta es una caída sin posibilidad de pedir ayuda, mencionada en el 70\,\% de las respuestas (Figura~\ref{fig:encuesta_q5}), seguida por la ocurrencia de un problema de salud repentino. Ambos escenarios comparten una característica: son eventos que pueden pasar inadvertidos durante horas si nadie está mirando.
+
+Frente a eso, las soluciones que usan hoy son limitadas. El 79\,\% depende exclusivamente del teléfono celular como mecanismo de contacto y seguimiento, y solo el 4\,\% utiliza algún sistema de videovigilancia o botón de pánico (Figura~\ref{fig:encuesta_q7}). El problema no es únicamente la falta de herramientas; el 38\,\% reporta que el adulto mayor olvida o rechaza el dispositivo disponible, y un 40\,\% directamente no usa ninguna solución (Figura~\ref{fig:encuesta_q8}). Hay una brecha concreta entre lo que los cuidadores necesitan y lo que tienen disponible hoy.
+
+Al presentarles la propuesta, el 85\,\% la calificó con 4 o 5 sobre 5 en términos de utilidad percibida (Figura~\ref{fig:encuesta_q9}). Los aspectos más valorados fueron las alertas en tiempo real (47\,\%) y que el adulto mayor no deba operar ningún dispositivo (34\,\%) (Figura~\ref{fig:encuesta_q10}). Este segundo punto refleja algo que los encuestados comprenden bien: el obstáculo no está en ellos sino en lograr que quien debe ser cuidado adopte y mantenga el uso de una herramienta.
+
+\subsection{Entrevista}
+
+Se realizó una entrevista semiestructurada a una familiar cuidadora a distancia, perfil que concentra la mayoría de los encuestados. La entrevistada cuida a su madre, de avanzada edad, que vive sola y presenta deterioro cognitivo leve.
+
+Uno de los hallazgos más relevantes es que la preocupación del cuidador no es constante ni uniforme a lo largo del día. Se estructura en torno a momentos específicos: al levantarse, al mediodía y al regresar del trabajo. La pregunta que se repite no es genérica sino muy concreta --- ¿se levantó?, ¿comió?, ¿cocinó? --- Esta dimensión temporal del cuidado es difícil de capturar en una encuesta y revela que lo que el cuidador necesita no es solo una alerta ante emergencias, sino visibilidad sobre si la rutina del día transcurrió con normalidad.
+
+La entrevista también permitió documentar un incidente real que ilustra el problema de fondo. La entrevistada relató que su madre consumió en dos días una cantidad excesiva de alimentos, lo que derivó en un episodio de salud que requirió atención hospitalaria. El evento pasó inadvertido durante horas porque el adulto mayor no lo comunicó y nadie estaba presente para notarlo. No fue una caída ni ningún evento puntual visible; fue un desvío en la rutina que escaló sin que nadie lo detectara a tiempo. Ese tipo de situación es exactamente lo que un monitoreo basado en actividad diaria puede detectar, y que una llamada telefónica no puede.
+
+En cuanto a la privacidad, la entrevistada manifestó que aceptaría el sistema siempre que las cámaras no cubran zonas íntimas del hogar y que el video no salga de la vivienda, condiciones que el diseño contempla al procesar todo localmente.
+
+\subsection{Identificación del User Persona}
+
+Del cruce entre encuesta y entrevista surge un perfil consistente. Una persona de mediana edad, activa laboralmente, que ejerce el cuidado de forma remota y con tiempo acotado. Convive con una preocupación que no es permanente sino episódica, anclada en momentos del día y en la ausencia de señales de que todo está bien. No dispone de herramientas adecuadas, y las que existen le generan más fricción que tranquilidad porque dependen de que el adulto mayor las use. Lo que este cuidador necesita es información, no interacción. Este perfil fue sintetizado en las User Personas que se presentan en el Anexo~\ref{anexo:user_persona}.

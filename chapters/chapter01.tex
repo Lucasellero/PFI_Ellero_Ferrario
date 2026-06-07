@@ -30,9 +30,18 @@ Desarrollar un sistema de monitoreo no invasivo para adultos mayores en entornos
     \item Diseñar e implementar una aplicación móvil que notifique a los familiares ante eventos detectados y permita el acceso a reportes periódicos sobre el estado y la rutina del adulto mayor.
     \item Validar el sistema en un entorno doméstico controlado mediante escenarios simulados que permitan evaluar la efectividad de la detección.
 \end{itemize}
+\vspace*{4pt}
 
 \section{Alcance}
 
-El proyecto abarca el diseño e implementación de un prototipo funcional compuesto por dos módulos: un módulo de análisis de video en tiempo real basado en YOLO para detectar poses, caídas e inmovilidad, y un módulo de aprendizaje adaptativo que construye y actualiza la línea base de rutina de cada usuario. El procesamiento se realiza localmente en una controladora, comunicada con cámaras IP, garantizando la privacidad de los videos. Solo los eventos detectados se envían a la nube para notificaciones y análisis. Se incluye una aplicación móvil para la visualización de alertas y reportes. El sistema se valida en un entorno doméstico controlado con escenarios simulados.
+\subsection{Características del prototipo funcional}
 
-No se incluye integración con sistemas médicos externos, ni producción a escala comercial. Tampoco se contempla el soporte para múltiples adultos mayores simultáneos en distintos hogares, ni la integración con servicios de emergencia o atención médica profesional.
+El proyecto abarca el diseño e implementación de un prototipo funcional compuesto por dos módulos principales. El primero realiza análisis de video en tiempo real mediante un modelo de estimación de poses para detectar caídas, inmovilidad prolongada y actividades de la vida diaria (AVD). El segundo construye y actualiza de forma adaptativa la línea base de rutina de cada usuario. El procesamiento se ejecuta localmente en una controladora conectada a cámaras IP, lo que garantiza la privacidad de los videos capturados; únicamente los eventos detectados se transmiten a la nube para el envío de notificaciones y el registro de actividad. El sistema incluye además una aplicación móvil para la visualización de alertas y reportes, y se valida en un entorno doméstico controlado mediante escenarios simulados.
+
+\subsection{Limitaciones y exclusiones}
+
+El prototipo no contempla integración con sistemas médicos externos ni producción a escala comercial. Tampoco incluye soporte para múltiples adultos mayores en distintos hogares de forma simultánea, ni vinculación con servicios de emergencia o atención médica profesional.
+
+\subsection{Estructura del documento}
+
+El presente informe se organiza en cinco secciones principales. La sección de Antecedentes presenta el marco teórico y el estado del arte sobre las tecnologías y enfoques relevantes para el sistema desarrollado. La sección de Descripción expone los resultados del User Research realizado, incluyendo la encuesta, la entrevista y los perfiles de usuario construidos. La sección de Metodología de Desarrollo detalla la arquitectura del sistema, las tecnologías utilizadas y el proceso de validación. Finalmente, se presentan las conclusiones generales del proyecto, seguidas de la bibliografía y los anexos correspondientes.

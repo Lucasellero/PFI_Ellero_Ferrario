@@ -12,6 +12,7 @@
 *.bcf
 *.run.xml
 *.pdf
+!images/*.pdf
 *.bcf
 *.toc
 *.upa

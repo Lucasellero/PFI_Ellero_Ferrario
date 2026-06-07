@@ -92,7 +92,6 @@ Para que el sistema pueda construir esa línea de base, primero necesita reconoc
 
 Una vez que el sistema puede reconocer y registrar las actividades del día, el módulo de detección de anomalías compara lo observado contra la línea de base aprendida. Si el adulto mayor habitualmente desayuna entre las 8 y las 9 de la mañana y un día determinado esa actividad no ocurre, el sistema identifica ese desvío como una anomalía y notifica a la familia. Este mecanismo se implementa mediante el algoritmo Isolation Forest \parencite{Liu2008}, cuya aplicación para detectar anomalías en rutinas de adultos mayores ha sido validada en entornos domésticos reales, alcanzando una precisión del 98\%, aunque en ese caso mediante sensores físicos y wearables sobre el adulto \parencite{Yahaya2021}.
 
-
 \subsection{Arquitecturas edge computing aplicadas a privacidad}
 
 El modelo tradicional de procesamiento en la nube (\textit{cloud computing}) implica que los datos capturados por los dispositivos del hogar se transmiten a servidores remotos para ser procesados y luego devuelven un resultado al usuario. Este modelo presenta una tensión fundamental con el requisito de privacidad desarrollado en la sección anterior: si el video del interior del hogar debe viajar a un servidor externo para ser analizado, la promesa de que los datos sensibles no salen del domicilio se vuelve técnicamente imposible de sostener. El paradigma del \textit{edge computing} surge precisamente como respuesta a esta limitación, trasladando el procesamiento de datos al propio dispositivo o a uno ubicado en las inmediaciones del punto de captura, sin depender de conectividad constante a servidores externos \parencite{Shi2016}. 
@@ -110,12 +109,10 @@ Esta arquitectura ha sido validada específicamente en el contexto del cuidado d
 
 Más allá de la privacidad, el \textit{edge computing} ofrece ventajas concretas para el tipo de aplicación que propone este proyecto. Al no depender de una conexión a internet para funcionar, el sistema mantiene su capacidad de detección incluso ante cortes de conectividad, lo que es especialmente relevante en el hogar de un adulto mayor que vive solo. La respuesta es además inmediata: un evento como una caída se detecta y notifica en tiempo real sin el retardo que introduce la transmisión y el procesamiento remoto. Por último, el costo operativo es significativamente menor que el de soluciones basadas en la nube, ya que no requiere infraestructura de servidores ni suscripciones a servicios de procesamiento. La madurez actual del hardware embebido de bajo costo hace que todo esto sea viable sin necesidad de equipamiento especializado \parencite{Surantha2025}.
 
-
 \section{Estado del Arte}
 
 \subsection{Introducción a la revisión}
 \label{sec:intro_revision}
-
 
 La presente revisión del estado del arte fue estructurada en torno a seis preguntas de investigación que guiaron tanto la selección de trabajos como la organización de los hallazgos:
 
@@ -175,7 +172,6 @@ Un resultado particularmente relevante para sistemas de bajo costo es el reporta
 de producción requiere considerar la variabilidad poblacional.
 
 El patrón emergente de esta literatura es consistente: los VLMs aportan comprensión semántica que los modelos de pose estimation no pueden proveer, pero presentan latencias y requerimientos computacionales incompatibles con inferencia local en tiempo real en hardware embebido. Esta asimetría motiva un diseño híbrido: inferencia local de baja latencia para detección de eventos agudos, complementada por consultas periódicas a un. VLM para enriquecer semánticamente la clasificación de actividades donde la latencia no es crítica.
-
 
 \subsection{Modelado adaptativo de rutinas y detección de desvíos conductuales (RQ4)}
 \label{sec:rutinas}
@@ -280,35 +276,3 @@ El sistema propuesto en este PFI constituye, a partir de la evidencia revisada, 
 \end{enumerate}
 
 No se identificaron en la literatura revisada sistemas que integren simultáneamente estos cuatro pilares dentro de una arquitectura orientada al análisis longitudinal del comportamiento. En consecuencia, permanece abierta la exploración de enfoques capaces de combinar detección de eventos, comprensión semántica de actividades y modelado adaptativo de rutinas para el monitoreo preventivo de adultos mayores.
-
-\section{User Research}
-
-Con el objetivo de validar la problemática identificada y comprender las necesidades de los usuarios potenciales del sistema, se llevó a cabo un proceso de investigación mediante dos herramientas complementarias: una encuesta de alcance cuantitativo y una entrevista semiestructurada de carácter cualitativo.
-
-\subsection{Encuesta}
-
-Se diseñó y distribuyó una encuesta orientada a comprender el perfil del cuidador familiar de adultos mayores, sus niveles de preocupación, las soluciones que utilizan hoy y su percepción ante el sistema propuesto. Se obtuvieron 62 respuestas válidas en un período de dos semanas.
-
-El perfil que emerge es claro. La mayoría de los cuidadores tiene entre 45 y 54~años (63\,\%), con un 19\,\% adicional de 55~años o más. Son personas en plena vida activa, con responsabilidades laborales y familiares propias, que dedican menos de 10~horas semanales de atención directa al adulto mayor (81\,\%). No son cuidadores de tiempo completo; cuidan desde la distancia, en paralelo a todo lo demás.
-
-La situación del adulto mayor que cuidan refuerza esta tensión. El 50\,\% vive solo de forma permanente y un 42\,\% queda solo con cierta frecuencia. En casi la totalidad de los casos hay períodos regulares en los que el adulto mayor está sin nadie presente.
-
-El nivel de preocupación que expresan es alto. El 63\,\% indicó los valores más elevados de la escala al ser consultados sobre su tranquilidad cuando no están presentes. La situación que más los inquieta es una caída sin posibilidad de pedir ayuda, mencionada en más del 60\,\% de las respuestas, seguida por la ocurrencia de un problema de salud repentino. Ambos escenarios comparten una característica: son eventos que pueden pasar inadvertidos durante horas si nadie está mirando.
-
-Frente a eso, las soluciones que usan hoy son limitadas. El 74\,\% depende exclusivamente del teléfono celular como mecanismo de contacto y seguimiento, y solo el 3\,\% utiliza algún sistema de videovigilancia o botón de pánico. El problema no es únicamente la falta de herramientas; el 34\,\% reporta que el adulto mayor olvida o rechaza el dispositivo disponible, y un 39\,\% directamente no usa ninguna solución. Hay una brecha concreta entre lo que los cuidadores necesitan y lo que tienen disponible hoy.
-
-Al presentarles la propuesta, el 84\,\% la calificó con 4 o 5 sobre 5 en términos de utilidad percibida. Los aspectos más valorados fueron las alertas en tiempo real (47\,\%) y que el adulto mayor no deba operar ningún dispositivo (32\,\%). Este segundo punto refleja algo que los encuestados comprenden bien: el obstáculo no está en ellos sino en lograr que quien debe ser cuidado adopte y mantenga el uso de una herramienta.
-
-\subsection{Entrevista}
-
-Se realizó una entrevista semiestructurada a una familiar cuidadora a distancia, perfil que concentra la mayoría de los encuestados. La entrevistada cuida a su madre, de avanzada edad, que vive sola y presenta deterioro cognitivo leve.
-
-Uno de los hallazgos más relevantes es que la preocupación del cuidador no es constante ni uniforme a lo largo del día. Se estructura en torno a momentos específicos: al levantarse, al mediodía y al regresar del trabajo. La pregunta que se repite no es genérica sino muy concreta --- ¿se levantó?, ¿comió?, ¿cocinó? --- Esta dimensión temporal del cuidado es difícil de capturar en una encuesta y revela que lo que el cuidador necesita no es solo una alerta ante emergencias, sino visibilidad sobre si la rutina del día transcurrió con normalidad.
-
-La entrevista también permitió documentar un incidente real que ilustra el problema de fondo. La entrevistada relató que su madre consumió en dos días una cantidad excesiva de alimentos, lo que derivó en un episodio de salud que requirió atención hospitalaria. El evento pasó inadvertido durante horas porque el adulto mayor no lo comunicó y nadie estaba presente para notarlo. No fue una caída ni ningún evento puntual visible; fue un desvío en la rutina que escaló sin que nadie lo detectara a tiempo. Ese tipo de situación es exactamente lo que un monitoreo basado en actividad diaria puede detectar, y que una llamada telefónica no puede.
-
-En cuanto a la privacidad, la entrevistada manifestó que aceptaría el sistema siempre que las cámaras no cubran zonas íntimas del hogar y que el video no salga de la vivienda, condiciones que el diseño contempla al procesar todo localmente.
-
-\subsection{Identificación del estereotipo de usuario}
-
-Del cruce entre encuesta y entrevista surge un perfil consistente. Una persona de mediana edad, activa laboralmente, que ejerce el cuidado de forma remota y con tiempo acotado. Convive con una preocupación que no es permanente sino episódica, anclada en momentos del día y en la ausencia de señales de que todo está bien. No dispone de herramientas adecuadas, y las que existen le generan más fricción que tranquilidad porque dependen de que el adulto mayor las use. Lo que este cuidador necesita es información, no interacción. Este perfil fue sintetizado en las User Personas que se presentan en el Anexo~\ref{anexo:user_persona}.
