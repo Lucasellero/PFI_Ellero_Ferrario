@@ -2,7 +2,7 @@
 
 \section{User Research}
 
-Con el objetivo de validar la problemática identificada y comprender las necesidades de los usuarios potenciales del sistema, se llevó a cabo un proceso de investigación mediante dos herramientas complementarias: una encuesta de alcance cuantitativo y una entrevista semiestructurada de carácter cualitativo.
+Con el objetivo de validar la problemática identificada y comprender las necesidades de los usuarios potenciales del sistema, se llevó a cabo un proceso de investigación mediante dos herramientas complementarias: una encuesta de alcance cuantitativo y entrevistas semiestructuradas de carácter cualitativo.
 
 \subsection{Encuesta}
 
@@ -18,15 +18,33 @@ Frente a eso, las soluciones que usan hoy son limitadas. El 79\,\% depende exclu
 
 Al presentarles la propuesta, el 85\,\% la calificó con 4 o 5 sobre 5 en términos de utilidad percibida (Figura~\ref{fig:encuesta_q9}). Los aspectos más valorados fueron las alertas en tiempo real (47\,\%) y que el adulto mayor no deba operar ningún dispositivo (34\,\%) (Figura~\ref{fig:encuesta_q10}). Este segundo punto refleja algo que los encuestados comprenden bien: el obstáculo no está en ellos sino en lograr que quien debe ser cuidado adopte y mantenga el uso de una herramienta.
 
-\subsection{Entrevista}
+\subsection{Entrevistas}
 
-Se realizó una entrevista semiestructurada a una familiar cuidadora a distancia, perfil que concentra la mayoría de los encuestados. La entrevistada cuida a su madre, de avanzada edad, que vive sola y presenta deterioro cognitivo leve.
+Se realizaron dos entrevistas semiestructuradas: una a una familiar cuidadora a distancia y otra a una adulta mayor que vive con supervisión limitada. Ambos perfiles son relevantes para el proyecto: el primero concentra la mayor parte de los encuestados; el segundo representa al usuario directamente monitoreado por el sistema. Las transcripciones completas se presentan en el Anexo~\ref{anexo:entrevistas}.
 
-Uno de los hallazgos más relevantes es que la preocupación del cuidador no es constante ni uniforme a lo largo del día. Se estructura en torno a momentos específicos: al levantarse, al mediodía y al regresar del trabajo. La pregunta que se repite no es genérica sino muy concreta --- ¿se levantó?, ¿comió?, ¿cocinó? --- Esta dimensión temporal del cuidado es difícil de capturar en una encuesta y revela que lo que el cuidador necesita no es solo una alerta ante emergencias, sino visibilidad sobre si la rutina del día transcurrió con normalidad.
+\subsubsection{Entrevista a familiar cuidadora}
 
-La entrevista también permitió documentar un incidente real que ilustra el problema de fondo. La entrevistada relató que su madre consumió en dos días una cantidad excesiva de alimentos, lo que derivó en un episodio de salud que requirió atención hospitalaria. El evento pasó inadvertido durante horas porque el adulto mayor no lo comunicó y nadie estaba presente para notarlo. No fue una caída ni ningún evento puntual visible; fue un desvío en la rutina que escaló sin que nadie lo detectara a tiempo. Ese tipo de situación es exactamente lo que un monitoreo basado en actividad diaria puede detectar, y que una llamada telefónica no puede.
+La entrevistada cuida a su madre, de avanzada edad, que vive sola y presenta deterioro cognitivo leve. De la entrevista surge con claridad que la preocupación del cuidador no es constante sino que se estructura en torno a franjas horarias específicas del día: al levantarse, en el almuerzo y al regresar del trabajo. Esta dimensión temporal del cuidado es difícil de capturar mediante encuestas y refuerza la necesidad de un sistema que brinde visibilidad sobre la rutina diaria, no únicamente ante emergencias puntuales.
 
-En cuanto a la privacidad, la entrevistada manifestó que aceptaría el sistema siempre que las cámaras no cubran zonas íntimas del hogar y que el video no salga de la vivienda, condiciones que el diseño contempla al procesar todo localmente.
+La entrevista también permitió documentar un incidente real que ilustra el problema central del proyecto. La entrevistada relató que su madre consumió en dos días una cantidad excesiva de alimentos, lo que derivó en un episodio de salud que requirió atención hospitalaria. El evento pasó inadvertido durante horas porque el adulto mayor no lo comunicó, lo que deja en evidencia que ciertas situaciones de riesgo no se detectan a tiempo con los canales de comunicación disponibles hoy.
+
+En cuanto a la privacidad, la entrevistada manifestó que aceptaría el sistema siempre que las cámaras no cubran zonas íntimas del hogar y que el video no sea transmitido fuera de la vivienda, condiciones que el diseño del sistema contempla al procesar todo localmente.
+
+\subsubsection{Entrevista a adulto mayor}
+
+La segunda entrevistada es una mujer de más de 70 años que vive con su marido pero con escasa supervisión de sus hijos, quienes residen fuera del hogar. Su rutina no tiene horarios fijos: se levanta temprano, realiza actividades según el ánimo del momento y come cuando tiene hambre. Esta irregularidad en los patrones cotidianos es precisamente el tipo de comportamiento que el módulo de modelado de rutinas del sistema busca capturar de forma personalizada, sin imponer estructuras externas.
+
+Al indagar sobre situaciones de riesgo, la entrevistada no reportó incidentes graves, pero identificó con claridad los escenarios que le generan mayor preocupación: atragantarse y no poder pedir ayuda, desmayarse en la bañera o quedar encerrada en algún ambiente. Son situaciones donde la persona no puede accionar ningún mecanismo de alerta por sus propios medios, lo que valida la necesidad de detección automática de eventos.
+
+Respecto a la tecnología, la entrevistada ya utiliza un sistema de alarma del hogar con botón de pánico, que le genera sensación de seguridad porque la conecta con servicios de emergencia sin necesidad de hacer nada especial. Esto indica una predisposición favorable hacia dispositivos de monitoreo pasivo, siempre que no requieran interacción activa de su parte.
+
+Ante la propuesta de un sistema de cámaras que alerte a sus hijos solo ante eventos graves, su respuesta fue positiva: ``Lo tomaría bien. No para preocuparlos, sino para que vengan si me pasó algo grave y no hay nadie a quien yo pueda llamar.'' Agregó que si el aviso incluyera un video corto para confirmar que la alerta es real, lo consideraría todavía más útil. Sus únicas condiciones fueron que el sistema actúe solo ante situaciones realmente graves y que el video no salga del hogar, requisitos que el diseño actual satisface.
+
+La entrevistada también aportó un caso de referencia de su entorno: una conocida con Alzheimer incipiente a quien sus hijos instalaron cámaras en el hogar. En un incidente, una persona desconocida ingresó al domicilio y comenzó a agredirla. Los hijos, que se encontraban a distancia, detectaron la situación a través de la cámara e intervinieron a tiempo. Sin embargo, la entrevistada señaló una limitación importante de ese esquema: ``Lo ideal sería algo que avise solo cuando pasa algo urgente, no que los hijos tengan que estar mirando todo el tiempo.'' Esta observación refuerza el enfoque del proyecto, que apunta a un sistema de alertas inteligentes en lugar de vigilancia continua.
+
+\subsubsection{Síntesis}
+
+Ambas entrevistas convergen en varios puntos clave. Desde el lado del cuidador, la preocupación no es permanente sino que se activa en momentos específicos del día, y los canales de comunicación actuales no garantizan visibilidad oportuna ante deterioros silenciosos. Desde el lado del adulto mayor, la disposición a ser monitoreada existe, pero está condicionada a que el sistema sea discreto, no invasivo, y actúe exclusivamente ante emergencias reales. El requisito de que el video permanezca dentro del hogar fue expresado en forma independiente por ambas entrevistadas, lo que refuerza la relevancia de la arquitectura de procesamiento local adoptada en este proyecto.
 
 \subsection{Identificación del User Persona}
 
