@@ -38,7 +38,11 @@ El proyecto abarca el diseño e implementación de un prototipo funcional compue
 
 \subsection{Limitaciones y exclusiones}
 
-El prototipo no contempla integración con sistemas médicos externos ni producción a escala comercial. El sistema está diseñado exclusivamente para entornos domésticos y no es aplicable a instituciones de salud, geriátricos ni espacios públicos. La ubicación de las cámaras queda a criterio de los familiares responsables del adulto mayor; el sistema solo puede ofrecer recomendaciones al respecto. Tampoco incluye soporte para múltiples adultos mayores en distintos hogares de forma simultánea, ni vinculación con servicios de emergencia o atención médica profesional.
+El prototipo no contempla integración con sistemas médicos externos ni producción a escala comercial. El sistema está diseñado exclusivamente para entornos domésticos y no es aplicable a instituciones de salud, geriátricos ni espacios públicos. Tampoco incluye soporte para múltiples adultos mayores en distintos hogares de forma simultánea, ni vinculación con servicios de emergencia o atención médica profesional.
+
+El sistema asume la presencia de un único residente monitoreado por instalación. En hogares donde conviven dos o más personas --escenario frecuente en adultos mayores que viven en pareja--, el pipeline de detección de poses no puede distinguir de forma confiable entre individuos, lo que contaminaría el perfil conductual del residente objetivo. Esta limitación se reconoce explícitamente como trabajo futuro; el prototipo se valida en un entorno de residente único.
+
+La ubicación de las cámaras queda a criterio de los familiares responsables del adulto mayor. El sistema puede ofrecer recomendaciones de instalación basadas en los ambientes de mayor actividad y riesgo, como el living, la cocina y las áreas de circulación principal, pero no impone restricciones técnicas sobre qué espacios cubrir. La decisión final implica un balance entre cobertura y privacidad que corresponde a cada familia evaluar.
 
 \subsection{Estructura del documento}
 
