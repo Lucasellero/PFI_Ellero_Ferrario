@@ -1,0 +1,41 @@
+{
+    "latex-workshop.latex.tools": [
+        {
+            "name": "latexmk",
+            "command": "/usr/local/texlive/2026/bin/universal-darwin/latexmk",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-pdf",
+                "-outdir=%OUTDIR%",
+                "%DOC%"
+            ]
+        },
+        {
+            "name": "pdflatex",
+            "command": "/usr/local/texlive/2026/bin/universal-darwin/pdflatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOC%"
+            ]
+        },
+        {
+            "name": "biber",
+            "command": "/usr/local/texlive/2026/bin/universal-darwin/biber",
+            "args": ["%DOCFILE%"]
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "latexmk (recomendado)",
+            "tools": ["latexmk"]
+        },
+        {
+            "name": "pdflatex -> biber -> pdflatex x2",
+            "tools": ["pdflatex", "biber", "pdflatex", "pdflatex"]
+        }
+    ]
+}
