@@ -49,3 +49,44 @@ Ambas entrevistas convergen en varios puntos clave. Desde el lado del cuidador, 
 \subsection{Identificación del User Persona}
 
 Del cruce entre encuesta y entrevista surge un perfil consistente. Una persona de mediana edad, activa laboralmente, que ejerce el cuidado de forma remota y con tiempo acotado. Convive con una preocupación que no es permanente sino episódica, anclada en momentos del día y en la ausencia de señales de que todo está bien. No dispone de herramientas adecuadas, y las que existen le generan más fricción que tranquilidad porque dependen de que el adulto mayor las use. Lo que este cuidador necesita es información, no interacción. Este perfil fue sintetizado en las User Personas que se presentan en el Anexo~\ref{anexo:user_persona}.
+
+\section{Requerimientos}
+
+A partir de la investigación de usuario descripta en la sección anterior y del alcance definido en la Introducción, se derivan los requerimientos que especifican el comportamiento esperado del sistema. Se distingue entre requerimientos funcionales, que describen las capacidades concretas que el sistema debe ofrecer, y requerimientos no funcionales, que establecen los atributos de calidad y las restricciones de diseño bajo las cuales esas capacidades deben cumplirse.
+
+\subsection{Requerimientos Funcionales}
+
+A continuación se detallan los requerimientos funcionales (RF) del sistema:
+
+\begin{itemize}
+    \item \textbf{RF1:} El sistema debe detectar caídas en tiempo real a partir del análisis de pose de la persona monitoreada.
+    \item \textbf{RF2:} El sistema debe detectar inmovilidad prolongada, distinguiendo entre sedentarismo (postura sentada) y posible caída no advertida (postura acostada), cada una con su propia severidad.
+    \item \textbf{RF3:} El sistema debe clasificar la actividad de la vida diaria que realiza el residente (cocinar, comer, leer, mirar televisión, entre otras) mediante consultas periódicas a un modelo de lenguaje visual.
+    \item \textbf{RF4:} El sistema debe registrar cada evento detectado (caída, inmovilidad o actividad) con marca temporal, tipo y metadata asociada.
+    \item \textbf{RF5:} El sistema debe construir y actualizar una línea base de comportamiento habitual del residente a partir del historial de eventos registrados.
+    \item \textbf{RF6:} El sistema debe detectar desvíos significativos respecto a la línea base de comportamiento y generar un evento de alerta ante un posible deterioro.
+    \item \textbf{RF7:} El sistema debe notificar a los familiares responsables cuando se detecte un evento crítico (caída, inmovilidad prolongada o desvío conductual).
+    \item \textbf{RF8:} El sistema debe permitir a los familiares consultar reportes periódicos del estado y la rutina del adulto mayor a través de una aplicación móvil.
+    \item \textbf{RF9:} El sistema debe permitir dar de alta, configurar e iniciar o detener el monitoreo de cada cámara IP desde un panel de administración local.
+    \item \textbf{RF10:} El sistema debe permitir visualizar en vivo el video de cada cámara con la detección de pose superpuesta, para verificar el funcionamiento del pipeline.
+    \item \textbf{RF11:} El sistema debe gestionar el acceso mediante autenticación, de forma que solo los familiares autorizados de un hogar puedan ver sus alertas y reportes.
+    \item \textbf{RF12:} El sistema debe permitir consultar el historial de eventos registrados, filtrando por tipo de evento y rango de fechas.
+\end{itemize}
+\vspace*{2pt}
+
+\subsection{Requerimientos No Funcionales}
+
+A continuación se detallan los requerimientos no funcionales (RNF) del sistema:
+
+\begin{itemize}
+    \item \textbf{RNF1:} El video debe procesarse dentro del hogar, sin enviarse a servidores externos para preservar la privacidad del residente.
+    \item \textbf{RNF2:} La detección de una caída debe generar el evento en el orden de segundos, no de minutos.
+    \item \textbf{RNF3:} La detección de inmovilidad prolongada debe evaluarse en una ventana de tiempo configurable, de 3 minutos por defecto.
+    \item \textbf{RNF4:} El módulo de estimación de pose debe procesar cada frame en fracciones de segundo, permitiendo una operación cercana al tiempo real.
+    \item \textbf{RNF5:} Los módulos de estimación de pose y de clasificación de actividades deben ejecutarse sobre el mismo hardware embebido, sin GPU.
+    \item \textbf{RNF6:} El sistema debe seguir registrando eventos localmente ante cortes de conexión a internet.
+    \item \textbf{RNF7:} El sistema debe sincronizar con la nube los eventos locales al restablecerse la conexión.
+    \item \textbf{RNF8:} La aplicación móvil debe ser simple, clara e intuitiva a la hora de consultar reportes y recibir alertas.
+    \item \textbf{RNF9:} El sistema debe soportar más de una cámara por hogar de forma simultánea.
+    \item \textbf{RNF10:} El acceso a la aplicación móvil debe requerir autenticación.
+\end{itemize}
