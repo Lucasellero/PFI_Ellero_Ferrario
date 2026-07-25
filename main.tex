@@ -148,6 +148,10 @@
 % Para tablas complejas
 \usepackage{multicol,multirow}
 \usepackage{array,longtable}
+% Por defecto longtable angosta el titulo a 4in (\LTcapwidth), distinto al resto
+% de las tablas del documento. Lo igualamos al ancho de texto para evitar
+% titulos cortados con guion y mantener consistencia visual.
+\setlength{\LTcapwidth}{\textwidth}
 
 % Times New Roman para texto y matemáticas. Debe ir antes de los paquetes AMS.
 \usepackage{mathptmx}

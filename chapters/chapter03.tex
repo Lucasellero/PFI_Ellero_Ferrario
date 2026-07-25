@@ -60,17 +60,18 @@ A continuación se detallan los requerimientos funcionales (RF) del sistema:
 
 \begin{itemize}
     \item \textbf{RF1:} El sistema debe detectar caídas en tiempo real a partir del análisis de pose de la persona monitoreada.
-    \item \textbf{RF2:} El sistema debe detectar inmovilidad prolongada, distinguiendo entre sedentarismo (postura sentada) y posible caída no advertida (postura acostada), cada una con su propia severidad.
-    \item \textbf{RF3:} El sistema debe clasificar la actividad de la vida diaria que realiza el residente (cocinar, comer, leer, mirar televisión, entre otras) mediante consultas periódicas a un modelo de lenguaje visual.
-    \item \textbf{RF4:} El sistema debe registrar cada evento detectado (caída, inmovilidad o actividad) con marca temporal, tipo y metadata asociada.
-    \item \textbf{RF5:} El sistema debe construir y actualizar una línea base de comportamiento habitual del residente a partir del historial de eventos registrados.
-    \item \textbf{RF6:} El sistema debe detectar desvíos significativos respecto a la línea base de comportamiento y generar un evento de alerta ante un posible deterioro.
-    \item \textbf{RF7:} El sistema debe notificar a los familiares responsables cuando se detecte un evento crítico (caída, inmovilidad prolongada o desvío conductual).
-    \item \textbf{RF8:} El sistema debe permitir a los familiares consultar reportes periódicos del estado y la rutina del adulto mayor a través de una aplicación móvil.
-    \item \textbf{RF9:} El sistema debe permitir dar de alta, configurar e iniciar o detener el monitoreo de cada cámara IP desde un panel de administración local.
-    \item \textbf{RF10:} El sistema debe permitir visualizar en vivo el video de cada cámara con la detección de pose superpuesta, para verificar el funcionamiento del pipeline.
-    \item \textbf{RF11:} El sistema debe gestionar el acceso mediante autenticación, de forma que solo los familiares autorizados de un hogar puedan ver sus alertas y reportes.
-    \item \textbf{RF12:} El sistema debe permitir consultar el historial de eventos registrados, filtrando por tipo de evento y rango de fechas.
+    \item \textbf{RF2:} El sistema debe detectar sedentarismo prolongado, correspondiente a inmovilidad en postura sentada, con severidad baja.
+    \item \textbf{RF3:} El sistema debe detectar una posible caída no advertida, correspondiente a inmovilidad en postura acostada, con severidad alta.
+    \item \textbf{RF4:} El sistema debe clasificar la actividad de la vida diaria que realiza el residente (cocinar, comer, leer, mirar televisión, entre otras) mediante consultas periódicas a un modelo de lenguaje visual.
+    \item \textbf{RF5:} El sistema debe registrar cada evento detectado (caída, inmovilidad o actividad) con marca temporal, tipo y metadata asociada.
+    \item \textbf{RF6:} El sistema debe construir y actualizar una línea base de comportamiento habitual del residente a partir del historial de eventos registrados.
+    \item \textbf{RF7:} El sistema debe detectar desvíos significativos respecto a la línea base de comportamiento y generar un evento de alerta ante un posible deterioro.
+    \item \textbf{RF8:} El sistema debe notificar a los familiares responsables cuando se detecte un evento crítico (caída, inmovilidad prolongada o desvío conductual).
+    \item \textbf{RF9:} El sistema debe permitir a los familiares consultar reportes periódicos del estado y la rutina del adulto mayor a través de una aplicación móvil.
+    \item \textbf{RF10:} El sistema debe permitir dar de alta, configurar e iniciar o detener el monitoreo de cada cámara IP desde un panel de administración local.
+    \item \textbf{RF11:} El sistema debe permitir visualizar en vivo el video de cada cámara con la detección de pose superpuesta, para verificar el funcionamiento del pipeline.
+    \item \textbf{RF12:} El sistema debe gestionar el acceso mediante autenticación, de forma que solo los familiares autorizados de un hogar puedan ver sus alertas y reportes.
+    \item \textbf{RF13:} El sistema debe permitir consultar el historial de eventos registrados, filtrando por tipo de evento y rango de fechas.
 \end{itemize}
 \vspace*{2pt}
 
@@ -90,3 +91,34 @@ A continuación se detallan los requerimientos no funcionales (RNF) del sistema:
     \item \textbf{RNF9:} El sistema debe soportar más de una cámara por hogar de forma simultánea.
     \item \textbf{RNF10:} El acceso a la aplicación móvil debe requerir autenticación.
 \end{itemize}
+\vspace*{2pt}
+
+\subsection{Historias de Usuario}
+
+Las historias de usuario expresan los requerimientos funcionales desde la perspectiva del responsable a cargo del adulto mayor, el actor principal identificado en el user research. Dos requerimientos son de naturaleza interna o habilitante: el registro de eventos (RF5) y la construcción de la línea base de comportamiento (RF6) no representan una necesidad que el responsable a cargo exprese de forma directa, sino un mecanismo que sostiene el valor de otro requerimiento. Por eso se agrupan junto con el requerimiento al que dan soporte en la Tabla~\ref{tab:hu}, en lugar de forzar una historia propia para cada uno.
+
+\begin{longtable}{@{}p{0.20\textwidth}p{0.72\textwidth}@{}}
+\caption{Historias de Usuario y su relación con los Requerimientos Funcionales.}
+\label{tab:hu} \\
+\toprule
+\textbf{Requerimiento} & \textbf{Historia de Usuario} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Requerimiento} & \textbf{Historia de Usuario} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+RF1 & \textit{Como responsable a cargo, quiero que el sistema detecte automáticamente si mi familiar se cayó, para poder responder rápido aunque no esté presente en el momento.} \\[6pt]
+RF2 & \textit{Como responsable a cargo, quiero que el sistema note si mi familiar pasa demasiado tiempo sentado sin moverse, para tener una señal temprana de que algo en su rutina no está bien, aunque no sea una emergencia.} \\[6pt]
+RF3 & \textit{Como responsable a cargo, quiero que el sistema me alerte si mi familiar queda inmóvil en el piso durante un tiempo prolongado, para poder actuar ante una posible caída que pasó inadvertida.} \\[6pt]
+RF4 & \textit{Como responsable a cargo, quiero tener una idea de qué está haciendo mi familiar durante el día, para no tener que llamarlo o preguntarle todo el tiempo.} \\[6pt]
+RF6, RF7 & \textit{Como responsable a cargo, quiero que el sistema me avise si la rutina de mi familiar cambia de forma inusual, para detectar a tiempo un posible deterioro de salud, antes de que se convierta en una emergencia.} \\[6pt]
+RF8 & \textit{Como responsable a cargo, quiero recibir una notificación en mi celular apenas ocurra algo grave, para reaccionar sin tener que estar pendiente del sistema todo el tiempo.} \\[6pt]
+RF9 & \textit{Como responsable a cargo, quiero ver un resumen periódico del estado y la rutina de mi familiar, para estar tranquilo aunque no haya recibido ninguna alerta.} \\[6pt]
+RF5, RF13 & \textit{Como responsable a cargo, quiero poder revisar el historial de eventos de días anteriores, para entender qué pasó si algo salió mal y no lo advertí a tiempo.} \\[6pt]
+RF10 & \textit{Como responsable a cargo, quiero poder instalar y configurar las cámaras del hogar sin ayuda técnica, para poner el sistema en marcha yo mismo.} \\[6pt]
+RF11 & \textit{Como responsable a cargo, quiero comprobar en el momento de la instalación que la cámara detecta correctamente a la persona, para confiar en que las alertas van a funcionar.} \\[6pt]
+RF12 & \textit{Como responsable a cargo, quiero que solo las personas autorizadas de la familia puedan acceder a las alertas y reportes del hogar, para que esa información quede resguardada.} \\
+\end{longtable}
