@@ -60,9 +60,9 @@ A continuación se detallan los requerimientos funcionales (RF) del sistema:
 
 \begin{itemize}
     \item \textbf{RF1:} El sistema debe detectar caídas en tiempo real a partir del análisis de pose de la persona monitoreada.
-    \item \textbf{RF2:} El sistema debe detectar sedentarismo prolongado, correspondiente a inmovilidad en postura sentada, con severidad baja.
-    \item \textbf{RF3:} El sistema debe detectar una posible caída no advertida, correspondiente a inmovilidad en postura acostada, con severidad alta.
-    \item \textbf{RF4:} El sistema debe clasificar la actividad de la vida diaria que realiza el residente (cocinar, comer, leer, mirar televisión, entre otras) mediante consultas periódicas a un modelo de lenguaje visual.
+    \item \textbf{RF2:} El sistema debe clasificar la actividad de la vida diaria que realiza el residente (cocinar, comer, leer, mirar televisión, entre otras) mediante consultas periódicas a un modelo de lenguaje visual.
+    \item \textbf{RF3:} El sistema debe detectar sedentarismo prolongado, correspondiente a inmovilidad en postura sentada.
+    \item \textbf{RF4:} El sistema debe detectar inmovilidad prolongada en el piso, independientemente de si la caída que la originó fue detectada previamente por el sistema.
     \item \textbf{RF5:} El sistema debe registrar cada evento detectado (caída, inmovilidad o actividad) con marca temporal, tipo y metadata asociada.
     \item \textbf{RF6:} El sistema debe construir y actualizar una línea base de comportamiento habitual del residente a partir del historial de eventos registrados.
     \item \textbf{RF7:} El sistema debe detectar desvíos significativos respecto a la línea base de comportamiento y generar un evento de alerta ante un posible deterioro.
@@ -111,9 +111,9 @@ Las historias de usuario expresan los requerimientos funcionales desde la perspe
 \bottomrule
 \endfoot
 RF1 & \textit{Como responsable a cargo, quiero que el sistema detecte automáticamente si mi familiar se cayó, para poder responder rápido aunque no esté presente en el momento.} \\[6pt]
-RF2 & \textit{Como responsable a cargo, quiero que el sistema note si mi familiar pasa demasiado tiempo sentado sin moverse, para tener una señal temprana de que algo en su rutina no está bien, aunque no sea una emergencia.} \\[6pt]
-RF3 & \textit{Como responsable a cargo, quiero que el sistema me alerte si mi familiar queda inmóvil en el piso durante un tiempo prolongado, para poder actuar ante una posible caída que pasó inadvertida.} \\[6pt]
-RF4 & \textit{Como responsable a cargo, quiero tener una idea de qué está haciendo mi familiar durante el día, para no tener que llamarlo o preguntarle todo el tiempo.} \\[6pt]
+RF2 & \textit{Como responsable a cargo, quiero tener una idea de qué está haciendo mi familiar durante el día, para no tener que llamarlo o preguntarle todo el tiempo.} \\[6pt]
+RF3 & \textit{Como responsable a cargo, quiero que el sistema note si mi familiar pasa demasiado tiempo sentado sin moverse, para tener una señal temprana de que algo en su rutina no está bien, aunque no sea una emergencia.} \\[6pt]
+RF4 & \textit{Como responsable a cargo, quiero que el sistema me alerte si mi familiar queda inmóvil en el piso durante un tiempo prolongado, haya detectado o no una caída previa, para poder actuar ante una posible caída que pasó inadvertida.} \\[6pt]
 RF6, RF7 & \textit{Como responsable a cargo, quiero que el sistema me avise si la rutina de mi familiar cambia de forma inusual, para detectar a tiempo un posible deterioro de salud, antes de que se convierta en una emergencia.} \\[6pt]
 RF8 & \textit{Como responsable a cargo, quiero recibir una notificación en mi celular apenas ocurra algo grave, para reaccionar sin tener que estar pendiente del sistema todo el tiempo.} \\[6pt]
 RF9 & \textit{Como responsable a cargo, quiero ver un resumen periódico del estado y la rutina de mi familiar, para estar tranquilo aunque no haya recibido ninguna alerta.} \\[6pt]
@@ -122,3 +122,147 @@ RF10 & \textit{Como responsable a cargo, quiero poder instalar y configurar las 
 RF11 & \textit{Como responsable a cargo, quiero comprobar en el momento de la instalación que la cámara detecta correctamente a la persona, para confiar en que las alertas van a funcionar.} \\[6pt]
 RF12 & \textit{Como responsable a cargo, quiero que solo las personas autorizadas de la familia puedan acceder a las alertas y reportes del hogar, para que esa información quede resguardada.} \\
 \end{longtable}
+
+\subsection{Diagrama de Casos de Uso}
+
+A partir de los requerimientos funcionales y las historias de usuario presentadas, se construyó el diagrama de casos de uso de la Figura~\ref{fig:casos_uso}, que organiza las capacidades del sistema en tres actores y tres bloques funcionales. Los actores \textit{Cámara IP} y \textit{Temporizador del Sistema} representan las dos formas en que se dispara el procesamiento sobre el video, ya sea frame a frame o de forma periódica, mientras que \textit{Responsable a Cargo} es el actor humano identificado en el user research.
+
+En cuanto a la organización interna del Sistema, el Bloque 1 agrupa el procesamiento sobre el video que ocurre dentro del hogar (estimación de pose, detección de caídas, de inmovilidad prolongada y clasificación de actividades), coherente con el procesamiento local exigido por RNF1. El caso de uso \textit{Detectar Inmovilidad Prolongada} engloba tanto RF3 (sedentarismo, postura sentada) como RF4 (piso, postura acostada), ya que ambos comparten el mismo mecanismo de detección basado en pose y se distinguen internamente mediante un atributo de postura. El registro de eventos y todo lo que depende de él, la construcción y actualización de la línea base de comportamiento, la detección de desvíos y la generación de reportes, se ejecutan del lado de la nube; RNF6 solo exige que el dispositivo conserve los eventos de forma transitoria ante cortes de conexión, hasta poder sincronizarlos (RNF7). El Bloque 2 agrupa las funcionalidades expuestas al responsable a cargo desde la aplicación móvil, y el Bloque 3 agrupa la administración y validación local de las cámaras.
+
+Además de la agrupación en bloques, las relaciones punteadas entre casos de uso representan dependencias \textit{include}: todo evento detectado (caída, inmovilidad prolongada o desvío de rutina) incluye siempre su registro (RF5) y su notificación al responsable a cargo (RF8), y toda funcionalidad de la aplicación móvil y del panel de control incluye la autenticación del usuario (RF12).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/Diagrama_Casos_Uso_PFI.pdf}
+    \caption{Diagrama de Casos de Uso del sistema, derivado de los requerimientos funcionales y las historias de usuario. Elaboración propia.}
+    \label{fig:casos_uso}
+\end{figure}
+
+\section{Análisis de Competencia y Posicionamiento en el Mercado}
+\label{sec:competencia}
+
+\subsection{Panorama competitivo}
+\label{sec:panorama_competitivo}
+
+A diferencia del estado del arte académico, que releva trabajos de investigación, este análisis se concentra en las soluciones comerciales que una familia puede contratar hoy para monitorear a un adulto mayor.
+Pueden distinguirse tres categorías, cada una con una lógica de funcionamiento distinta.
+
+La más extendida en Argentina es la teleasistencia mediante botón de pánico, con empresas como \textcite{SPS} y \textcite{Atempo} a la cabeza.
+El usuario presiona un botón ante una emergencia y así un teleasistente recibe la alerta de forma instantánea, coordina la asistencia médica y avisa a los familiares \parencite{SPS}.
+Este límite ya se planteó en la Introducción, pero vale la pena retomarlo acá porque es el mismo en todos los casos de esta categoría.
+Todo depende de que el adulto mayor esté consciente y dispuesto a accionar el dispositivo, algo que no ocurre cuando hay pérdida de conocimiento o deterioro cognitivo avanzado.
+Una variante de este enfoque son los relojes con GPS y botón SOS, como GCare, que suman geolocalización pero mantienen la misma dependencia de una acción consciente del usuario \parencite{GCare}.
+
+Una segunda categoría, todavía sin presencia local, son los sensores ambientales sin cámara.
+El caso de referencia es Vayyar Care, un radar de pared que detecta caídas sin contacto, sin botones, sin cables y sin cámara, y que durante los primeros siete días de instalación entra en un modo de aprendizaje para reconocer el comportamiento normal de la habitación \parencite{Vayyar}.
+Sin embargo, hoy opera exclusivamente en Estados Unidos y depende de un dispositivo Alexa con suscripción a Alexa Together, por lo que queda fuera del alcance del mercado argentino y además atado a un proveedor externo para el enrutamiento de las alertas.
+
+La tercera categoría, y la más cercana técnicamente a la propuesta de este trabajo, son las cámaras con inteligencia artificial que procesan localmente en el propio dispositivo.
+Acá el competidor directo más maduro es AltumView Sentinare, que en lugar de transmitir video procesa la detección en el propio equipo y envía únicamente una representación esquemática de la persona, una figura de palo, con un costo de entre USD 200 y 230 y sin cuota mensual para las funciones principales \parencite{AltumView}.
+Esto lo convierte en el estándar de referencia en privacidad local dentro de su categoría, aunque su alcance se agota en la detección de eventos discretos, como caídas, ausencias o permanencias prolongadas, sobre una habitación puntual.
+Tampoco construye una línea base conductual personalizada por individuo ni razona sobre desvíos de rutina a lo largo del tiempo, que es justamente el aporte diferencial del segundo módulo del sistema propuesto en este proyecto.
+
+\subsubsection{Cuadro comparativo comercial}
+\label{sec:tabla_comparativa_comercial}
+
+\begin{table}[H]
+\centering
+\caption{Comparación de soluciones comerciales disponibles para el monitoreo de adultos mayores.}
+\vspace{0.3cm}
+\label{tab:comparativa_comercial}
+\begingroup
+\renewcommand{\arraystretch}{1.6}
+\setlength{\tabcolsep}{10pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Solución} & \textbf{No invasivo} & \textbf{Privacidad local} & \textbf{Detección de caídas} & \textbf{Aprendizaje de rutina} & \textbf{Disponible en Argentina} \\
+\midrule
+SPS / Atempo (botón y teleasistencia) & --         & N/A        & Parcial    & --         & \checkmark \\
+GCare (reloj SOS con GPS)             & --         & N/A        & Parcial    & --         & --         \\
+Vayyar Care (radar)                   & \checkmark & \checkmark & \checkmark & --         & --         \\
+AltumView Sentinare (cámara con IA)   & \checkmark & \checkmark & \checkmark & --         & --         \\
+Sistema propuesto                     & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\bottomrule
+\end{tabular}
+}
+\endgroup
+\end{table}
+
+{\footnotesize\textit{Nota. La tabla indica presencia o ausencia de cada capacidad en la solución comercial, siguiendo el mismo criterio metodológico utilizado en la Tabla~\ref{tab:comparacion} del Capítulo 2. No refleja diferencias de precisión o de calidad de implementación entre las distintas propuestas.}}
+
+\subsubsection{Análisis FODA}
+\label{sec:foda}
+
+Para completar el análisis de posicionamiento, se construye un FODA a partir del panorama competitivo relevado en la sección anterior.
+
+\paragraph{Fortalezas}
+\begin{itemize}
+    \item \textbf{Privacidad por procesamiento local del video.} El video nunca sale del hogar: la estimación de pose y la detección de eventos ocurren en el propio dispositivo, sin exponer imágenes a servidores externos ni requerir hardware adicional.
+    \item \textbf{Integración de dos capacidades en un mismo sistema.} Combina detección de eventos agudos con modelado longitudinal de rutina dentro de una misma arquitectura.
+    \item \textbf{Ninguna acción requerida del adulto mayor.} El sistema opera de forma completamente pasiva, sin necesidad de que la persona esté consciente o dispuesta a accionar nada.
+    \item \textbf{Arquitectura modular entre borde y nube.} El procesamiento de video corre en el dispositivo local, mientras que la línea base, la detección de desvíos y los reportes corren en la nube, lo que permite escalar o migrar cada capa de forma independiente sin rediseñar el sistema completo.
+\end{itemize}
+
+\paragraph{Oportunidades}
+\begin{itemize}
+    \item \textbf{Mercado latinoamericano prácticamente vacío en esta categoría.} Los actores relevados en la región, como SPS y Atempo en Argentina o GCare en Chile, operan sobre el modelo de botón y teleasistencia, sin competidor directo identificado en cámara o radar en ningún país de la región.
+    \item \textbf{Resistencia documentada a wearables.} La evidencia del INDEC sobre la dificultad de adopción de nuevas tecnologías entre adultos mayores empuja la demanda hacia soluciones pasivas como esta \parencite{INDEC2020}.
+    \item \textbf{Posible interés institucional.} Existe espacio para alianzas con obras sociales, geriátricos o municipios interesados en programas de cuidado domiciliario.
+    \item \textbf{Crecimiento sostenido de la población objetivo.} Las proyecciones del INDEC indican que la población de 60 años o más va a superar el 20\% hacia 2040, lo que amplía el mercado potencial de forma sostenida en el tiempo \parencite{INDEC2024}.
+\end{itemize}
+
+\paragraph{Debilidades}
+\begin{itemize}
+    \item \textbf{Validación limitada.} El prototipo todavía no fue probado en múltiples hogares reales ni a escala.
+    \item \textbf{Sin canal de distribución propio.} Todavía no existe una estructura comercial ni soporte disponible las 24 horas.
+    \item \textbf{Dependencia de conectividad domiciliaria.} El envío de alertas requiere una conexión a internet estable, algo que no está garantizado en todos los hogares.
+    \item \textbf{Modelo de costos sin validar.} A diferencia de AltumView Sentinare, que ya tiene un precio de referencia de mercado (USD 200-230 sin cuota mensual), el sistema propuesto todavía no cuenta con un costo de producción ni una estructura de precios validada frente a esa referencia.
+\end{itemize}
+
+\paragraph{Amenazas}
+\begin{itemize}
+    \item \textbf{Reacción de competidores locales o globales.} Tanto actores ya instalados en Argentina, como SPS o Atempo, como jugadores globales con cámara en el borde, como AltumView, podrían anticiparse incorporando estas capacidades antes de que el proyecto logre escalar a producto.
+    \item \textbf{Percepción de intrusión.} Aun con procesamiento local, la sola presencia de una cámara puede generar rechazo inicial en algunas familias, tal como surgió en el User Research.
+\end{itemize}
+
+\subsubsection{Cinco fuerzas de Porter}
+\label{sec:porter}
+
+El modelo de las cinco fuerzas de Porter permite evaluar la atractividad competitiva de un mercado a partir de cinco dimensiones.
+Se aplica acá sobre el panorama relevado en la sección anterior, con el objetivo de entender qué tan sostenible puede ser la posición del proyecto una vez que salga del prototipo.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{images/Porter_Cinco_Fuerzas.pdf}
+\caption{Cinco fuerzas de Porter aplicadas al sistema propuesto. Elaboración propia.}
+\label{fig:porter}
+\end{figure}
+
+\paragraph{Amenaza de nuevos entrantes:}
+La barrera técnica de entrada es baja, ya que los modelos de pose estimation y detección de eventos como YOLO son abiertos y accesibles, y el hardware de referencia, entre Raspberry Pi y cámaras IP, es de bajo costo.
+La barrera real está en la confianza, porque un producto que monitorea a un familiar mayor necesita validación de precisión y garantías de privacidad que toman tiempo en construirse.
+Esto retrasa la entrada de nuevos competidores, aunque no la impide, y deja abierta la puerta a que un jugador global como AltumView decida expandirse a Latinoamérica.
+
+\paragraph{Poder de negociación de los proveedores:}
+Los componentes críticos, como Raspberry Pi, cámaras IP y sensores, tienen múltiples fabricantes alternativos, por lo que ningún proveedor de hardware puede fijar precios de forma unilateral.
+Los modelos de inferencia utilizados, YOLO para pose estimation y CLIP para clasificación de actividades, son además de código abierto y se ejecutan localmente, lo que evita cualquier dependencia de una API propietaria de terceros para el procesamiento de video.
+El punto todavía sin definir es qué proveedor va a alojar la infraestructura de nube que soporta el registro de eventos, la línea base de comportamiento y la generación de reportes.
+Al tratarse de servicios de cómputo y almacenamiento estándar, y no de un modelo propietario específico, el poder de negociación de ese proveedor debería ser bajo, ya que migrar de proveedor de nube es un problema de ingeniería resoluble y no una dependencia estructural del producto.
+
+\paragraph{Poder de negociación de los compradores:}
+La familia responsable del adulto mayor cuenta con alternativas de bajo costo de cambio, como un botón de pánico con teleasistencia tipo SPS o Atempo, o directamente la opción de no adoptar ningún sistema.
+Esto presiona el precio y obliga a comunicar con claridad la propuesta de valor, centrada en la no invasividad y en que el adulto mayor no tiene que hacer nada, porque el comprador puede optar por no avanzar sin que eso le cueste nada de forma inmediata.
+
+\paragraph{Amenaza de productos sustitutos:}
+Existen sustitutos maduros e instalados en el mercado argentino, como la teleasistencia telefónica de SPS y Atempo, los relojes con botón SOS y GPS tipo GCare, y el sustituto más común de todos, que no es tecnológico sino humano, un familiar, vecino o cuidador que llama o visita con frecuencia.
+Ninguno de ellos resuelve el problema de fondo, que es la dependencia de una acción consciente del adulto mayor, pero todos compiten por el mismo presupuesto familiar y la misma decisión de compra.
+
+\paragraph{Rivalidad entre competidores existentes:}
+No se observa rivalidad directa dentro de la categoría de cámara con aprendizaje de rutina, porque no se identificó ningún competidor que la ofrezca, según se ve en la Tabla~\ref{tab:comparativa_comercial}.
+La rivalidad real ocurre entre categorías, entre la teleasistencia tradicional, fuerte en Argentina y con canal de distribución y confianza ya instalados, y los sensores pasivos importados, como AltumView y Vayyar, sin presencia local pero con ventaja técnica.
+En los hechos, el proyecto compite contra ambas categorías al mismo tiempo, más que contra un rival puntual.
+
+\paragraph{Síntesis}
+En conjunto, la fuerza más determinante para la viabilidad comercial del proyecto es el poder de negociación de los compradores, combinado con la amenaza de sustitutos.
+El desafío no es tecnológico sino de adopción, algo consistente con lo que surgió en el User Research sobre la resistencia cultural a nuevas tecnologías entre adultos mayores y sus familias.
