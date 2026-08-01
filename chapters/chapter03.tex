@@ -165,6 +165,41 @@ Del lado de la nube, la construcción de la línea base de comportamiento (RF6) 
 \end{figure}
 \FloatBarrier
 
+\subsection{Diagrama de Componentes}
+\label{sec:diagrama_componentes}
+
+La Figura~\ref{fig:diagrama_componentes} documenta cómo está organizado el código fuente del sistema en el ambiente en el que se lo está construyendo y validando en la actualidad.
+Esta organización es distinta del despliegue objetivo, que incluye la Raspberry Pi, la nube alojada en AWS y la aplicación móvil, y que se presenta más adelante en la Sección~\ref{sec:diagrama_arquitectura}.
+Por eso el diagrama no incluye todavía esos componentes, que pertenecen al despliegue final y no forman parte de esta etapa del desarrollo.
+Lo que muestra en cambio es el software validado localmente hasta esta entrega, correspondiente al 50\% del avance del proyecto, organizado en siete módulos independientes que corren hoy sobre la PC de desarrollo.
+
+El módulo \texttt{runner/} es el orquestador central del sistema y el único que importa directamente el código de \texttt{vision/} y \texttt{vlm/}, a los que invoca por cada cámara activa y de los que recibe el resultado de la detección correspondiente.
+Por su parte, \texttt{vision/} implementa una heurística de dos fases sobre descriptores de pose, sin una red neuronal propia más allá de la estimación de pose de base, para detectar caídas e inmovilidad prolongada, en línea con RF1, RF3 y RF4.
+De manera similar, \texttt{vlm/} clasifica la actividad de la persona monitoreada mediante CLIP exportado a formato ONNX, lo que le permite ejecutarse sin depender de PyTorch en tiempo de inferencia, cumpliendo con RF2.
+Sin embargo, y a diferencia de lo que podría suponerse a partir de sus nombres, ni \texttt{vision/} ni \texttt{vlm/} escriben eventos por sí mismos, ya que es \texttt{runner/} quien, luego de recibir el resultado de cada uno, registra el evento correspondiente en \texttt{events/}, respetando el formato exigido por RF5.
+En ese esquema, \texttt{events/} funciona como el único punto de acuerdo formal entre los módulos del sistema, mediante el esquema compartido \texttt{MonitoringEvent} y \texttt{EventType} junto con un almacenamiento local en SQLite, importado hoy como una librería de Python dentro del mismo proceso y sin exponerse todavía como servicio o API.
+Esta decisión mantiene a cada módulo desacoplado de la implementación interna de los demás, dado que alcanza con que todos respeten el esquema de eventos para poder desarrollarse y probarse de forma independiente.
+
+\texttt{dashboard/} cumple un doble rol operativo, ya que por un lado controla a \texttt{runner/}, iniciándolo y deteniéndolo como subproceso y gestionando la configuración de cámaras en \texttt{cameras.yaml}, y por otro lee los eventos almacenados en \texttt{events/} para mostrarlos en un panel de operación local, en línea con RF10.
+Este panel es una herramienta de desarrollo y operación sobre la PC local, distinta de la futura API pública que se expondrá sobre \texttt{events/} y \texttt{baseline/} para la aplicación móvil descripta en la Sección~\ref{sec:diagrama_arquitectura}.
+
+\texttt{baseline/} y \texttt{evaluation/} aparecen en el diagrama con trazo punteado porque a la fecha de esta entrega ninguno de los dos módulos fue iniciado, aunque su diseño ya está definido dentro de la arquitectura del sistema.
+\texttt{baseline/} está pensado para leer los eventos almacenados en \texttt{events/} y construir a partir de ellos la línea base de comportamiento mediante clustering dinámico, correspondiente a RF6, mientras que \texttt{evaluation/} no consume eventos de la misma manera, sino que toma el video original de la carpeta \texttt{videos/} junto con los eventos detectados sobre ese video para generar un video anotado que permite la inspección visual de las detecciones.
+El desarrollo de ambos módulos está planificado para la segunda mitad de 2026.
+
+El diagrama incluye además las dos fuentes de datos externas del sistema en esta fase, \texttt{cameras.yaml}, que configura qué cámaras o streams procesa \texttt{runner/}, y la carpeta \texttt{videos/}, que contiene el dataset utilizado en modo offline.
+Sobre ese dataset existe además un modo de ejecución batch, en el que \texttt{vision/} y \texttt{vlm/} corren de forma independiente sin pasar por \texttt{runner/}, que es el que efectivamente se utilizó para calibrar y validar la detección de caídas y la clasificación de actividad hasta el momento, un proceso de ajuste iterativo que continúa a medida que se incorporan nuevos datasets.
+Ese modo batch no se representa como un componente aparte en la Figura~\ref{fig:diagrama_componentes} para no saturar el diagrama, dado que reutiliza el mismo código de \texttt{vision/} y \texttt{vlm/} ya documentado y solo cambia la forma en que se lo invoca.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.94\textwidth]{images/Diagrama_componentes.png}
+    \caption{Diagrama de componentes del sistema en su fase de desarrollo local. Elaboración propia.}
+    \label{fig:diagrama_componentes}
+\end{figure}
+\FloatBarrier
+
+\clearpage
 \section{Modelo de Datos}
 \label{sec:modelo_datos}
 
@@ -173,7 +208,7 @@ Los diagramas de la sección anterior describen el comportamiento del sistema de
 \subsection*{Diagrama de Arquitectura}
 \label{sec:diagrama_arquitectura}
 
-La Figura~\ref{fig:arquitectura} muestra el despliegue físico del sistema, desde la cámara IP hasta la aplicación móvil. Del lado del borde, la Raspberry Pi aloja el nodo de inferencia que ejecuta el pipeline de YOLO para estimación de pose y CLIP para clasificación de actividades sobre el video capturado por la cámara, coherente con RNF5, que exige que ambos módulos corran sobre el mismo hardware embebido y sin GPU. El video nunca sale de ese nodo, cumpliendo con RNF1, y lo único que cruza hacia la nube son los eventos generados, nunca imágenes. Esos eventos se persisten localmente en SQLite antes de sincronizarse, la implementación concreta del requisito de continuidad ante cortes de conexión que exige RNF6, y esa misma base es la que se vuelca hacia la nube una vez que la conexión se restablece, según RNF7.
+A diferencia del diagrama de componentes de la Sección~\ref{sec:diagrama_componentes}, que documentó la organización del código en su fase de validación local, la Figura~\ref{fig:arquitectura} muestra el despliegue físico del sistema, desde la cámara IP hasta la aplicación móvil. Del lado del borde, la Raspberry Pi aloja el nodo de inferencia que ejecuta el pipeline de YOLO para estimación de pose y CLIP para clasificación de actividades sobre el video capturado por la cámara, coherente con RNF5, que exige que ambos módulos corran sobre el mismo hardware embebido y sin GPU. El video nunca sale de ese nodo, cumpliendo con RNF1, y lo único que cruza hacia la nube son los eventos generados, nunca imágenes. Esos eventos se persisten localmente en SQLite antes de sincronizarse, la implementación concreta del requisito de continuidad ante cortes de conexión que exige RNF6, y esa misma base es la que se vuelca hacia la nube una vez que la conexión se restablece, según RNF7.
 
 Del lado de la nube, AWS Elastic Beanstalk aloja la aplicación que recibe los eventos sincronizados y los persiste en Amazon RDS sobre PostgreSQL, junto con la línea base de comportamiento construida a partir de ellos (RF6). Desde ahí, Firebase Cloud Messaging es el servicio que entrega las notificaciones push a la aplicación móvil, desarrollada en React Native, cerrando el circuito que exige RF8 entre la detección de un evento crítico y el aviso al responsable a cargo.
 
