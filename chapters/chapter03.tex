@@ -141,12 +141,49 @@ En cuanto a la organización interna del Sistema, el Bloque 1 agrupa el procesam
 
 Además de la agrupación en bloques, las relaciones punteadas entre casos de uso representan dependencias \textit{include}, ya que todo evento detectado (caída, inmovilidad prolongada o desvío de rutina) incluye siempre su registro (RF5) y su notificación al responsable a cargo (RF8), y toda funcionalidad de la aplicación móvil y del panel de control incluye la autenticación del usuario (RF12).
 
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=\textwidth]{images/Diagrama_Casos_Uso_PFI.pdf}
+    \includegraphics[width=\textwidth]{images/Diagrama_Casos_Uso_PFI.png}
     \caption{Diagrama de Casos de Uso del sistema, derivado de los requerimientos funcionales y las historias de usuario. Elaboración propia.}
     \label{fig:casos_uso}
 \end{figure}
+\FloatBarrier
+
+\subsection{Diagrama de Flujo de Información}
+
+Mientras que el diagrama de casos de uso responde qué hace el sistema, el diagrama de flujo de información de la Figura~\ref{fig:flujo_informacion} responde cómo un frame de video se convierte en un evento, una alerta o un reporte, y en qué punto pasa de ejecutarse en el borde a ejecutarse en la nube. Las tres franjas del diagrama, correspondientes a la Raspberry Pi 5 en el borde, la nube alojada en AWS y la aplicación móvil, hacen explícita esa frontera, coherente con la arquitectura modular entre borde y nube descripta en la Sección~\ref{sec:edge_marco}. Esa misma frontera se retoma más adelante, tanto en el diagrama de arquitectura de la Sección~\ref{sec:diagrama_arquitectura} como en el análisis de posicionamiento de este capítulo.
+
+Sobre el lado del borde, ambas ramas parten de la misma detección de pose por frame, pero se disparan con lógicas distintas. La detección de caídas e inmovilidad se evalúa en cada frame, consistente con la operación cercana al tiempo real que exige RNF4, mientras que la clasificación de actividad con CLIP se consulta cada 10 segundos sobre una ventana de 3 segundos, la cadencia periódica descripta en la Sección~\ref{sec:vlm_marco} para compensar su mayor costo computacional frente a la estimación de pose. Ambas ramas incorporan además un filtro antes de generar un evento (la evaluación de \textit{situación de riesgo} en un caso, el umbral de confianza y la deduplicación frente a la actividad anterior en el otro), de modo que no todo lo detectado se traduce automáticamente en un evento registrado.
+
+Del lado de la nube, la construcción de la línea base de comportamiento (RF6) ocurre a partir de cada evento sincronizado, y de ahí en más el flujo se bifurca en dos caminos independientes. Uno evalúa si existe un desvío relevante y, en ese caso, dispara la notificación push y la alerta al responsable a cargo (RF7, RF8); el otro actualiza los reportes de rutina (RF9) sin condicionarse a que haya habido una alerta. Esta bifurcación es intencional, ya que el responsable a cargo debe poder consultar el estado y la rutina del adulto mayor en cualquier momento, haya o no un evento que lo amerite, tal como se expresa en la historia de usuario asociada a RF9.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth,height=20cm,keepaspectratio]{images/Diagrama_Flujo_Informacion.png}
+    \caption{Diagrama de Flujo de Información del sistema, desde la captura de video hasta la notificación y el reporte. Elaboración propia.}
+    \label{fig:flujo_informacion}
+\end{figure}
+\FloatBarrier
+
+\section{Modelo de Datos}
+\label{sec:modelo_datos}
+
+Los diagramas de la sección anterior describen el comportamiento del sistema desde el punto de vista funcional. Esta sección lo complementa desde la infraestructura concreta que lo soporta y desde el modelo de datos que esa infraestructura persiste.
+
+\subsection*{Diagrama de Arquitectura}
+\label{sec:diagrama_arquitectura}
+
+La Figura~\ref{fig:arquitectura} muestra el despliegue físico del sistema, desde la cámara IP hasta la aplicación móvil. Del lado del borde, la Raspberry Pi aloja el nodo de inferencia que ejecuta el pipeline de YOLO para estimación de pose y CLIP para clasificación de actividades sobre el video capturado por la cámara, coherente con RNF5, que exige que ambos módulos corran sobre el mismo hardware embebido y sin GPU. El video nunca sale de ese nodo, cumpliendo con RNF1, y lo único que cruza hacia la nube son los eventos generados, nunca imágenes. Esos eventos se persisten localmente en SQLite antes de sincronizarse, la implementación concreta del requisito de continuidad ante cortes de conexión que exige RNF6, y esa misma base es la que se vuelca hacia la nube una vez que la conexión se restablece, según RNF7.
+
+Del lado de la nube, AWS Elastic Beanstalk aloja la aplicación que recibe los eventos sincronizados y los persiste en Amazon RDS sobre PostgreSQL, junto con la línea base de comportamiento construida a partir de ellos (RF6). Desde ahí, Firebase Cloud Messaging es el servicio que entrega las notificaciones push a la aplicación móvil, desarrollada en React Native, cerrando el circuito que exige RF8 entre la detección de un evento crítico y el aviso al responsable a cargo.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{images/Diagrama_Arquitectura.png}
+    \caption{Diagrama de arquitectura del sistema, desde la cámara IP hasta la aplicación móvil. Elaboración propia.}
+    \label{fig:arquitectura}
+\end{figure}
+\FloatBarrier
 
 \section{Análisis de Competencia y Posicionamiento en el Mercado}
 \label{sec:competencia}
@@ -227,9 +264,8 @@ Esto retrasa la entrada de nuevos competidores, aunque no la impide, y deja abie
 \paragraph{Poder de negociación de los proveedores:}
 Los componentes críticos, como Raspberry Pi, cámaras IP y sensores, tienen múltiples fabricantes alternativos, por lo que ningún proveedor de hardware puede fijar precios de forma unilateral.
 Los modelos de inferencia utilizados, YOLO para pose estimation y CLIP para clasificación de actividades, son además de código abierto y se ejecutan localmente, lo que evita cualquier dependencia de una API propietaria de terceros para el procesamiento de video.
-% TODO: definir el proveedor de nube antes de la entrega final. Ver Dudas en history/considerations.tex.
-El punto todavía sin definir es qué proveedor va a alojar la infraestructura de nube que soporta el registro de eventos, la línea base de comportamiento y la generación de reportes.
-Al tratarse de servicios de cómputo y almacenamiento estándar, y no de un modelo propietario específico, el poder de negociación de ese proveedor debería ser bajo, ya que migrar de proveedor de nube es un problema de ingeniería resoluble y no una dependencia estructural del producto.
+AWS aloja la infraestructura de nube que soporta el registro de eventos, la línea base de comportamiento y la generación de reportes.
+Al tratarse de servicios de cómputo y almacenamiento estándar, y no de un modelo propietario específico, el poder de negociación del proveedor es bajo, ya que migrar de proveedor de nube es un problema de ingeniería resoluble y no una dependencia estructural del producto.
 
 \paragraph{Poder de negociación de los compradores:}
 La familia responsable del adulto mayor cuenta con alternativas de bajo costo de cambio, como un botón de pánico con teleasistencia tipo SPS o Atempo, un asistente de compañía como Ato, o directamente la opción de no adoptar ningún sistema.
