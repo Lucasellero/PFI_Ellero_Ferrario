@@ -203,7 +203,7 @@ Ese modo batch no se representa como un componente aparte en la Figura~\ref{fig:
 \section{Modelo de Datos}
 \label{sec:modelo_datos}
 
-Los diagramas de la sección anterior describen el comportamiento del sistema desde el punto de vista funcional. Esta sección lo complementa desde la infraestructura concreta que lo soporta y desde el modelo de datos que esa infraestructura persiste.
+Los diagramas de la sección anterior describen el comportamiento del sistema desde el punto de vista funcional, es decir, qué hace y cómo fluye la información entre sus partes. Lo que sigue es la infraestructura concreta que soporta ese comportamiento, desde el despliegue físico del sistema hasta el modelo de datos que esa infraestructura persiste.
 
 \subsection*{Diagrama de Arquitectura}
 \label{sec:diagrama_arquitectura}
@@ -217,6 +217,37 @@ Del lado de la nube, AWS Elastic Beanstalk aloja la aplicación que recibe los e
     \includegraphics[width=\textwidth]{images/Diagrama_Arquitectura.png}
     \caption{Diagrama de arquitectura del sistema, desde la cámara IP hasta la aplicación móvil. Elaboración propia.}
     \label{fig:arquitectura}
+\end{figure}
+\FloatBarrier
+
+\subsection*{Diagrama de Base de Datos}
+\label{sec:diagrama_base_datos}
+
+El Diagrama de Arquitectura mostró dónde vive cada nodo del sistema. Lo que falta es qué guarda cada uno, y ahí el borde y la nube difieren tanto en lo que ya existe como en lo que todavía es diseño. La Figura~\ref{fig:diagrama_bd_local} documenta el modelo local, ya implementado sobre SQLite (Sección~\ref{sec:diagrama_componentes}), mientras que la Figura~\ref{fig:diagrama_bd_cloud} documenta el modelo de nube sobre PostgreSQL, que sigue siendo una propuesta de diseño y no código en producción, en la misma línea que \texttt{baseline/} y \texttt{evaluation/} en la Sección~\ref{sec:diagrama_componentes}. El backend en la nube (Sección~\ref{sec:backend_nube}) todavía no arrancó, pero el modelo de datos que lo va a sostener ya está definido con el mismo nivel de detalle que los demás diagramas ya presentados.
+
+El modelo local es una única entidad, EVENTO, sin relaciones ni claves foráneas, y eso no es una limitación a disculpar sino un reflejo fiel del código real de \texttt{events/schema.py} y \texttt{events/store.py}. El campo \texttt{video\_id} funciona como un proxy informal de residente y día, tal como lo describe \texttt{baseline/README.md}, pero no tiene una clave foránea declarada dado que el sistema asume hoy un único residente por instalación, la misma restricción del Alcance del proyecto que más adelante justifica la relación uno a uno entre HOGAR y RESIDENTE en el modelo de nube. El campo \texttt{metadata} es un JSON de forma variable según el \texttt{event\_type} (\texttt{fall}, \texttt{immobility}, \texttt{activity}), cada uno con sus propios campos internos, en lugar de columnas fijas para cada tipo de evento, ya que forzar un esquema rígido hubiera significado agregar columnas vacías para la mayoría de los eventos cada vez que se sume un tipo nuevo.
+
+El modelo de nube parte de HOGAR y RESIDENTE en una relación estrictamente uno a uno, no uno a muchos, porque el Alcance del proyecto restringe el sistema a un único residente monitoreado por instalación. Cada HOGAR tiene, a su vez, una o varias CAMARA registradas (\texttt{hogar\_id} como clave foránea), con un identificador local que coincide con el que usa \texttt{cameras.yaml} en el borde (Sección~\ref{sec:diagrama_componentes}), una ubicación descriptiva dentro del hogar y un estado activo que habilita darlas de alta o de baja desde el panel de administración, tal como exige RF10. Cada evento se origina en una cámara puntual, de ahí la clave foránea \texttt{camara\_id} en EVENTO, pero además referencia directamente al residente mediante \texttt{residente\_id}, una desnormalización deliberada que evita recorrer la cadena \texttt{camara} hacia \texttt{hogar} hacia \texttt{residente} cada vez que el módulo de línea base necesita traer todos los eventos de una persona, algo que va a hacer con frecuencia ya que la relación hogar-residente es uno a uno.
+
+Frente al EVENTO local, el EVENTO de la nube difiere en dos campos. El \texttt{video\_timestamp\_s}, relativo al archivo de video que se está procesando, se traduce a \texttt{occurred\_at}, un timestamp real, porque en la nube hay que poder ordenar eventos entre distintos hogares y videos, algo que un tiempo relativo al archivo no permite. Y se agrega \texttt{es\_alerta}, un booleano derivado de la severidad del evento, en lugar de modelar una entidad Notificación aparte, porque RF7 y RF8 solo necesitan distinguir si un evento dispara una alerta al responsable a cargo, no llevar un historial propio de notificaciones enviadas. El campo \texttt{synced\_at} registra cuándo llegó el evento a la nube, distinto de \texttt{occurred\_at}, que registra cuándo ocurrió, la misma separación que sostiene la continuidad ante cortes de conexión que exigen RNF6 y RNF7.
+
+FAMILIAR y HOGAR\_FAMILIAR resuelven la relación entre hogares y responsables a cargo. Un hogar puede tener varios familiares autorizados, tal como exige RF12, y un mismo familiar podría estar vinculado a más de un hogar, así que la relación es de muchos a muchos y se resuelve con HOGAR\_FAMILIAR como tabla intermedia, con clave primaria compuesta por \texttt{hogar\_id} y \texttt{familiar\_id}, más un campo \texttt{rol} que distingue el tipo de vínculo de cada familiar con ese hogar en particular. FAMILIAR no tiene contraseña propia en el modelo, sino un campo \texttt{firebase\_uid}, dado que la autenticación se delega completamente a Firebase Authentication, ya justificado en la Sección~\ref{sec:backend_nube}.
+
+Por último, LINEA\_BASE\_COMPORTAMIENTO corresponde al módulo \texttt{baseline/} (RF6, Secciones~\ref{sec:aprendizaje_adaptativo_marco} y~\ref{sec:rutinas}) y guarda, por residente, los parámetros del clustering dinámico junto con la fecha de la última actualización. La estructura de esta entidad todavía es provisoria, ya que \texttt{baseline/} no arrancó a la fecha de esta entrega (Sección~\ref{sec:diagrama_componentes}), y el campo \texttt{parametros\_cluster} en formato JSON se eligió justamente por esa razón, para no comprometerse hoy con una estructura de salida que probablemente cambie una vez que el módulo esté en desarrollo.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/Diagrama_Base_Datos_Local.png}
+    \caption{Diagrama de base de datos local, implementado sobre SQLite. Elaboración propia.}
+    \label{fig:diagrama_bd_local}
+\end{figure}
+\FloatBarrier
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{images/Diagrama_Base_Datos_Nube.png}
+    \caption{Diagrama de base de datos en la nube, propuesto sobre PostgreSQL. Elaboración propia.}
+    \label{fig:diagrama_bd_cloud}
 \end{figure}
 \FloatBarrier
 
