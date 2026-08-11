@@ -108,7 +108,7 @@ A continuación se detallan los requerimientos no funcionales (RNF) del sistema.
 Cada requerimiento funcional se tradujo en una historia de usuario, escrita desde la perspectiva del responsable a cargo del adulto mayor, el actor principal identificado en el user research. Dos requerimientos quedan afuera de esa regla, el registro de eventos (RF5) y la construcción de la línea base de comportamiento (RF6), porque son de naturaleza interna o habilitante y no representan una necesidad que el responsable a cargo exprese de forma directa, sino un mecanismo que sostiene el valor de otro requerimiento. Por eso, en la Tabla~\ref{tab:hu}, se agrupan junto al requerimiento al que dan soporte en lugar de forzar una historia propia para cada uno.
 
 \begin{longtable}{@{}p{0.20\textwidth}p{0.78\textwidth}@{}}
-\caption{Historias de Usuario y su relación con los Requerimientos Funcionales.}
+\caption[Historias de Usuario y Requerimientos Funcionales.]{Historias de Usuario y su relación con los Requerimientos Funcionales.}
 \label{tab:hu} \\
 \toprule
 \textbf{Requerimiento} & \textbf{Historia de Usuario} \\
@@ -133,6 +133,11 @@ RF11 & \textit{Como responsable a cargo, quiero comprobar en el momento de la in
 RF12 & \textit{Como responsable a cargo, quiero que solo las personas autorizadas de la familia puedan acceder a las alertas y reportes del hogar, para que esa información quede resguardada.} \\
 \end{longtable}
 
+\section{Mockups}
+\label{sec:mockups}
+
+\section{Diagramas}
+
 \subsection{Diagrama de Casos de Uso}
 
 A partir de los requerimientos funcionales y las historias de usuario presentadas, se construyó el diagrama de casos de uso de la Figura~\ref{fig:casos_uso}, que organiza las capacidades del sistema en tres actores y tres bloques funcionales. Los actores \textit{Cámara IP} y \textit{Temporizador del Sistema} representan las dos formas en que se dispara el procesamiento sobre el video, ya sea frame a frame o de forma periódica, mientras que \textit{Responsable a Cargo} es el actor humano identificado en el user research.
@@ -144,7 +149,7 @@ Además de la agrupación en bloques, las relaciones punteadas entre casos de us
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{Imagenes/Diagrama_Casos_Uso_PFI.png}
-    \caption{Diagrama de Casos de Uso del sistema, derivado de los requerimientos funcionales y las historias de usuario. Elaboración propia.}
+    \caption[Diagrama de Casos de Uso del sistema.]{Diagrama de Casos de Uso del sistema, derivado de los requerimientos funcionales y las historias de usuario. Elaboración propia.}
     \label{fig:casos_uso}
 \end{figure}
 \FloatBarrier
@@ -160,7 +165,7 @@ Del lado de la nube, la construcción de la línea base de comportamiento (RF6) 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth,height=20cm,keepaspectratio]{Imagenes/Diagrama_Flujo_Informacion.png}
-    \caption{Diagrama de Flujo de Información del sistema, desde la captura de video hasta la notificación y el reporte. Elaboración propia.}
+    \caption[Diagrama de Flujo de Información del sistema.]{Diagrama de Flujo de Información del sistema, desde la captura de video hasta la notificación y el reporte. Elaboración propia.}
     \label{fig:flujo_informacion}
 \end{figure}
 \FloatBarrier
@@ -194,7 +199,7 @@ Ese modo batch no se representa como un componente aparte en la Figura~\ref{fig:
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.94\textwidth]{Imagenes/Diagrama_componentes.png}
-    \caption{Diagrama de componentes del sistema en su fase de desarrollo local. Elaboración propia.}
+    \caption[Diagrama de componentes del sistema.]{Diagrama de componentes del sistema en su fase de desarrollo local. Elaboración propia.}
     \label{fig:diagrama_componentes}
 \end{figure}
 \FloatBarrier
@@ -205,7 +210,7 @@ Ese modo batch no se representa como un componente aparte en la Figura~\ref{fig:
 
 Los diagramas de la sección anterior describen el comportamiento del sistema desde el punto de vista funcional, es decir, qué hace y cómo fluye la información entre sus partes. Lo que sigue es la infraestructura concreta que soporta ese comportamiento, desde el despliegue físico del sistema hasta el modelo de datos que esa infraestructura persiste.
 
-\subsection*{Diagrama de Arquitectura}
+\subsection{Diagrama de Arquitectura}
 \label{sec:diagrama_arquitectura}
 
 A diferencia del diagrama de componentes de la Sección~\ref{sec:diagrama_componentes}, que documentó la organización del código en su fase de validación local, la Figura~\ref{fig:arquitectura} muestra el despliegue físico del sistema, desde la cámara IP hasta la aplicación móvil. Del lado del borde, la Raspberry Pi aloja el nodo de inferencia que ejecuta el pipeline de YOLO para estimación de pose y CLIP para clasificación de actividades sobre el video capturado por la cámara, coherente con RNF5, que exige que ambos módulos corran sobre el mismo hardware embebido y sin GPU. El video nunca sale de ese nodo, cumpliendo con RNF1, y lo único que cruza hacia la nube son los eventos generados, nunca imágenes. Esos eventos se persisten localmente en SQLite antes de sincronizarse, la implementación concreta del requisito de continuidad ante cortes de conexión que exige RNF6, y esa misma base es la que se vuelca hacia la nube una vez que la conexión se restablece, según RNF7.
@@ -215,12 +220,12 @@ Del lado de la nube, AWS Elastic Beanstalk aloja la aplicación que recibe los e
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{Imagenes/Diagrama_Arquitectura.png}
-    \caption{Diagrama de arquitectura del sistema, desde la cámara IP hasta la aplicación móvil. Elaboración propia.}
+    \caption[Diagrama de arquitectura del sistema.]{Diagrama de arquitectura del sistema, desde la cámara IP hasta la aplicación móvil. Elaboración propia.}
     \label{fig:arquitectura}
 \end{figure}
 \FloatBarrier
 
-\subsection*{Diagrama de Base de Datos}
+\subsection{Diagrama de Base de Datos}
 \label{sec:diagrama_base_datos}
 
 El Diagrama de Arquitectura mostró dónde vive cada nodo del sistema. Lo que falta es qué guarda cada uno, y ahí el borde y la nube difieren tanto en lo que ya existe como en lo que todavía es diseño. La Figura~\ref{fig:diagrama_bd_local} documenta el modelo local, ya implementado sobre SQLite (Sección~\ref{sec:diagrama_componentes}), mientras que la Figura~\ref{fig:diagrama_bd_cloud} documenta el modelo de nube sobre PostgreSQL, que sigue siendo una propuesta de diseño y no código en producción, en la misma línea que \texttt{baseline/} y \texttt{evaluation/} en la Sección~\ref{sec:diagrama_componentes}. El backend en la nube (Sección~\ref{sec:backend_nube}) todavía no arrancó, pero el modelo de datos que lo va a sostener ya está definido con el mismo nivel de detalle que los demás diagramas ya presentados.
@@ -238,7 +243,7 @@ Por último, LINEA\_BASE\_COMPORTAMIENTO corresponde al módulo \texttt{baseline
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.4\textwidth]{Imagenes/Diagrama_Base_Datos_Local.png}
-    \caption{Diagrama de base de datos local, implementado sobre SQLite. Elaboración propia.}
+    \caption[Diagrama de base de datos local.]{Diagrama de base de datos local, implementado sobre SQLite. Elaboración propia.}
     \label{fig:diagrama_bd_local}
 \end{figure}
 \FloatBarrier
@@ -246,7 +251,7 @@ Por último, LINEA\_BASE\_COMPORTAMIENTO corresponde al módulo \texttt{baseline
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{Imagenes/Diagrama_Base_Datos_Nube.png}
-    \caption{Diagrama de base de datos en la nube, propuesto sobre PostgreSQL. Elaboración propia.}
+    \caption[Diagrama de base de datos en la nube.]{Diagrama de base de datos en la nube, propuesto sobre PostgreSQL. Elaboración propia.}
     \label{fig:diagrama_bd_cloud}
 \end{figure}
 \FloatBarrier
@@ -279,12 +284,12 @@ Una cuarta categoría, de aparición reciente y actualmente muy visible en Argen
 El caso más difundido es Ato, un dispositivo sin pantalla que inicia conversaciones de forma proactiva, envía recordatorios de medicación y genera reportes de actividad para la familia a través de una aplicación, con un costo de entre USD 179 y 200 más una suscripción de USD 29 mensuales tras el primer mes gratuito \parencite{Ato}.
 A diferencia de las categorías anteriores, no detecta caídas ni inmovilidad de forma automática, ni construye una línea base conductual a partir de video, de modo que resuelve una necesidad complementaria, la de compañía activa, y no compite de forma directa con el sistema propuesto en la dimensión de seguridad.
 
-\subsubsection{Cuadro comparativo comercial}
+\subsection{Tabla Comparativa de Alternativas}
 \label{sec:tabla_comparativa_comercial}
 
 \begin{table}[H]
 \centering
-\caption{Comparación de soluciones comerciales disponibles para el monitoreo de adultos mayores.}
+\caption[Comparación de soluciones comerciales de monitoreo.]{Comparación de soluciones comerciales disponibles para el monitoreo de adultos mayores.}
 \vspace{0.3cm}
 \label{tab:comparativa_comercial}
 \begingroup
@@ -318,7 +323,7 @@ Se aplica acá sobre el panorama relevado en la sección anterior, con el objeti
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{Imagenes/Porter_Cinco_Fuerzas.pdf}
-\caption{Cinco fuerzas de Porter aplicadas al sistema propuesto. Elaboración propia.}
+\caption[Cinco fuerzas de Porter.]{Cinco fuerzas de Porter aplicadas al sistema propuesto. Elaboración propia.}
 \label{fig:porter}
 \end{figure}
 
@@ -350,7 +355,7 @@ En los hechos, el proyecto compite contra estas tres categorías al mismo tiempo
 
 En conjunto, las cinco fuerzas dibujan un mercado accesible en lo técnico pero exigente en lo comercial. Por un lado, la amenaza de nuevos entrantes es baja en el corto plazo porque la confianza todavía no se construye rápido, aunque eso mismo advierte que un jugador global como AltumView podría entrar más adelante, y tanto los proveedores de hardware como los de infraestructura de nube tienen bajo poder de negociación, ya que ambos son reemplazables sin comprometer el producto. Sin embargo, esa ventaja del lado de la oferta se compensa con una fuerza mucho más determinante del lado de la demanda, el poder de negociación de los compradores, que cuentan con alternativas de bajo costo de cambio, y la amenaza de sustitutos ya instalados y de confianza, como la teleasistencia tradicional, un asistente de compañía como Ato o directamente un familiar que llama con frecuencia. En consecuencia, el desafío central no es tecnológico sino de adopción, algo consistente con lo que surgió en el User Research sobre la resistencia cultural a nuevas tecnologías entre adultos mayores y sus familias. Ese desafío, sin embargo, es exactamente el que la propuesta de valor del proyecto está diseñada para resolver, ya que ninguna de las alternativas relevadas, ni siquiera la de mayor tracción reciente como Ato, ofrece monitoreo de seguridad sin requerir ninguna acción del adulto mayor.
 
-\subsection{Triple P de Producto, Precio y Plaza}
+\subsection{Triple P}
 \label{sec:triple_p}
 
 A partir del panorama competitivo y de las cinco fuerzas que estructuran ese mercado, se construye la estrategia de posicionamiento aplicando el modelo de Producto, Precio y Plaza.
