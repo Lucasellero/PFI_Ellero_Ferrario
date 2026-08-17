@@ -28,7 +28,7 @@ Todo el sistema, tanto el pipeline de visión que corre en el borde como el back
 El módulo \texttt{vision/} implementa la heurística de detección de caídas e inmovilidad (Sección~\ref{sec:diagrama_componentes}) sobre keypoints de pose obtenidos con YOLO11n-pose a través de la librería Ultralytics. Implementar la arquitectura de YOLO desde cero, o recurrir a una implementación de terceros menos consolidada, hubiera significado resignar lo que Ultralytics ya resuelve, una interfaz de alto nivel que integra la descarga del modelo, la inferencia y la exportación a otros formatos. Además, es la misma línea de modelos que valida \textcite{Giri2025} y que confirma \textcite{Wang2025} como la variante de referencia para hardware embebido (Sección~\ref{sec:edge-inference}), de modo que usarla evita apartarse de la literatura que ya validó la viabilidad del enfoque. OpenCV se usa para todo el manejo de frames (lectura de archivos y de streams, recorte, dibujo del overlay de esqueleto) y NumPy para las operaciones vectoriales sobre los keypoints (velocidad vertical, ángulo de orientación) que alimentan la heurística de caída, ambas librerías estándar de facto en visión artificial con Python.
 
 \subsubsection*{ONNX Runtime para la clasificación semántica}
-CLIP se entrena y se exporta una única vez, en la máquina de desarrollo, con PyTorch, pero en el dispositivo de inferencia (hoy la PC de desarrollo, más adelante la Raspberry Pi) corre exclusivamente sobre ONNX Runtime, sin dependencia de PyTorch en tiempo de ejecución. Esta separación es deliberada, ya que PyTorch es una dependencia pesada, pensada para entrenamiento y con un footprint de instalación que no se justifica en un dispositivo que solo hace inferencia, mientras que ONNX Runtime está diseñado específicamente para ese escenario, con un binario liviano y soporte de ejecución en CPU sin necesidad de GPU, coherente con RNF5. Exportar a ONNX tiene además la ventaja de desacoplar el modelo del framework en el que fue entrenado, de modo que si en el futuro conviene migrar la inferencia a otro runtime no hace falta reentrenar ni reexportar CLIP desde cero.
+CLIP se entrena y se exporta una única vez, en la máquina de desarrollo, con PyTorch, pero en el dispositivo de inferencia (la Raspberry Pi) corre exclusivamente sobre ONNX Runtime, sin dependencia de PyTorch en tiempo de ejecución. Esta separación es deliberada, ya que PyTorch es una dependencia pesada, pensada para entrenamiento y con un footprint de instalación que no se justifica en un dispositivo que solo hace inferencia, mientras que ONNX Runtime está diseñado específicamente para ese escenario, con un binario liviano y soporte de ejecución en CPU sin necesidad de GPU, coherente con RNF5. Exportar a ONNX tiene además la ventaja de desacoplar el modelo del framework en el que fue entrenado, de modo que si en el futuro conviene migrar la inferencia a otro runtime no hace falta reentrenar ni reexportar CLIP desde cero.
 
 \subsubsection*{Pydantic y SQLite en el contrato de eventos}
 El esquema \texttt{MonitoringEvent} que actúa de contrato entre \texttt{vision/}, \texttt{vlm/} y \texttt{baseline/} (Sección~\ref{sec:diagrama_componentes}) está definido con Pydantic, que valida en tiempo de ejecución que cada evento tenga el tipo y la estructura esperada antes de persistirlo, algo que una clase de Python sin validación no garantizaría. La persistencia local usa SQLite a través del módulo estándar \texttt{sqlite3}, sin una capa de ORM intermedia. Se descartó un ORM como SQLAlchemy ya que el volumen y la variedad de consultas sobre \texttt{events/} son bajos (insertar un evento, leerlos todos o filtrados por identificador de video o de cámara), y esas consultas ya están expresadas con claridad en SQL directo, de modo que la capa de abstracción adicional de un ORM no aportaría legibilidad ni velocidad de desarrollo, solo una dependencia más. SQLite en sí, frente a un motor cliente-servidor como PostgreSQL, es la elección natural para este punto del sistema porque el requisito no es concurrencia entre múltiples clientes sino persistencia liviana de un único proceso local (RNF6), sin necesidad de levantar ni administrar un servidor de base de datos en un dispositivo embebido.
@@ -54,3 +54,48 @@ Del lado de la persistencia en la nube, el backend va a usar Amazon RDS sobre Po
 La autenticación de la aplicación móvil se apoya en Firebase Authentication en lugar de un esquema de tokens propio administrado por el backend, principalmente porque el sistema ya depende de Firebase Cloud Messaging para las notificaciones push (RF8). Sumar también Firebase Authentication evita administrar un segundo proveedor de identidad y aprovecha que el SDK de Firebase en el cliente móvil (React Native) ya integra ambos servicios de forma nativa. El costo es una dependencia mayor de un proveedor externo, pero se trata de un servicio de autenticación estándar, con inicio de sesión por correo y contraseña o proveedores federados, y no de un componente que procese datos sensibles del video ni de la línea base de comportamiento, por lo que no compromete el requisito de privacidad desarrollado en el Marco Teórico (Sección~\ref{sec:edge_marco}). Además, Firebase Authentication envía de forma automática un correo de verificación al momento de crear la cuenta, de manera que el acceso mediante la contraseña elegida por el familiar queda condicionado a que ese correo haya sido confirmado, sin que el equipo tenga que implementar ese mecanismo por su cuenta, reforzando así el control de acceso que exigen RNF10 y RF12.
 
 Por último, la aplicación móvil está desarrollada en React Native. Desarrollar de forma nativa en Swift y en Kotlin por separado no se justifica en este caso, porque la aplicación no requiere acceso a funcionalidades de bajo nivel del dispositivo más allá de recibir notificaciones push y consumir una API REST, y duplicar ese desarrollo tiene poco sentido para un equipo de dos personas con un cronograma acotado. Esta decisión es además independiente de RNF8, que exige que la aplicación sea simple, clara e intuitiva, un objetivo de diseño de interfaz que no depende de si el código corre sobre un framework nativo o multiplataforma.
+
+\subsection{Demo}
+\label{sec:demo}
+
+Todas las decisiones tecnológicas descriptas hasta acá ya se traducen en un sistema que corre y detecta eventos en tiempo real sobre la Raspberry Pi de destino. A diferencia de las pantallas de la aplicación móvil presentadas en la Sección~\ref{sec:mockups}, que son una propuesta de diseño todavía no implementada, las capturas de esta sección corresponden al panel de operación local (\texttt{dashboard/}) construido sobre FastAPI y WebSockets, tal como se justificó más arriba. A través de él, el equipo ya puede dar de alta cámaras o archivos de video, iniciar y detener el monitoreo, y visualizar en vivo el resultado de la detección superpuesto sobre cada fuente, resolviendo así RF10 y RF11 aun antes de que exista la aplicación móvil.
+
+En primer lugar, la Figura~\ref{fig:demo_caida} muestra la vista de una única fuente sobre el video \texttt{fall}, con el esqueleto de keypoints de YOLO superpuesto sobre la persona detectada en el piso. A la derecha, la pestaña Postura · YOLO lista cuatro eventos de caída detectada, no porque haya cuatro caídas distintas, sino porque \texttt{fall} es un clip corto de prueba configurado en bucle, y el sistema vuelve a detectar la caída correctamente en cada repetición, con el aspect ratio del cuadro delimitador y el ángulo del cuerpo que \texttt{vision/} usa para esa detección (RF1). La pestaña Actividad · CLIP de esa misma fuente no registra eventos, algo que confirma en la práctica lo que ya describía el Diagrama de Flujo de Información, que las dos ramas de detección corren de forma independiente sobre cada frame.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Imagenes/Demo_Dashboard_Caida.png}
+    \caption[Demo del panel local: detección de caídas.]{Panel de operación local (\texttt{dashboard/}): vista única de la fuente \texttt{fall}, con overlay de pose YOLO y cuatro eventos de caída detectados. Captura propia.}
+    \label{fig:demo_caida}
+\end{figure}
+\FloatBarrier
+
+Por su parte, la Figura~\ref{fig:demo_actividad} muestra el mismo panel sobre la fuente \texttt{video2}, donde el patrón se invierte. La pestaña Postura · YOLO no registra eventos porque no hubo caídas ni inmovilidad, mientras que Actividad · CLIP acumula siete eventos de clasificación semántica (RF2), también repetidos por el mismo motivo, un clip corto en bucle. Esos eventos alternan entre ``posiblemente comiendo, bebiendo o con medicación'' con hasta 73\,\% de confianza y ``leyendo o usando una pantalla'' con hasta 72\,\%, porque la persona de la escena está haciendo las dos cosas a la vez, leyendo mientras toma algo, y el sistema capta correctamente las dos lecturas de esa actividad compuesta en lugar de quedarse con una sola. La etiqueta ``sin confirmar'' y la variación de confianza entre eventos muestran, además, el umbral de confianza y la deduplicación que exige el diagrama de flujo antes de registrar un evento.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Imagenes/Demo_Dashboard_Actividad.png}
+    \caption[Demo del panel local: clasificación de actividad.]{Panel de operación local (\texttt{dashboard/}): vista única de la fuente \texttt{video2}, con eventos de clasificación de actividad mediante CLIP. Captura propia.}
+    \label{fig:demo_actividad}
+\end{figure}
+\FloatBarrier
+
+Además, la Figura~\ref{fig:demo_todas} muestra la vista completa del panel, con las cinco cámaras corriendo en simultáneo, cada una con su propio overlay de pose y un indicador de estado (RNF9). Debajo, el feed de eventos detectados reúne en un único listado cronológico los eventos de las cinco fuentes a la vez, caídas, actividades e inmovilidad mezcladas, pero cada tarjeta indica de qué cámara proviene ese evento en particular, por ejemplo \texttt{fall} o \texttt{video2}, de modo que verlas todas juntas no significa perder de dónde viene cada una, la misma lógica de registro centralizado que exige RF5.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Imagenes/Demo_Dashboard_TodasFuentes.png}
+    \caption[Demo del panel local: monitoreo simultáneo de múltiples fuentes.]{Panel de operación local (\texttt{dashboard/}): vista de todas las fuentes en simultáneo, con el feed combinado de eventos detectados. Captura propia.}
+    \label{fig:demo_todas}
+\end{figure}
+\FloatBarrier
+
+Por último, la Figura~\ref{fig:demo_alta} muestra el panel de fuentes de video, donde las cámaras y archivos ya cargados se pueden reordenar en la lista, y donde se puede sumar una fuente nueva, ya sea una cámara IP o un archivo de video local, con un identificador propio y la opción de repetirlo en bucle. Esta pantalla resuelve directamente RF10, que exige poder configurar cámaras desde un panel de administración local sin depender de asistencia técnica externa.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.32\textwidth]{Imagenes/Demo_Dashboard_AltaCamara.png}
+    \caption[Demo del panel local: gestión de fuentes de video.]{Panel de operación local (\texttt{dashboard/}): listado de fuentes de video, con la opción de reordenarlas y de sumar una cámara IP o un archivo. Captura propia.}
+    \label{fig:demo_alta}
+\end{figure}
+\FloatBarrier

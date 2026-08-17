@@ -202,10 +202,10 @@ Del lado de la nube, la construcción de la línea base de comportamiento (RF6) 
 \subsection{Diagrama de Componentes}
 \label{sec:diagrama_componentes}
 
-La Figura~\ref{fig:diagrama_componentes} documenta cómo está organizado el código fuente del sistema en el ambiente en el que se lo está construyendo y validando en la actualidad.
-Esta organización es distinta del despliegue objetivo, que incluye la Raspberry Pi, la nube alojada en AWS y la aplicación móvil, y que se presenta más adelante en la Sección~\ref{sec:diagrama_arquitectura}.
-Por eso el diagrama no incluye todavía esos componentes, que pertenecen al despliegue final y no forman parte de esta etapa del desarrollo.
-Lo que muestra en cambio es el software validado localmente hasta esta entrega, correspondiente al 50\% del avance del proyecto, organizado en siete módulos independientes que corren hoy sobre la PC de desarrollo.
+La Figura~\ref{fig:diagrama_componentes} documenta cómo está organizado el código fuente del sistema, ya validado corriendo sobre la Raspberry Pi que constituye el hardware de borde del despliegue objetivo (Sección~\ref{sec:diagrama_arquitectura}).
+Ese despliegue objetivo también incluye la nube alojada en AWS y la aplicación móvil, presentadas más adelante en la misma sección, pero ninguna de las dos está implementada todavía a la fecha de esta entrega.
+Por eso el diagrama no incluye esos componentes, que pertenecen al despliegue final y todavía no forman parte de esta etapa del desarrollo.
+Lo que muestra en cambio es el software validado hasta esta entrega, correspondiente al 50\% del avance del proyecto, organizado en siete módulos independientes que ya corren sobre la Raspberry Pi.
 
 El módulo \texttt{runner/} es el orquestador central del sistema y el único que importa directamente el código de \texttt{vision/} y \texttt{vlm/}, a los que invoca por cada cámara activa y de los que recibe el resultado de la detección correspondiente.
 Por su parte, \texttt{vision/} implementa una heurística de dos fases sobre descriptores de pose, sin una red neuronal propia más allá de la estimación de pose de base, para detectar caídas e inmovilidad prolongada, en línea con RF1, RF3 y RF4.
@@ -215,7 +215,7 @@ En ese esquema, \texttt{events/} funciona como el único punto de acuerdo formal
 Esta decisión mantiene a cada módulo desacoplado de la implementación interna de los demás, dado que alcanza con que todos respeten el esquema de eventos para poder desarrollarse y probarse de forma independiente.
 
 \texttt{dashboard/} cumple un doble rol operativo, ya que por un lado controla a \texttt{runner/}, iniciándolo y deteniéndolo como subproceso y gestionando la configuración de cámaras en \texttt{cameras.yaml}, y por otro lee los eventos almacenados en \texttt{events/} para mostrarlos en un panel de operación local, en línea con RF10.
-Este panel es una herramienta de desarrollo y operación sobre la PC local, distinta de la futura API pública que se expondrá sobre \texttt{events/} y \texttt{baseline/} para la aplicación móvil descripta en la Sección~\ref{sec:diagrama_arquitectura}.
+Este panel es una herramienta de desarrollo y operación que corre directamente sobre la Raspberry Pi, distinta de la futura API pública que se expondrá sobre \texttt{events/} y \texttt{baseline/} para la aplicación móvil descripta en la Sección~\ref{sec:diagrama_arquitectura}.
 
 \texttt{baseline/} y \texttt{evaluation/} aparecen en el diagrama con trazo punteado porque a la fecha de esta entrega ninguno de los dos módulos fue iniciado, aunque su diseño ya está definido dentro de la arquitectura del sistema.
 \texttt{baseline/} está pensado para leer los eventos almacenados en \texttt{events/} y construir a partir de ellos la línea base de comportamiento mediante clustering dinámico, correspondiente a RF6, mientras que \texttt{evaluation/} no consume eventos de la misma manera, sino que toma el video original de la carpeta \texttt{videos/} junto con los eventos detectados sobre ese video para generar un video anotado que permite la inspección visual de las detecciones.
@@ -246,7 +246,7 @@ A diferencia del diagrama de componentes de la Sección~\ref{sec:diagrama_compon
 
 Del lado de la nube, AWS Elastic Beanstalk aloja la aplicación que recibe los eventos sincronizados y los persiste en Amazon RDS sobre PostgreSQL, junto con la línea base de comportamiento construida a partir de ellos (RF6). Desde ahí, Firebase Cloud Messaging es el servicio que entrega las notificaciones push a la aplicación móvil, desarrollada en React Native, cerrando el circuito que exige RF8 entre la detección de un evento crítico y el aviso al responsable a cargo.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{Imagenes/Diagrama_Arquitectura.png}
     \caption[Diagrama de arquitectura del sistema.]{Diagrama de arquitectura del sistema, desde la cámara IP hasta la aplicación móvil. Elaboración propia.}
@@ -263,13 +263,13 @@ El modelo local es una única entidad, EVENTO, sin relaciones ni claves foránea
 
 El modelo de nube parte de HOGAR y RESIDENTE en una relación estrictamente uno a uno, no uno a muchos, porque RNF11 restringe el sistema a un único residente monitoreado por instalación. Cada HOGAR tiene, a su vez, una o varias CAMARA registradas (\texttt{hogar\_id} como clave foránea), con un identificador local que coincide con el que usa \texttt{cameras.yaml} en el borde (Sección~\ref{sec:diagrama_componentes}), una ubicación descriptiva dentro del hogar y un estado activo que habilita darlas de alta o de baja desde el panel de administración, tal como exige RF10. Cada evento se origina en una cámara puntual, de ahí la clave foránea \texttt{camara\_id} en EVENTO, pero además referencia directamente al residente mediante \texttt{residente\_id}, una desnormalización deliberada que evita recorrer la cadena \texttt{camara} hacia \texttt{hogar} hacia \texttt{residente} cada vez que el módulo de línea base necesita traer todos los eventos de una persona, algo que va a hacer con frecuencia ya que la relación hogar-residente es uno a uno.
 
-Frente al EVENTO local, el EVENTO de la nube difiere en dos campos. El \texttt{video\_timestamp\_s}, relativo al archivo de video que se está procesando, se traduce a \texttt{occurred\_at}, un timestamp real, porque en la nube hay que poder ordenar eventos entre distintos hogares y videos, algo que un tiempo relativo al archivo no permite. Y se agrega \texttt{es\_alerta}, un booleano derivado de la severidad del evento, en lugar de modelar una entidad Notificación aparte, porque RF7 y RF8 solo necesitan distinguir si un evento dispara una alerta al responsable a cargo, no llevar un historial propio de notificaciones enviadas. El campo \texttt{synced\_at} registra cuándo llegó el evento a la nube, distinto de \texttt{occurred\_at}, que registra cuándo ocurrió, la misma separación que sostiene la continuidad ante cortes de conexión que exigen RNF6 y RNF7.
+Frente al EVENTO local, el EVENTO de la nube difiere en dos campos. El \texttt{video\_\allowbreak timestamp\_\allowbreak s}, relativo al archivo de video que se está procesando, se traduce a \texttt{occurred\_at}, un timestamp real, porque en la nube hay que poder ordenar eventos entre distintos hogares y videos, algo que un tiempo relativo al archivo no permite. Y se agrega \texttt{es\_alerta}, un booleano derivado de la severidad del evento, en lugar de modelar una entidad Notificación aparte, porque RF7 y RF8 solo necesitan distinguir si un evento dispara una alerta al responsable a cargo, no llevar un historial propio de notificaciones enviadas. El campo \texttt{synced\_at} registra cuándo llegó el evento a la nube, distinto de \texttt{occurred\_at}, que registra cuándo ocurrió, la misma separación que sostiene la continuidad ante cortes de conexión que exigen RNF6 y RNF7.
 
 FAMILIAR y HOGAR\_FAMILIAR resuelven la relación entre hogares y responsables a cargo. Un hogar puede tener varios familiares autorizados, tal como exige RF12, y un mismo familiar podría estar vinculado a más de un hogar, así que la relación es de muchos a muchos y se resuelve con HOGAR\_FAMILIAR como tabla intermedia, con clave primaria compuesta por \texttt{hogar\_id} y \texttt{familiar\_id}, más un campo \texttt{rol} que distingue el tipo de vínculo de cada familiar con ese hogar en particular. FAMILIAR no tiene contraseña propia en el modelo, sino un campo \texttt{firebase\_uid}, dado que la autenticación se delega completamente a Firebase Authentication, ya justificado en la Sección~\ref{sec:backend_nube}.
 
 Por último, LINEA\_BASE\_COMPORTAMIENTO corresponde al módulo \texttt{baseline/} (RF6, Secciones~\ref{sec:aprendizaje_adaptativo_marco} y~\ref{sec:rutinas}) y guarda, por residente, los parámetros del clustering dinámico junto con la fecha de la última actualización. La estructura de esta entidad todavía es provisoria, ya que \texttt{baseline/} no arrancó a la fecha de esta entrega (Sección~\ref{sec:diagrama_componentes}), y el campo \texttt{parametros\_cluster} en formato JSON se eligió justamente por esa razón, para no comprometerse hoy con una estructura de salida que probablemente cambie una vez que el módulo esté en desarrollo.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.4\textwidth]{Imagenes/Diagrama_Base_Datos_Local.png}
     \caption[Diagrama de base de datos local.]{Diagrama de base de datos local, implementado sobre SQLite. Elaboración propia.}
@@ -277,7 +277,7 @@ Por último, LINEA\_BASE\_COMPORTAMIENTO corresponde al módulo \texttt{baseline
 \end{figure}
 \FloatBarrier
 
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{Imagenes/Diagrama_Base_Datos_Nube.png}
     \caption[Diagrama de base de datos en la nube.]{Diagrama de base de datos en la nube, propuesto sobre PostgreSQL. Elaboración propia.}
