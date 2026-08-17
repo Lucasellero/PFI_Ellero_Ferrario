@@ -1,5 +1,7 @@
 \chapter{Descripción}\label{chapter03}
 
+Este capítulo describe el proceso de investigación de usuarios y el diseño resultante del sistema. Primero se presenta el User Research, del cual se derivan los requerimientos funcionales y no funcionales, las historias de usuario y los mockups de la aplicación móvil. Luego se documentan los diagramas de diseño del sistema y el modelo de datos, y por último se analiza el panorama competitivo y el posicionamiento del proyecto en el mercado.
+
 \section{User Research}
 
 Con el objetivo de validar la problemática identificada y comprender las necesidades de los usuarios potenciales del sistema, se llevó a cabo un proceso de investigación mediante dos herramientas complementarias, una encuesta de alcance cuantitativo y entrevistas semiestructuradas de carácter cualitativo.
@@ -106,7 +108,7 @@ A continuación se detallan los requerimientos no funcionales (RNF) del sistema.
 
 \subsection{Historias de Usuario}
 
-Cada requerimiento funcional se tradujo en una historia de usuario, escrita desde la perspectiva del responsable a cargo del adulto mayor, el actor principal identificado en el user research. Dos requerimientos quedan afuera de esa regla, el registro de eventos (RF5) y la construcción de la línea base de comportamiento (RF6), porque son de naturaleza interna o habilitante y no representan una necesidad que el responsable a cargo exprese de forma directa, sino un mecanismo que sostiene el valor de otro requerimiento. Por eso, en la Tabla~\ref{tab:hu}, se agrupan junto al requerimiento al que dan soporte en lugar de forzar una historia propia para cada uno.
+Cada requerimiento funcional se tradujo en una historia de usuario, escrita desde la perspectiva del responsable a cargo del adulto mayor, el actor principal identificado en el User Research. Dos requerimientos quedan afuera de esa regla, el registro de eventos (RF5) y la construcción de la línea base de comportamiento (RF6), porque son de naturaleza interna o habilitante y no representan una necesidad que el responsable a cargo exprese de forma directa, sino un mecanismo que sostiene el valor de otro requerimiento. Por eso, en la Tabla~\ref{tab:hu}, se agrupan junto al requerimiento al que dan soporte en lugar de forzar una historia propia para cada uno.
 
 \begin{longtable}{@{}p{0.20\textwidth}p{0.78\textwidth}@{}}
 \caption[Historias de Usuario y Requerimientos Funcionales.]{Historias de Usuario y su relación con los Requerimientos Funcionales.}
@@ -169,7 +171,7 @@ Por último, la pantalla \textit{Día en orden} (05) representa el estado sin al
 
 \subsection{Diagrama de Casos de Uso}
 
-A partir de los requerimientos funcionales y las historias de usuario presentadas, se construyó el diagrama de casos de uso de la Figura~\ref{fig:casos_uso}, que organiza las capacidades del sistema en tres actores y tres bloques funcionales. Los actores \textit{Cámara IP} y \textit{Temporizador del Sistema} representan las dos formas en que se dispara el procesamiento sobre el video, ya sea frame a frame o de forma periódica, mientras que \textit{Responsable a Cargo} es el actor humano identificado en el user research.
+A partir de los requerimientos funcionales y las historias de usuario presentadas, se construyó el diagrama de casos de uso de la Figura~\ref{fig:casos_uso}, que organiza las capacidades del sistema en tres actores y tres bloques funcionales. Los actores \textit{Cámara IP} y \textit{Temporizador del Sistema} representan las dos formas en que se dispara el procesamiento sobre el video, ya sea frame a frame o de forma periódica, mientras que \textit{Responsable a Cargo} es el actor humano identificado en el User Research.
 
 En cuanto a la organización interna del Sistema, el Bloque 1 agrupa el procesamiento sobre el video que ocurre dentro del hogar (estimación de pose, detección de caídas, de inmovilidad prolongada y clasificación de actividades), coherente con el procesamiento local exigido por RNF1. El caso de uso \textit{Detectar Inmovilidad Prolongada} engloba tanto RF3 (sedentarismo, postura sentada) como RF4 (piso, postura acostada), ya que ambos comparten el mismo mecanismo de detección basado en pose y se distinguen internamente mediante un atributo de postura. El registro de eventos y todo lo que depende de él, la construcción y actualización de la línea base de comportamiento, la detección de desvíos y la generación de reportes, se ejecutan del lado de la nube; RNF6 solo exige que el dispositivo conserve los eventos de forma transitoria ante cortes de conexión, hasta poder sincronizarlos (RNF7). El Bloque 2 agrupa las funcionalidades expuestas al responsable a cargo desde la aplicación móvil, y el Bloque 3 agrupa la administración y validación local de las cámaras.
 
@@ -205,7 +207,7 @@ Del lado de la nube, la construcción de la línea base de comportamiento (RF6) 
 La Figura~\ref{fig:diagrama_componentes} documenta cómo está organizado el código fuente del sistema, ya validado corriendo sobre la Raspberry Pi que constituye el hardware de borde del despliegue objetivo (Sección~\ref{sec:diagrama_arquitectura}).
 Ese despliegue objetivo también incluye la nube alojada en AWS y la aplicación móvil, presentadas más adelante en la misma sección, pero ninguna de las dos está implementada todavía a la fecha de esta entrega.
 Por eso el diagrama no incluye esos componentes, que pertenecen al despliegue final y todavía no forman parte de esta etapa del desarrollo.
-Lo que muestra en cambio es el software validado hasta esta entrega, correspondiente al 50\% del avance del proyecto, organizado en siete módulos independientes que ya corren sobre la Raspberry Pi.
+Lo que muestra en cambio es el software validado hasta esta entrega, correspondiente al 50\,\% del avance del proyecto, organizado en siete módulos independientes que ya corren sobre la Raspberry Pi.
 
 El módulo \texttt{runner/} es el orquestador central del sistema y el único que importa directamente el código de \texttt{vision/} y \texttt{vlm/}, a los que invoca por cada cámara activa y de los que recibe el resultado de la detección correspondiente.
 Por su parte, \texttt{vision/} implementa una heurística de dos fases sobre descriptores de pose, sin una red neuronal propia más allá de la estimación de pose de base, para detectar caídas e inmovilidad prolongada, en línea con RF1, RF3 y RF4.
@@ -382,7 +384,7 @@ En los hechos, el proyecto compite contra estas tres categorías al mismo tiempo
 
 \medskip
 
-En conjunto, las cinco fuerzas dibujan un mercado accesible en lo técnico pero exigente en lo comercial. Por un lado, la amenaza de nuevos entrantes es baja en el corto plazo porque la confianza todavía no se construye rápido, aunque eso mismo advierte que un jugador global como AltumView podría entrar más adelante, y tanto los proveedores de hardware como los de infraestructura de nube tienen bajo poder de negociación, ya que ambos son reemplazables sin comprometer el producto. Sin embargo, esa ventaja del lado de la oferta se compensa con una fuerza mucho más determinante del lado de la demanda, el poder de negociación de los compradores, que cuentan con alternativas de bajo costo de cambio, y la amenaza de sustitutos ya instalados y de confianza, como la teleasistencia tradicional, un asistente de compañía como Ato o directamente un familiar que llama con frecuencia. En consecuencia, el desafío central no es tecnológico sino de adopción, algo consistente con lo que surgió en el User Research sobre la resistencia cultural a nuevas tecnologías entre adultos mayores y sus familias. Ese desafío, sin embargo, es exactamente el que la propuesta de valor del proyecto está diseñada para resolver, ya que ninguna de las alternativas relevadas, ni siquiera la de mayor tracción reciente como Ato, ofrece monitoreo de seguridad sin requerir ninguna acción del adulto mayor.
+En conjunto, las cinco fuerzas dibujan un mercado accesible en lo técnico pero exigente en lo comercial. Por un lado, la amenaza de nuevos entrantes es baja en el corto plazo porque la confianza todavía no se construye rápido, aunque eso mismo advierte que un jugador global como AltumView podría entrar más adelante, y tanto los proveedores de hardware como los de infraestructura de nube tienen bajo poder de negociación, dado que ambos son reemplazables sin comprometer el producto. Sin embargo, esa ventaja del lado de la oferta se compensa con una fuerza mucho más determinante del lado de la demanda, el poder de negociación de los compradores, que cuentan con alternativas de bajo costo de cambio, y la amenaza de sustitutos ya instalados y de confianza, como la teleasistencia tradicional, un asistente de compañía como Ato o directamente un familiar que llama con frecuencia. En consecuencia, el desafío central no es tecnológico sino de adopción, algo consistente con lo que surgió en el User Research sobre la resistencia cultural a nuevas tecnologías entre adultos mayores y sus familias. Ese desafío, no obstante, es exactamente el que la propuesta de valor del proyecto está diseñada para resolver, dado que ninguna de las alternativas relevadas, ni siquiera la de mayor tracción reciente como Ato, ofrece monitoreo de seguridad sin requerir ninguna acción del adulto mayor.
 
 \subsection{Triple P}
 \label{sec:triple_p}
@@ -396,14 +398,14 @@ La oferta combina hardware y software en un mismo paquete, compuesto por la cám
 AltumView Sentinare fija la referencia de mercado más cercana en la categoría de cámaras, entre USD 200 y 230 sin cuota mensual \parencite{AltumView}, pero cubre solo detección de eventos sobre una habitación. La arquitectura del sistema propuesto, dividida entre procesamiento local (RNF1) y un componente en la nube que sostiene la línea base y los reportes (RNF6, RNF7), sugiere naturalmente un esquema mixto, con un costo inicial por el hardware, similar en orden de magnitud al de AltumView, más una suscripción opcional que cubra el cómputo y almacenamiento en la nube del segundo módulo. Este esquema ya tiene precedente en el mismo segmento de cliente, dado que Ato cobra un dispositivo de entre USD 179 y 200 más una suscripción de USD 29 mensuales \parencite{Ato}, lo que sugiere que las familias de este segmento están dispuestas a aceptar un costo recurrente cuando el valor entregado es continuo. El esquema propio todavía no está validado con costos de producción reales, pero es coherente con la arquitectura y cuenta con un antecedente de mercado que respalda su viabilidad.
 
 \paragraph{Plaza:}
-El proyecto no cuenta hoy con canal de distribución propio. Dos vías parecen más viables que una tienda física, dado el perfil de comprador relevado en el user research, cuidadores que ya buscan de forma activa una solución y se informan por redes o grupos de mensajería. La primera es la venta directa por canal digital, y la segunda son las alianzas institucionales con geriátricos, obras sociales o municipios interesados en programas de cuidado domiciliario, una oportunidad que se apoya en el crecimiento poblacional proyectado por INDEC \parencite{INDEC2024}. Esta segunda vía tiene además la ventaja de acortar el problema de confianza señalado en el análisis de Porter, porque la institución actúa como validador ante la familia.
+El proyecto no cuenta hoy con canal de distribución propio. Dos vías parecen más viables que una tienda física, dado el perfil de comprador relevado en el User Research, cuidadores que ya buscan de forma activa una solución y se informan por redes o grupos de mensajería. La primera es la venta directa por canal digital, y la segunda son las alianzas institucionales con geriátricos, obras sociales o municipios interesados en programas de cuidado domiciliario, una oportunidad que se apoya en el crecimiento poblacional proyectado por INDEC \parencite{INDEC2024}. Esta segunda vía tiene además la ventaja de acortar el problema de confianza señalado en el análisis de Porter, porque la institución actúa como validador ante la familia.
 
 \subsection{Análisis FODA}
 \label{sec:foda}
 
 A partir del panorama competitivo, las cinco fuerzas de Porter y el posicionamiento de producto, precio y plaza relevados en las secciones anteriores, se construye un FODA.
 
-\paragraph{Fortalezas}
+\paragraph{Fortalezas:}
 \begin{itemize}
     \item \textbf{Privacidad por procesamiento local del video.} El video nunca sale del hogar, ya que la estimación de pose y la detección de eventos ocurren en el propio dispositivo, sin exponer imágenes a servidores externos ni requerir hardware adicional.
     \item \textbf{Integración de dos capacidades en un mismo sistema.} Combina detección de eventos agudos con modelado longitudinal de rutina dentro de una misma arquitectura.
@@ -411,16 +413,16 @@ A partir del panorama competitivo, las cinco fuerzas de Porter y el posicionamie
     \item \textbf{Arquitectura modular entre borde y nube.} El procesamiento de video corre en el dispositivo local, mientras que la línea base, la detección de desvíos y los reportes corren en la nube, lo que permite escalar o migrar cada capa de forma independiente sin rediseñar el sistema completo.
 \end{itemize}
 
-\paragraph{Oportunidades}
+\paragraph{Oportunidades:}
 \begin{itemize}
     \item \textbf{Mercado latinoamericano prácticamente vacío en esta categoría.} Los actores relevados en la región, como SPS y Atempo en Argentina o GCare en Chile, operan sobre el modelo de botón y teleasistencia, sin competidor directo identificado en cámara o radar en ningún país de la región.
     \item \textbf{Resistencia documentada a wearables.} La evidencia del INDEC sobre la dificultad de adopción de nuevas tecnologías entre adultos mayores empuja la demanda hacia soluciones pasivas como esta \parencite{INDEC2020}.
     \item \textbf{Posible interés institucional.} Existe espacio para alianzas con obras sociales, geriátricos o municipios interesados en programas de cuidado domiciliario.
-    \item \textbf{Crecimiento sostenido de la población objetivo.} Las proyecciones del INDEC indican que la población de 60 años o más va a superar el 20\% hacia 2040, lo que amplía el mercado potencial de forma sostenida en el tiempo \parencite{INDEC2024}.
+    \item \textbf{Crecimiento sostenido de la población objetivo.} Las proyecciones del INDEC indican que la población de 60 años o más va a superar el 20\,\% hacia 2040, lo que amplía el mercado potencial de forma sostenida en el tiempo \parencite{INDEC2024}.
     \item \textbf{Creciente aceptación de asistentes de IA en el hogar.} La tracción reciente de Ato en Argentina muestra que las familias ya están dispuestas a incorporar dispositivos de inteligencia artificial en el cuidado del adulto mayor, lo que reduce la barrera de confianza inicial identificada en el análisis de Porter para cualquier producto nuevo de esta categoría.
 \end{itemize}
 
-\paragraph{Debilidades}
+\paragraph{Debilidades:}
 \begin{itemize}
     \item \textbf{Validación limitada.} El prototipo todavía no fue probado en múltiples hogares reales ni a escala.
     \item \textbf{Sin canal de distribución propio.} Todavía no existe una estructura comercial ni soporte disponible las 24 horas.
@@ -428,7 +430,7 @@ A partir del panorama competitivo, las cinco fuerzas de Porter y el posicionamie
     \item \textbf{Modelo de costos sin validar.} A diferencia de AltumView Sentinare, que ya tiene un precio de referencia de mercado (USD 200-230 sin cuota mensual), el sistema propuesto todavía no cuenta con un costo de producción ni una estructura de precios validada frente a esa referencia.
 \end{itemize}
 
-\paragraph{Amenazas}
+\paragraph{Amenazas:}
 \begin{itemize}
     \item \textbf{Reacción de competidores locales o globales.} Tanto actores ya instalados en Argentina, como SPS o Atempo, como jugadores globales con cámara en el borde, como AltumView, podrían anticiparse incorporando estas capacidades antes de que el proyecto logre escalar a producto.
     \item \textbf{Percepción de intrusión.} Aun con procesamiento local, la sola presencia de una cámara puede generar rechazo inicial en algunas familias, tal como surgió en el User Research.
