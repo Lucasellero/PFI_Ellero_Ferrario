@@ -14,7 +14,7 @@
 \usepackage{lmodern}
 \usepackage{booktabs}
 
-\usepackage[backend=biber, style=iso-authoryear, language=spanish]{biblatex}
+\usepackage[backend=biber, style=iso-authoryear, language=spanish, maxcitenames=3, mincitenames=1]{biblatex}
 \DeclareUnicodeCharacter{202F}{~} % Para reemplazar el caracter 202F por un espacio
 \bibliography{biblio.bib}
 \setcounter{tocdepth}{3}
@@ -113,7 +113,8 @@
 \renewcommand{\thetable}{\thechapter.\Roman{table}}
 
 %Espaciado antes y despu\'es de una figura respecto del texto
-\setlength{\textfloatsep}{5pt}
+\setlength{\textfloatsep}{15pt plus 2pt minus 4pt}
+\setlength{\intextsep}{15pt plus 2pt minus 4pt}
 
 % Para notas
 \usepackage{todonotes}
