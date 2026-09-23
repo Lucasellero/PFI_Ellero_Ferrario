@@ -55,6 +55,53 @@ La autenticación de la aplicación móvil se apoya en Firebase Authentication e
 
 Por último, la aplicación móvil está desarrollada en React Native. Desarrollar de forma nativa en Swift y en Kotlin por separado no se justifica en este caso, porque la aplicación no requiere acceso a funcionalidades de bajo nivel del dispositivo más allá de recibir notificaciones push y consumir una API REST, y duplicar ese desarrollo tiene poco sentido para un equipo de dos personas con un cronograma acotado. Esta decisión es además independiente de RNF8, que exige que la aplicación sea simple, clara e intuitiva, un objetivo de diseño de interfaz que no depende de si el código corre sobre un framework nativo o multiplataforma.
 
+\subsection{Datasets y pipeline de datos}
+\label{sec:datasets}
+
+El sistema utiliza dos familias de datasets según el módulo que los consume.
+Los módulos \texttt{vision/} y \texttt{vlm/} se calibran y validan sobre datasets de video, mientras que \texttt{baseline/} se apoya en un dataset de eventos de sensores.
+
+\subsubsection*{Datasets de video}
+
+Los datasets Toyota Smarthome, GMDCSA-24, CAUCAFall y URFD ya fueron presentados en la Sección~\ref{sec:brecha}, junto con el rol que cumple cada uno en la calibración y validación del sistema.
+Sobre esa base, Toyota Smarthome se complementó con un conjunto propio de clips categorizados por el equipo, necesario porque el dataset público no cubre por sí solo los ángulos de cámara ni todas las actividades relevantes para el hogar objetivo del sistema.
+GMDCSA-24 está alojado en Zenodo bajo el DOI 10.5281/zenodo.11216408, con licencia CC BY 4.0.
+A URFD se sumó además \texttt{ToyotaSmarthome\_FP}, un conjunto de clips largos que funciona como negativo duro adicional, y que cubre casos de falso positivo de caída (posturas en el piso o movimientos bruscos sin caída real) que las secuencias de casi caídas de URFD no representan.
+
+Se evaluó también el Kaggle Multiple Cameras Fall Dataset como candidato adicional, pero no se integró debido a un problema no resuelto en la tasa de frames por segundo del material original.
+Esta decisión se retoma como limitación en la Sección de Discusión.
+
+El detalle ampliado de origen, licencia y limitaciones de cada uno de estos datasets se documenta en los README de los módulos \texttt{videos/}, \texttt{vision/} y \texttt{vlm/} del repositorio.
+
+\subsubsection*{Datos propios en entorno real}
+
+El equipo está además recopilando su propio conjunto de datos en un hogar real, con el consentimiento informado de la residente.
+Este conjunto busca validar el pipeline completo de punta a punta bajo condiciones reales de uso, complementando los datasets públicos y el conjunto local descriptos anteriormente.
+La recolección está en curso a la fecha de esta entrega, y los resultados de esa validación se retoman en la Sección de Discusión.
+
+\subsubsection*{Dataset de eventos}
+
+El módulo \texttt{baseline/} se apoya en CASAS Smart Home Datasets, de la Washington State University, que reúne datos de sensores binarios de movimiento y puerta de 81 hogares reales, con un total aproximado de 26,3 millones de eventos registrados.
+CASAS está alojado en Zenodo bajo el DOI 10.5281/zenodo.15708568, con licencia CC BY 4.0.
+A diferencia de los datasets de video, que son simulados o grabados en un entorno controlado, CASAS aporta comportamiento real de hogares a una escala que permite validar el clustering de línea base sobre una población amplia de residentes en lugar de sobre un único caso de prueba.
+Que la fuente original de estos eventos sean sensores binarios y no video no compromete su utilidad para este trabajo, dado que tanto el almacenamiento en la nube como el entrenamiento del módulo de línea base operan sobre el esquema abstracto de eventos (\texttt{MonitoringEvent}), independientemente de si el evento fue producido por un sensor o por el pipeline de visión.
+Su uso se cita según lo exige el dataset \parencite{Cook2013}, y el detalle ampliado de su tratamiento se documenta en \texttt{baseline/README.md}.
+
+\subsubsection*{Pipeline de transformación}
+
+A diferencia de los datasets de video, que se consumen directamente, el dataset de eventos requiere un proceso de transformación antes de poder alimentar el módulo de línea base.
+El pipeline se organiza en tres etapas, siguiendo una arquitectura por capas de tipo bronze, silver y gold.
+
+En la etapa bronze, \texttt{etl.py} parsea cada archivo CSV por hogar, empareja los tramos begin y end de cada etiqueta, y descarta líneas corruptas o tramos de duración inválida u huérfanos.
+Cada evento resultante se valida contra el esquema compartido \texttt{MonitoringEvent} (Sección~\ref{sec:diagrama_componentes}), y los hogares con baja cobertura o indicios de múltiples residentes se excluyen o se marcan explícitamente, en línea con la restricción de residente único (RNF11).
+
+En la etapa silver, \texttt{activity\_map.py} mapea las 56 etiquetas heterogéneas del dataset original a un vocabulario canónico de 19 clases de actividad, y a un subconjunto de 11 clases más generales, correspondiente a lo que un único punto de cámara puede detectar.
+
+En la etapa gold, \texttt{build\_table.py} convierte los eventos validados en una tabla analítica tipada y genera un timeline resampleado en bins de tiempo fijo, que es la entrada que consume el clustering de \texttt{baseline/}, además de un reporte de calidad versionado junto con los datos.
+
+La corrida completa del pipeline sobre CASAS produjo 319.229 eventos válidos correspondientes a 80 residentes, distribuidos en las 19 clases canónicas, con un total aproximado de 63.370 horas etiquetadas y una tasa de solapamiento entre actividades del 0,1\,\%.
+La integración de esta salida con el clustering de \texttt{baseline/} está en curso y se retoma en la Sección de Discusión.
+
 \section{Demo}
 \label{sec:demo}
 
