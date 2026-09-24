@@ -141,7 +141,7 @@ RF12 & \textit{Como responsable a cargo, quiero que solo las personas autorizada
 
 Para validar la interpretación del frontend antes de comenzar su implementación, se diseñaron las pantallas principales de la aplicación móvil descripta en el diagrama de arquitectura (Sección~\ref{sec:diagrama_arquitectura}), destinada al responsable a cargo del adulto mayor. Este usuario no siempre tiene conocimientos técnicos, y suele revisar la aplicación en momentos de preocupación o mientras hace otra cosa. Por eso el diseño prioriza tres criterios por sobre cualquier otro: que la información se lea de un solo vistazo, que la jerarquía visual separe lo urgente de lo rutinario, y que cada alerta permita responder sin pasos intermedios innecesarios. Son la traducción a nivel de interfaz de la simplicidad que exige RNF8, y recorren todo el flujo, desde el inicio de sesión (RNF10) hasta el consumo de alertas (RF8) y reportes (RF9).
 
-La Figura~\ref{fig:mockup_flujo1} muestra el primer tramo de ese recorrido. La pantalla de \textit{Login} (01) resuelve RNF10 con la menor fricción posible, ya que solo pide correo y contraseña y concentra la atención en un único botón. Aun así, ya acá se adelanta la promesa central del producto. El pie de página aclara que el monitoreo es no invasivo y que el video nunca sale del hogar, tal como exige RNF1, y esa aclaración construye la confianza del familiar antes incluso de que inicie sesión. Es coherente, además, con el posicionamiento frente a la competencia que se desarrolla más adelante en este capítulo (Sección~\ref{sec:competencia}).
+La Figura~\ref{fig:mockup_flujo1} muestra el primer tramo de ese recorrido. La pantalla de \textit{Login} (01) resuelve RNF10 con la menor fricción posible, ya que solo pide correo y contraseña y concentra la atención en un único botón. Aun así, ya aquí se adelanta la promesa central del producto. El pie de página aclara que el monitoreo es no invasivo y que el video nunca sale del hogar, tal como exige RNF1, y esa aclaración construye la confianza del familiar antes incluso de que inicie sesión. Es coherente, además, con el posicionamiento frente a la competencia que se desarrolla más adelante en este capítulo (Sección~\ref{sec:competencia}).
 
 Una vez dentro, la pantalla de \textit{Notificaciones} (02) funciona como home de la aplicación. Ahí aparece la decisión de diseño más importante de todo el recorrido, el uso del color como código de severidad. Cada tarjeta de evento sigue el mismo patrón, un borde de color a la izquierda, un ícono y un punto de no leído, para que la urgencia se reconozca sin leer el texto completo. El rojo es para las caídas (RF1), el amarillo para señales moderadas como la inactividad prolongada (RF3), y el verde para los eventos de rutina (RF2), la misma convención de semáforo que el usuario ya conoce de otros contextos cotidianos. Ese código se repite en los chips de filtro (``Todas'', ``Urgentes'', ``Moderadas'', ``Rutina'') y también en la Figura~\ref{fig:mockup_flujo2}, así el color significa siempre lo mismo en toda la aplicación. Además, las alertas urgentes y moderadas quedan fijadas arriba del feed hasta ser atendidas, para que no se pierdan entre los eventos de rutina si el familiar no revisa la aplicación enseguida.
 
@@ -298,7 +298,7 @@ Pueden distinguirse cuatro categorías, cada una con una lógica de funcionamien
 
 La más extendida en Argentina es la teleasistencia mediante botón de pánico, con empresas como \textcite{SPS} y \textcite{Atempo} a la cabeza.
 El usuario presiona un botón ante una emergencia y así un teleasistente recibe la alerta de forma instantánea, coordina la asistencia médica y avisa a los familiares \parencite{SPS}.
-Este límite ya se planteó en la Introducción, pero vale la pena retomarlo acá porque es el mismo en todos los casos de esta categoría.
+Este límite ya se planteó en la Introducción, pero vale la pena retomarlo aquí porque es el mismo en todos los casos de esta categoría.
 Todo depende de que el adulto mayor esté consciente y dispuesto a accionar el dispositivo, algo que no ocurre cuando hay pérdida de conocimiento o deterioro cognitivo avanzado.
 Una variante de este enfoque son los relojes con GPS y botón SOS, como GCare, que suman geolocalización pero mantienen la misma dependencia de una acción consciente del usuario \parencite{GCare}.
 
@@ -349,7 +349,7 @@ Sistema propuesto                     & \checkmark & \checkmark & \checkmark & \
 \label{sec:porter}
 
 El modelo de las cinco fuerzas de Porter permite evaluar la atractividad competitiva de un mercado a partir de cinco dimensiones.
-Se aplica acá sobre el panorama relevado en la sección anterior, con el objetivo de entender qué tan sostenible puede ser la posición del proyecto una vez que salga del prototipo.
+Se aplica aquí sobre el panorama relevado en la sección anterior, con el objetivo de entender qué tan sostenible puede ser la posición del proyecto una vez que salga del prototipo.
 
 \begin{figure}[H]
 \centering
@@ -435,3 +435,28 @@ A partir del panorama competitivo, las cinco fuerzas de Porter y el posicionamie
     \item \textbf{Reacción de competidores locales o globales.} Tanto actores ya instalados en Argentina, como SPS o Atempo, como jugadores globales con cámara en el borde, como AltumView, podrían anticiparse incorporando estas capacidades antes de que el proyecto logre escalar a producto.
     \item \textbf{Percepción de intrusión.} Aun con procesamiento local, la sola presencia de una cámara puede generar rechazo inicial en algunas familias, tal como surgió en el User Research.
 \end{itemize}
+
+\section{Viabilidad Legal}
+\label{sec:viabilidad-legal}
+
+Dado que el sistema propuesto aborda un tema sensible vinculado a la salud y el bienestar de una población vulnerable, corresponde precisar el marco legal aplicable y las condiciones bajo las cuales el producto puede utilizarse de manera responsable.
+
+En Argentina, el tratamiento de información personal está regulado por la Ley N.º 25.326 de Protección de Datos Personales, reglamentada y supervisada por la Agencia de Acceso a la Información Pública (AAIP) \parencite{Argentina2000}.
+Esta ley define como dato personal a toda información referida a personas físicas determinadas o determinables, sin exigir que dicha información incluya un nombre, una imagen u otro identificador directo.
+Como se desarrolló en la Sección~\ref{sec:privacidad_marco} y la Sección~\ref{sec:edge_marco}, el sistema no transmite ni almacena video fuera del hogar, y los eventos que sí se envían a la nube (por ejemplo, ``caída detectada, usuario 4821, 14:32hs'') se identifican mediante un identificador de usuario interno, que es el que vincula las cámaras, el sistema, la nube y la aplicación entre sí, sin exponer nombre ni imagen en ningún punto del flujo.
+Sin embargo, esa condición no elimina el carácter de dato personal de la información transmitida, porque dicho identificador sigue permitiendo asociar cada evento con una persona física determinada para quien tenga acceso al sistema, como el equipo de desarrollo o la familia del usuario.
+Este tipo de dato se conoce como dato seudonimizado, y se distingue del dato verdaderamente anonimizado, en el que ya no existe ninguna forma de reconstruir la identidad de la persona, ni siquiera para quien lo procesa.
+Por lo tanto, aunque el sistema minimiza la exposición de información sensible, los eventos y las clasificaciones de actividad que produce siguen quedando alcanzados por la Ley 25.326.
+
+Esto implica, entre otras cosas, que el usuario o su familia deben prestar un consentimiento informado y expreso antes de que el sistema comience a operar, y que ese consentimiento debe poder revocarse en cualquier momento, dando de baja la recolección y solicitando la eliminación de los datos almacenados.
+
+La prestación de ese consentimiento presenta una particularidad en el caso de adultos mayores con una incapacidad legal declarada, dado que en esos casos la ley exige que el consentimiento sea otorgado por su representante legal.
+Fuera de ese supuesto, el consentimiento debe provenir siempre del propio titular de los datos, sin que la opinión de terceros, familiares incluidos, pueda sustituirlo.
+
+Más allá del tratamiento de datos, la naturaleza del sistema exige un descargo de responsabilidad explícito sobre su uso.
+El sistema propuesto es una herramienta de apoyo al cuidado y no constituye un dispositivo médico ni reemplaza la supervisión profesional o familiar del adulto mayor.
+La detección de caídas y de desvíos de rutina depende del correcto funcionamiento del hardware, de la disponibilidad de conectividad para el envío de alertas y de que un familiar o cuidador esté en condiciones de responder a la notificación recibida, por lo que el sistema no garantiza una respuesta inmediata ante una emergencia ni sustituye los mecanismos de asistencia médica de urgencia.
+Esta limitación se comunica de manera explícita al usuario y a su familia al momento de la instalación, como parte del proceso de consentimiento informado.
+
+Finalmente, cabe aclarar que el presente trabajo constituye un prototipo académico y no un producto comercial.
+Un eventual lanzamiento comercial del sistema requeriría la redacción de Términos y Condiciones de uso y una Política de Privacidad formal, elaborados con asesoramiento legal profesional, que quedan fuera del alcance de este proyecto pero se dejan señalados como trabajo futuro.
