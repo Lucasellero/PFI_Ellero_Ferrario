@@ -460,3 +460,48 @@ Esta limitación se comunica de manera explícita al usuario y a su familia al m
 
 Finalmente, cabe aclarar que el presente trabajo constituye un prototipo académico y no un producto comercial.
 Un eventual lanzamiento comercial del sistema requeriría la redacción de Términos y Condiciones de uso y una Política de Privacidad formal, elaborados con asesoramiento legal profesional, que quedan fuera del alcance de este proyecto pero se dejan señalados como trabajo futuro.
+
+\section{Viabilidad Técnica}
+\label{sec:viabilidad-tecnica}
+
+El sistema propuesto requiere hardware físico instalado en el domicilio del usuario, compuesto por una controladora que ejecuta el procesamiento local y una o más cámaras IP que capturan el video.
+A diferencia de un software que se instala sobre equipamiento que el usuario ya posee, el producto se entrega como un kit cerrado, por lo que esta sección demuestra la viabilidad de producir y adquirir ese hardware.
+
+El componente central del kit es la controladora, una Raspberry Pi 5 de 8GB que llega con el software del equipo preinstalado y configurado, incluyendo los módulos de detección de eventos, clasificación semántica de actividades y el resto del pipeline descripto en la Sección~\ref{sec:tecnologias} (Tecnologías).
+En consecuencia, este componente no es intercambiable por hardware genérico del usuario, ya que es precisamente el que ejecuta el software desarrollado por el equipo, y sin él no existe forma de correr el sistema propuesto.
+
+Las cámaras, en cambio, sí podrían en principio reemplazarse por otro modelo compatible.
+Sin embargo, el equipo optó por incluirlas en el mismo kit en lugar de dejar que el usuario aporte sus propias cámaras, ya que la razón no es comercial sino técnica y está directamente ligada a la garantía de privacidad central del sistema, desarrollada en la Sección~\ref{sec:privacidad_marco} y la Sección~\ref{sec:edge_marco}.
+Esto se debe a que la mayoría de las cámaras IP domésticas de uso masivo están diseñadas para transmitir su video hacia un servicio en la nube del propio fabricante, de modo que el usuario pueda verlas remotamente desde una aplicación, lo que implica que el video saldría del hogar antes de llegar siquiera a la controladora, incumpliendo así la restricción de procesamiento local que sostiene todo el diseño del sistema.
+
+Además, esta incompatibilidad no es solo teórica.
+Durante el desarrollo, el equipo intentó conectar el sistema a cámaras domésticas ya instaladas en el hogar de uno de los integrantes, pero la conexión fue rechazada por tratarse de un canal de video cifrado por el propio fabricante, lo que impidió el acceso directo que requiere el procesamiento local.
+Por lo tanto, permitir cámaras arbitrarias del usuario introduciría una dependencia no controlada por el equipo sobre si esa cámara transmite o no video a un tercero, o expone su video de forma accesible, algo que no puede garantizarse sin validar cada modelo de forma individual.
+En consecuencia, el kit incluye cámaras seleccionadas por el equipo para funcionar con la controladora, de modo que la privacidad que el sistema promete no dependa de una configuración que el usuario deba resolver por su cuenta.
+
+En cuanto al costo, se resume a continuación el presupuesto estimado, calculado a partir de una controladora y tres cámaras, la configuración prevista para el prototipo.
+Este presupuesto cubre únicamente el hardware del prototipo y no constituye un costo de producción ni una estructura de precios de venta, aspecto que queda señalado como pendiente de validar en la Sección~\ref{sec:foda}.
+Los costos de infraestructura en la nube tampoco se incluyen en la tabla y quedan pendientes de estimar.
+
+\begin{table}[h!]
+\centering
+\caption[Presupuesto estimado del hardware del prototipo]{Presupuesto estimado del hardware del prototipo. Precios relevados en Mercado Libre Argentina, septiembre de 2026.}
+\label{tab:presupuesto-hardware}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Insumo} & \textbf{Cantidad} & \textbf{Costo unitario} & \textbf{Costo total} \\
+\midrule
+Raspberry Pi 5, 8GB & 1 & USD 230 & USD 230 \\
+Cámara IP & 3 & USD 15 & USD 45 \\
+\midrule
+\textbf{Total} & & & \textbf{USD 275} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Este presupuesto corresponde a la etapa de prototipo, y el diseño contempla varias cámaras simultáneas sobre una misma controladora (RNF9), con un máximo previsto de tres, en línea con la arquitectura descripta en la Sección~\ref{sec:diagrama_componentes} (Diagrama de Componentes), donde el módulo orquestador invoca los módulos de detección por cada cámara activa sin necesidad de una controladora adicional por cámara.
+Por lo tanto, un kit doméstico típico, con una controladora y entre una y tres cámaras según la cantidad de ambientes a cubrir, se mantiene dentro de ese mismo orden de magnitud.
+
+Asimismo, tanto la Raspberry Pi 5 como las cámaras IP utilizadas son componentes disponibles comercialmente en Argentina a través de múltiples proveedores, sin depender de un fabricante único ni de importación directa por parte del equipo, lo que reduce el riesgo de desabastecimiento como barrera para producir el kit a pequeña escala.
+
+Finalmente, el kit se entrega armado y preconfigurado, por lo que la instalación por parte del usuario se limita a conectarlo y asignarle una ubicación descriptiva a cada cámara mediante la aplicación móvil, sin requerir conocimientos técnicos ni intervención de personal especializado en el domicilio.
