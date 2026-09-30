@@ -505,3 +505,401 @@ Por lo tanto, un kit doméstico típico, con una controladora y entre una y tres
 Asimismo, tanto la Raspberry Pi 5 como las cámaras IP utilizadas son componentes disponibles comercialmente en Argentina a través de múltiples proveedores, sin depender de un fabricante único ni de importación directa por parte del equipo, lo que reduce el riesgo de desabastecimiento como barrera para producir el kit a pequeña escala.
 
 Finalmente, el kit se entrega armado y preconfigurado, por lo que la instalación por parte del usuario se limita a conectarlo y asignarle una ubicación descriptiva a cada cámara mediante la aplicación móvil, sin requerir conocimientos técnicos ni intervención de personal especializado en el domicilio.
+
+% Requiere graphicx y biblatex (citas con \parencite).
+\providecommand{\figuraexcel}[4]{%
+  % #1 archivo, #2 ancho relativo, #3 epígrafe, #4 etiqueta
+  \begin{figure}[H]
+    \centering
+    \IfFileExists{#1}{\includegraphics[width=#2\textwidth]{#1}}{\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}Insertar imagen \texttt{\detokenize{#1}}\vspace{1.5cm}}}}
+    \caption{#3 Fuente: Elaboración propia.}
+    \label{#4}
+  \end{figure}
+}
+
+\section{Modelo de negocio y viabilidad económica}
+\label{sec:modelo-negocio}
+
+Esta sección estima si el sistema descripto podría sostenerse como producto comercial.
+El prototipo se valida únicamente en un entorno doméstico controlado, por lo que no existen ventas reales que permitan medir la demanda.
+Por ese motivo las cifras que siguen no son predicciones, sino proyecciones de orden de magnitud construidas a partir de tres escenarios posibles.
+La sección se organiza en tres partes.
+Primero se describe el negocio con el Business Model Canvas, luego se definen la oferta, el mercado y los precios, y por último se proyectan los ingresos y egresos de cinco años para cada escenario.
+Además del resultado económico, el análisis mide el impacto social, expresado como la cantidad de personas alcanzadas.
+
+\subsection{Business Model Canvas}
+\label{sec:bmc}
+
+El Business Model Canvas \parencite{Osterwalder2010} representa la forma en que una organización crea, entrega y captura valor a través de nueve bloques.
+Es una herramienta cualitativa, ya que todavía no incorpora cifras y solo muestra la lógica del negocio.
+La Figura~\ref{fig:bmc} lo aplica al sistema propuesto y los apartados siguientes detallan cada bloque.
+
+% FIGURA 1: armar el lienzo con los 9 bloques y los textos cortos de los apartados de abajo.
+\figuraexcel{bmc.png}{0.95}{Business Model Canvas del sistema propuesto.}{fig:bmc}
+
+\subsubsection{Segmentos de clientes}
+
+El segmento principal está formado por los familiares responsables de un adulto mayor que vive solo o queda solo buena parte del día, en general personas de mediana edad con sus propias familias y trabajos que no pueden estar disponibles todo el día, tal como se describió en la Introducción y confirmó la encuesta del User Research.
+Quien paga el servicio es el cuidador y quien se beneficia es el adulto mayor.
+Como segmento secundario se consideran las obras sociales, prepagas y municipios con programas de cuidado domiciliario, que podrían ofrecer el sistema a sus afiliados o beneficiarios.
+
+\subsubsection{Propuesta de valor}
+
+La propuesta ofrece a la familia información inmediata y constante sobre el estado del adulto mayor, mediante un monitoreo completamente no invasivo y pasivo.
+El sistema detecta caídas e inmovilidad prolongada en tiempo real y, además, construye una línea base de comportamiento que permite avisar ante desvíos significativos en la rutina.
+El procesamiento del video se realiza dentro del hogar y solo se transmiten los eventos detectados, sin imágenes ni video, lo que sostiene la garantía de privacidad central del proyecto.
+La encuesta del User Research validó una alta utilidad percibida de esta propuesta entre los cuidadores.
+
+\subsubsection{Canales}
+
+Se prevén dos vías, coherentes con el análisis de posicionamiento de la Sección~\ref{sec:triple_p}.
+La primera es la venta directa por canal digital, dirigida a cuidadores que ya buscan una solución y se informan por redes y grupos de mensajería.
+La segunda son las alianzas institucionales con obras sociales, prepagas y municipios, que además actúan como validadores frente a la familia.
+Al comienzo la marca es desconocida, por lo que se espera que la venta directa sea lenta.
+Con el tiempo, a medida que las primeras familias comprueban que el sistema funciona de manera confiable, ese boca a boca se vuelve el motor principal de nuevos clientes, y esto se refleja en un costo de adquisición que baja año a año (Sección~\ref{sec:cac}).
+
+\subsubsection{Relación con clientes}
+
+La relación se sostiene mediante la aplicación móvil, los reportes periódicos de rutina y un soporte remoto por mensajería.
+No se contempla visita presencial, a fin de mantener bajo el costo de servicio.
+
+\subsubsection{Fuentes de ingresos}
+
+El esquema es mixto e incluye la venta única del kit de hardware y una suscripción mensual.
+Este formato tiene precedente en el mismo segmento, dado que Ato combina un dispositivo con una suscripción mensual \parencite{Ato}.
+El detalle de precios se presenta en la Sección~\ref{sec:oferta-ingresos}.
+
+\subsubsection{Recursos clave}
+
+Los recursos principales son el código de los módulos de detección y de línea base, los modelos abiertos de estimación de pose y de lenguaje visual, la infraestructura en la nube y el equipo de desarrollo.
+A ellos se suma el stock de kits de hardware necesario para responder a los primeros pedidos.
+
+\subsubsection{Actividades clave}
+
+Las actividades centrales son el desarrollo y mantenimiento de ambos módulos, la calibración de umbrales con datos de nuevos hogares, la operación del backend, la preparación y despacho de los kits y la atención del soporte remoto.
+
+\subsubsection{Socios clave}
+
+Los socios previstos son los proveedores de hardware, con múltiples alternativas según el análisis de las cinco fuerzas de Porter, el proveedor de nube y las instituciones de salud que se describen en el apartado de Canales, en su rol de aliadas de distribución.
+
+\subsubsection{Estructura de costos}
+
+La estructura incluye el hardware de los kits, el equipo, la adquisición de clientes, la infraestructura en la nube y los gastos generales.
+El hardware concentra la mayor parte del gasto porque se compra por adelantado, seguido por el equipo y la adquisición de clientes.
+El costo de nube pesa poco porque el video no sale del hogar.
+
+\subsection{Modelo de negocio}
+\label{sec:modelo}
+
+En esta parte se traduce el canvas a decisiones concretas.
+Se define qué se vende y a qué precio, a cuánta gente se puede llegar y cuánto cuesta conseguir a cada cliente.
+
+\subsubsection{Oferta y estructura de ingresos}
+\label{sec:oferta-ingresos}
+
+La oferta se compone de un kit inicial y una suscripción mensual.
+El kit incluye una Raspberry Pi 5 de 8 GB, una cámara IP, la fuente de alimentación, la tarjeta microSD y una carcasa con disipador, y se entrega configurado para su uso.
+Se propone un precio final de USD 230 por el kit y de USD 30 por mes por la suscripción, que incluye el procesamiento en la nube de la línea base, los reportes, las notificaciones y las actualizaciones.
+
+Ambos precios incluyen IVA.
+En el modelo se cargan sin IVA, es decir, divididos por 1,21, porque ese impuesto se cobra al cliente pero se entrega al fisco y no constituye un ingreso del negocio.
+Por la misma razón el análisis se realiza sobre valores netos y tampoco incorpora el impuesto sobre los ingresos brutos.
+
+Como referencia, AltumView Sentinare cuesta entre USD 200 y 230 sin cuota mensual \parencite{AltumView}, mientras que Ato cobra un dispositivo de entre USD 179 y 200 más USD 29 por mes \parencite{Ato}.
+El kit queda en el extremo superior de ese rango y la suscripción en línea con la de Ato, aunque a diferencia de AltumView se cobra una cuota mensual.
+La encuesta no relevó disposición a pagar, por lo que este valor constituye un supuesto que debe validarse en etapas posteriores.
+
+La lógica del negocio se entiende mejor mirando a un cliente promedio del escenario Base.
+El kit cuesta USD 200 en componentes, a lo que se suman USD 25 de armado y envío y USD 10 de garantía.
+Además hay que sumar el costo de conseguir al cliente, que en el primer año es de USD 130.
+En total se gastan unos USD 365 por cada cliente nuevo.
+Por el kit se cobran USD 230 con IVA incluido, y lo que queda para el negocio después de descontar el IVA, la comisión de cobro y la estructura comercial es de unos USD 133.
+La inversión neta por cliente es entonces de unos USD 232, como muestra la Tabla~\ref{tab:cuenta-cliente}.
+
+\begin{table}[H]
+\centering
+\caption[Cuenta simple por cliente nuevo en el escenario Base.]{Cuenta simple por cliente nuevo en el escenario Base (USD, aproximada). Fuente: Elaboración propia.}
+\label{tab:cuenta-cliente}
+\begin{tabular}{|p{8.2cm}|r|}
+\hline
+\textbf{Concepto} & \textbf{USD} \\
+\hline
+Costo del kit (hardware) & 200 \\
+\hline
+Armado y envío & 25 \\
+\hline
+Garantía (5\,\% del costo del kit) & 10 \\
+\hline
+Costo de conseguir al cliente (año 1) & 130 \\
+\hline
+\textbf{Total que sale por cliente nuevo} & \textbf{365} \\
+\hline
+Se resta el ingreso neto de la venta del kit (sin IVA, comisiones ni estructura comercial) & 133 \\
+\hline
+\textbf{Inversión neta por cliente} & \textbf{232} \\
+\hline
+\end{tabular}
+\end{table}
+
+Cada mes de suscripción deja unos USD 17 luego de descontar la comisión de cobro, la estructura comercial y la nube.
+Con ese margen, cada cliente recupera su inversión en unos catorce meses y desde ese momento genera ganancia.
+En otras palabras, el kit se vende por debajo de su costo para facilitar la compra, y la rentabilidad proviene de la suscripción.
+La cuenta es orientativa, ya que no incluye al equipo ni los gastos fijos, que sí forman parte del modelo completo.
+
+Ese plazo de recuperación es el punto sensible del negocio, porque un cliente que cancela antes de cumplirlo deja una pérdida.
+Por eso la suscripción se ofrece con una permanencia mínima de 12 meses.
+En la práctica, el cliente acepta esa permanencia al contratar y, si se da de baja antes, abona un cargo proporcional a lo que resta de los 12 meses.
+De este modo el riesgo de bajas tempranas queda cubierto durante casi todo el período de recuperación.
+La forma concreta de instrumentarla, incluido su encuadre en la normativa de defensa del consumidor, debe definirse con asesoramiento legal.
+
+\subsubsection{Mercado objetivo}
+\label{sec:mercado-objetivo}
+
+El mercado de partida está formado por las personas de 65 años o más que viven solas en Argentina.
+Según el Censo 2022 representan el 24\,\% de ese grupo etario, lo que equivale a unas 1.360.000 personas \parencite{INDEC2022}.
+Cada una de ellas es un cliente potencial a través de su familia.
+
+Los tres escenarios se distinguen sobre todo por la penetración acumulada sobre ese mercado al cabo de cinco años.
+Esta es del 1\,\% en el escenario Bear, del 2,5\,\% en el escenario Base y del 4,4\,\% en el escenario Bull, lo que equivale a 13.600, 34.000 y 60.000 kits vendidos (Figura~\ref{fig:supuestos}).
+En el escenario Bull la cifra corresponde al objetivo del equipo.
+
+Las ventas no se reparten de forma pareja a lo largo de los años.
+Siguen la curva de adopción de difusión de innovaciones \parencite{Rogers2003}, en la que primero compran pocos usuarios, luego se suma la mayoría y hacia el final el mercado se satura.
+En el modelo se vende el 5\,\% de los kits en el primer año y el 16\,\%, 28\,\%, 32\,\% y 19\,\% en los años siguientes.
+En el escenario Base esto da 1.700, 5.440, 9.520, 10.880 y 6.460 kits por año.
+
+Cada kit vendido se cuenta como una suscripción activa.
+El modelo trabaja con suscripciones netas, es decir, con el saldo entre altas y bajas a lo largo del tiempo, y no modela las bajas por separado.
+La reposición de los clientes que se van queda incluida en el costo de adquisición, que se presenta a continuación.
+
+\subsubsection{Costo de adquisición de clientes}
+\label{sec:cac}
+
+El costo de adquisición de clientes, conocido como CAC, es el gasto promedio necesario para conseguir una suscripción neta.
+No se mantiene constante, sino que disminuye cada año.
+La razón de fondo es que la propuesta depende de la confianza, y esa confianza se construye con el uso, no con la promesa.
+Los primeros cuidadores que contratan el sistema no tienen ninguna referencia previa de que funcione, y la adquisición en esa etapa temprana es más cara porque el equipo tiene que convencer sin poder mostrar un caso de uso real.
+A medida que esas primeras familias comprueban, mes a mes, que las alertas de caída corresponden a eventos reales y no a falsas alarmas, que los reportes de rutina reflejan lo que efectivamente pasa en el hogar, y que el video en ningún momento sale del hogar, empiezan a recomendar el sistema dentro de su propia red de contactos, otros cuidadores en situaciones parecidas, grupos familiares, círculos de conocidos, lo que reduce el costo de conseguir al siguiente cliente sin que el equipo tenga que gastar más en marketing para lograrlo.
+Ese boca a boca basado en experiencia concreta, reforzado por las alianzas institucionales descriptas en el apartado de Canales, es lo que explica la baja progresiva del CAC.
+En el modelo el CAC del primer año baja un porcentaje fijo por año, y en el escenario Base pasa de USD 130 a USD 85 en el año 5 (Figura~\ref{fig:supuestos}).
+
+\subsection{Análisis económico-financiero}
+\label{sec:analisis-financiero}
+
+\subsubsection{Supuestos}
+\label{sec:supuestos}
+
+El análisis se realiza en dólares estadounidenses, con un horizonte de cinco años, sin amortizaciones y sin valor residual.
+El año 0 corresponde al desarrollo y al lanzamiento.
+El desarrollo se estima en USD 20 por hora y 160 horas mensuales, aplicados a dos personas durante nueve meses, lo que da USD 57.600.
+A ese monto se suman USD 6.000 de lanzamiento y aspectos legales.
+
+El costo del kit varía según el escenario y es de USD 250, 200 y 190 en Bear, Base y Bull, respectivamente.
+La diferencia refleja descuentos por volumen.
+La Raspberry Pi 5 de 8 GB, que es el componente principal, cuesta USD 175 \parencite{PiShop2026} a la escala de compra mayorista prevista para producción, un valor menor al de la unidad relevada en Mercado Libre para el prototipo (Sección~\ref{sec:viabilidad-tecnica}), ya que la producción a escala contempla además la posibilidad de importar directamente.
+El hardware se compra con cuatro meses de anticipación, por lo que en los primeros años hay que pagar los kits antes de venderlos y esto aumenta el financiamiento necesario.
+
+El equipo se estima en USD 1.500 por persona por mes.
+Se parte de un núcleo de desarrollo y gestión que crece con cada escenario y se agrega un agente de soporte cada 500 suscripciones.
+La estructura comercial y de gerencia se calcula como el 25\,\% de las ventas, bajo el supuesto de que la parte comercial está tercerizada y se paga por comisiones de canal.
+Para el impuesto a las ganancias se toma la alícuota de 35\,\% \parencite{ARCA2026}, con compensación de quebrantos de años anteriores.
+La Figura~\ref{fig:supuestos} muestra la hoja del modelo con los supuestos comunes a los tres escenarios y los que cambian según cada uno.
+
+\figuraexcel{captura_supuestos.png}{0.95}{Hoja de supuestos del modelo financiero.}{fig:supuestos}
+
+\subsubsection{Financiamiento}
+
+Como el proyecto pierde dinero durante los primeros años, se financia con rondas de inversión de capital y no con deuda.
+Se supone una ronda pre-seed en el año 0 y una ronda seed al inicio del año 2, con montos crecientes según el escenario (Tabla~\ref{tab:rondas}).
+En los tres casos el capital levantado supera el financiamiento máximo necesario, lo que deja un colchón de caja.
+Una vez incorporadas las rondas, la caja mínima es de USD 281.000 en Bear, USD 446.000 en Base y USD 286.000 en Bull.
+
+\begin{table}[H]
+\centering
+\caption[Rondas de capital y financiamiento necesario.]{Rondas de capital y financiamiento necesario (USD). Fuente: Elaboración propia.}
+\label{tab:rondas}
+\begin{tabular}{|p{6.2cm}|r|r|r|}
+\hline
+\textbf{Concepto} & \textbf{Bear} & \textbf{Base} & \textbf{Bull} \\
+\hline
+Ronda pre-seed (año 0) & 900.000 & 1.200.000 & 1.400.000 \\
+\hline
+Ronda seed (inicio del año 2) & 800.000 & 1.100.000 & 1.500.000 \\
+\hline
+\textbf{Total levantado} & \textbf{1.700.000} & \textbf{2.300.000} & \textbf{2.900.000} \\
+\hline
+Financiamiento máximo necesario & 1.419.000 & 1.767.000 & 2.211.000 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Tasa de descuento}
+\label{sec:wacc}
+
+Un dólar dentro de cinco años vale menos que un dólar hoy, y todavía menos si el negocio es riesgoso.
+La tasa de descuento representa el rendimiento mínimo que exigiría un inversor para aportar capital a este proyecto en lugar de destinarlo a otra alternativa.
+Se calcula con el modelo de valoración de activos de capital, conocido como CAPM \parencite{Sharpe1964}, al que se suma el riesgo país de Argentina.
+Como el proyecto se financia solo con capital propio y sin deuda, el costo promedio ponderado del capital (WACC) coincide con el costo del capital propio.
+
+La tasa libre de riesgo corresponde al bono del Tesoro de Estados Unidos a 10 años al 29 de septiembre de 2026.
+La beta es el promedio de las betas desapalancadas de tres industrias cercanas al producto, que son el software, la tecnología de la información en salud y la electrónica de consumo, publicadas en la base de datos sectorial de enero de 2026 \parencite{Damodaran2026}.
+El riesgo país es el EMBI de Argentina al 28 de septiembre de 2026.
+La prima por tamaño y etapa temprana es un supuesto propio que puede modificarse en el modelo.
+El resultado es una tasa de 19,83\,\%, que se utiliza en todo el análisis, según el detalle de la Figura~\ref{fig:wacc}.
+
+\figuraexcel{captura_wacc.png}{0.85}{Hoja de cálculo de la tasa de descuento.}{fig:wacc}
+
+\subsubsection{Indicadores de evaluación}
+
+Cada escenario tiene su propia hoja en el modelo, con el mismo orden.
+Primero se calculan los kits vendidos y las suscripciones de cada año, luego los ingresos, después los egresos y por último el flujo de caja, que es la diferencia entre ambos.
+Sobre ese flujo se calculan los indicadores que permiten evaluar si el proyecto conviene.
+
+El valor actual neto (VAN) es la suma de los flujos anuales llevados a valor de hoy con la tasa de descuento.
+Un VAN positivo indica que el proyecto rinde más de lo que exige el inversor.
+La tasa interna de retorno (TIR) es el rendimiento anual del proyecto y se compara con la tasa de descuento de 19,83\,\%.
+El payback es el tiempo que tarda en recuperarse la inversión.
+Junto con ellos se calcula el financiamiento máximo necesario, que es el punto más bajo del flujo acumulado, y el EBITDA, que mide si el negocio genera ganancias antes de impuestos.
+Los tres escenarios comparten los mismos precios y costos unitarios, y lo que cambia entre ellos es cuánta gente compra, cuánto cuesta conseguirla y a qué precio se compra el hardware.
+Cada escenario informa además las personas alcanzadas, cuyo criterio de cálculo se explica en la subsección de impacto social, después de los tres escenarios.
+
+\subsubsection{Escenario Bear}
+
+En el escenario Bear, que es el pesimista, la penetración es del 1\,\%, el kit cuesta USD 250 y el CAC parte de USD 150 y baja solo 5\,\% por año.
+El resultado operativo es negativo hasta el año 3 y recién pasa a ser positivo en el año 4.
+El flujo acumulado toca su punto más bajo en USD $-$1,42 millones, que es el financiamiento máximo necesario, y se vuelve levemente positivo en el año 5, con USD 247.000.
+El VAN es de USD $-$321.903 y la TIR de 5,6\,\%, muy por debajo de la tasa de descuento, por lo que el proyecto no alcanza el rendimiento exigido.
+Además llega a 40.800 personas, por debajo de la meta de 100.000.
+Con poca adopción, un hardware caro y clientes difíciles de conseguir, el negocio sobrevive pero no compensa el riesgo asumido.
+
+% CAPTURA 3: hoja "Bear", filas 17 a 47 (flujo de caja, EBITDA, financiamiento y resultados).
+\figuraexcel{captura_bear_flujo.png}{0.95}{Flujo de caja y resultados del escenario Bear.}{fig:bear}
+
+\subsubsection{Escenario Base}
+
+El escenario Base es el principal.
+Supone una penetración del 2,5\,\% (34.000 kits), un kit que cuesta USD 200 en componentes y un CAC que parte de USD 130 y baja 10\,\% por año hasta USD 85.
+Los años 1 a 3 son de pérdida, porque se compra hardware por adelantado y se consiguen clientes antes de cobrar las suscripciones.
+En el año 4 el EBITDA pasa a ser positivo, con un margen del 16\,\%, y en el año 5 llega a USD 3,7 millones, con un margen del 36\,\%.
+El flujo acumulado toca su punto más bajo en USD $-$1,77 millones y la inversión se recupera en 4,1 años.
+El VAN es de USD 575.998 y la TIR de 34,1\,\%, por encima del 19,83\,\% exigido, y el escenario alcanza 102.000 personas, con lo que cumple la meta social.
+El proyecto es rentable en el escenario esperado, con la particularidad de que requiere un capital inicial importante, de USD 2,3 millones en dos rondas, porque tarda cuatro años en recuperarse.
+
+% CAPTURA 4: hoja "Base", filas 2 a 15 (kits, suscripciones, CAC e ingresos por año).
+\figuraexcel{captura_base_datos.png}{0.95}{Kits, suscripciones, costo de adquisición e ingresos del escenario Base.}{fig:base-datos}
+
+% CAPTURA 5: hoja "Base", filas 17 a 47.
+\figuraexcel{captura_base_flujo.png}{0.95}{Flujo de caja y resultados del escenario Base.}{fig:base-flujo}
+
+\subsubsection{Escenario Bull}
+
+En el escenario Bull, que es el optimista, la penetración es del 4,4\,\% (60.000 kits), el kit cuesta USD 190 y el CAC parte de USD 110 y baja 12\,\% por año hasta USD 66.
+Además se cuentan dos personas indirectas por kit.
+El EBITDA es positivo desde el año 3 y el flujo acumulado supera el cero en el año 4, con un payback de 3,7 años.
+En el año 5 el margen EBITDA es de 38\,\%.
+El VAN es de USD 1.867.933 y la TIR de 49,7\,\%, claramente por encima de la tasa de descuento, y el escenario alcanza 240.000 personas.
+Si la adopción crece según lo previsto, el negocio no solo se paga sino que deja retorno de sobra.
+Por ser más grande, también necesita más capital, con un financiamiento máximo de USD 2,21 millones.
+
+% CAPTURA 6: hoja "Bull", filas 17 a 47.
+\figuraexcel{captura_bull_flujo.png}{0.95}{Flujo de caja y resultados del escenario Bull.}{fig:bull}
+
+\subsubsection{Impacto social}
+
+Además del resultado económico, el proyecto se propone alcanzar al menos 100.000 personas.
+Por cada kit vendido se cuentan el adulto mayor, que es el beneficiario directo, el cuidador, que es el usuario directo, y una persona indirecta, como otro familiar que se entera del estado del adulto mayor.
+En el escenario Bull se cuentan dos personas indirectas por kit.
+La encuesta respalda que en cada caso hay más de una persona involucrada además del cuidador principal.
+Con este criterio, el escenario Base alcanza 102.000 personas, que surgen de multiplicar por tres los 34.000 kits vendidos.
+
+\subsubsection{Comparación de escenarios}
+
+Los tres escenarios comparten la misma forma, con pérdidas en los primeros años, recuperación hacia el año 4 o 5 y un retorno que depende sobre todo de cuánta gente compra.
+Para pasar de un VAN negativo, como en Bear, a uno positivo, como en Base, alcanza con más ventas, un CAC que baje más rápido y un hardware algo más barato.
+La Tabla~\ref{tab:resumen} reúne las variables principales y la Figura~\ref{fig:flujo-acumulado} muestra el flujo de caja acumulado de cada escenario.
+
+\begin{table}[H]
+\centering
+\caption[Resumen de supuestos y resultados por escenario.]{Resumen de supuestos y resultados por escenario. Fuente: Elaboración propia.}
+\label{tab:resumen}
+\begin{tabular}{|p{6.4cm}|r|r|r|}
+\hline
+\textbf{Variable} & \textbf{Bear} & \textbf{Base} & \textbf{Bull} \\
+\hline
+Penetración a 5 años & 1\,\% & 2,5\,\% & 4,4\,\% \\
+\hline
+Kits vendidos en 5 años & 13.600 & 34.000 & 60.000 \\
+\hline
+Costo del kit (USD) & 250 & 200 & 190 \\
+\hline
+CAC del año 1 al año 5 (USD) & 150 a 122 & 130 a 85 & 110 a 66 \\
+\hline
+Capital levantado (USD) & 1.700.000 & 2.300.000 & 2.900.000 \\
+\hline
+Ingresos del año 5 (USD) & 4.153.000 & 10.383.000 & 18.322.000 \\
+\hline
+EBITDA del año 5 (USD) & 1.255.000 & 3.739.000 & 6.995.000 \\
+\hline
+Margen EBITDA del año 5 & 30\,\% & 36\,\% & 38\,\% \\
+\hline
+Financiamiento máximo necesario (USD) & 1.419.000 & 1.767.000 & 2.211.000 \\
+\hline
+VAN al 19,83\,\% (USD) & $-$321.903 & 575.998 & 1.867.933 \\
+\hline
+TIR & 5,6\,\% & 34,1\,\% & 49,7\,\% \\
+\hline
+Payback (años) & 4,8 & 4,1 & 3,7 \\
+\hline
+Personas alcanzadas & 40.800 & 102.000 & 240.000 \\
+\hline
+Cumple la meta de 100.000 personas & No & Sí & Sí \\
+\hline
+\end{tabular}
+\end{table}
+
+% FIGURA: gráfico de cierre (archivo ya generado).
+\figuraexcel{flujo_acumulado_escenarios.png}{0.85}{Flujo de caja acumulado por escenario, en millones de USD.}{fig:flujo-acumulado}
+
+Estos resultados deben leerse con algunas precauciones.
+En primer lugar, todo depende de la penetración y del canal de venta.
+En el escenario Base se venden 1.700 kits en el primer año y casi 11.000 en el cuarto, y sostener ese ritmo requiere que la adopción efectivamente acelere año a año como prevé el modelo, algo que todavía debe validarse.
+En segundo lugar, el costo del kit es la variable que más mueve el resultado, ya que con un kit de USD 250 en lugar de USD 200 el VAN del escenario Base pasa a ser negativo.
+Por eso resulta importante asegurar precios de volumen con los proveedores.
+En tercer lugar, el modelo trabaja con suscripciones netas, es decir, no descuenta clientes que se dan de baja.
+Para medir cuánto pesa este supuesto se repitió el cálculo del escenario Base aplicando una tasa de bajas anual sobre las suscripciones (Tabla~\ref{tab:bajas}).
+El VAN se hace cero con bajas de alrededor de 12\,\% anual, de modo que el negocio soporta cierta rotación pero no una alta.
+Como los datos de retención no existen todavía y el prototipo no permite medirlos, la permanencia mínima y la validación en un piloto son las principales defensas frente a este riesgo.
+
+\begin{table}[H]
+\centering
+\caption[Sensibilidad del escenario Base a la tasa de bajas anual.]{Sensibilidad del escenario Base a la tasa de bajas anual. Fuente: Elaboración propia.}
+\label{tab:bajas}
+\begin{tabular}{|r|r|r|}
+\hline
+\textbf{Bajas anuales} & \textbf{VAN (USD)} & \textbf{TIR} \\
+\hline
+0\,\% (modelo) & 575.998 & 34,1\,\% \\
+\hline
+5\,\% & 331.620 & 28,3\,\% \\
+\hline
+10\,\% & 94.736 & 22,3\,\% \\
+\hline
+15\,\% & $-$121.942 & 16,6\,\% \\
+\hline
+20\,\% & $-$337.777 & 10,9\,\% \\
+\hline
+30\,\% & $-$724.651 & 0,3\,\% \\
+\hline
+\end{tabular}
+\end{table}
+
+Por último, algunos supuestos son propios y no surgen de una fuente externa, como la prima por tamaño de 4\,\% en la tasa, el 25\,\% de estructura comercial y un agente de soporte cada 500 suscripciones, y todos pueden modificarse en el modelo.
+El análisis también se simplifica a propósito, ya que trabaja con valores netos de IVA, con suscripciones netas y sin valor residual al año 5.
+Se trata de una aproximación para comparar escenarios y no de un pronóstico.
+
+\subsection{Conclusión del análisis económico}
+
+El modelo mixto de kit y suscripción resulta viable en el escenario esperado y muy atractivo en el optimista, aunque requiere capital inicial y depende de alcanzar el volumen de ventas previsto.
+Con los supuestos adoptados, el escenario Base supera la tasa de descuento con una TIR de 34,1\,\%, recupera la inversión en 4,1 años y alcanza a 102.000 personas.
+El escenario Bear, en cambio, no es rentable, lo que muestra que la adopción y el costo de conseguir clientes son los factores críticos.
+Los próximos pasos para reducir la incertidumbre son obtener cotizaciones firmes de los componentes, relevar la disposición a pagar de los cuidadores y validar con un piloto que el boca a boca reduce el costo de adquisición tal como asume el modelo.
