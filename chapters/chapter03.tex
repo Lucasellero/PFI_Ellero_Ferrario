@@ -395,7 +395,7 @@ A partir del panorama competitivo y de las cinco fuerzas que estructuran ese mer
 La oferta combina hardware y software en un mismo paquete, compuesto por la cámara IP, la Raspberry Pi 5 que procesa localmente, y una aplicación móvil para el responsable a cargo. A diferencia de la teleasistencia por botón, no requiere ninguna acción del adulto mayor; a diferencia de las cámaras con IA como AltumView Sentinare, no se limita a detectar eventos discretos, sino que incorpora un segundo módulo que construye una línea base de comportamiento y detecta desvíos de rutina a lo largo del tiempo; y a diferencia de los asistentes conversacionales como Ato, no depende de que el adulto mayor hable o interactúe para generar valor, sino que monitorea de forma completamente pasiva. El producto es, entonces, la combinación de ambas capas, no cada una por separado.
 
 \paragraph{Precio:}
-AltumView Sentinare fija la referencia de mercado más cercana en la categoría de cámaras, entre USD 200 y 230 sin cuota mensual \parencite{AltumView}, pero cubre solo detección de eventos sobre una habitación. La arquitectura del sistema propuesto, dividida entre procesamiento local (RNF1) y un componente en la nube que sostiene la línea base y los reportes (RNF6, RNF7), sugiere naturalmente un esquema mixto, con un costo inicial por el hardware, similar en orden de magnitud al de AltumView, más una suscripción opcional que cubra el cómputo y almacenamiento en la nube del segundo módulo. Este esquema ya tiene precedente en el mismo segmento de cliente, dado que Ato cobra un dispositivo de entre USD 179 y 200 más una suscripción de USD 29 mensuales \parencite{Ato}, lo que sugiere que las familias de este segmento están dispuestas a aceptar un costo recurrente cuando el valor entregado es continuo. El esquema propio todavía no está validado con costos de producción reales, pero es coherente con la arquitectura y cuenta con un antecedente de mercado que respalda su viabilidad.
+AltumView Sentinare fija la referencia de mercado más cercana en la categoría de cámaras, entre USD 200 y 230 sin cuota mensual \parencite{AltumView}, pero cubre solo detección de eventos sobre una habitación. La arquitectura del sistema propuesto, dividida entre procesamiento local (RNF1) y un componente en la nube que sostiene la línea base y los reportes (RNF6, RNF7), sugiere naturalmente un esquema mixto, con un costo inicial por el hardware, similar en orden de magnitud al de AltumView, más una suscripción mensual que cubra el cómputo y almacenamiento en la nube del segundo módulo. Este esquema ya tiene precedente en el mismo segmento de cliente, dado que Ato cobra un dispositivo de entre USD 179 y 200 más una suscripción de USD 29 mensuales \parencite{Ato}, lo que sugiere que las familias de este segmento están dispuestas a aceptar un costo recurrente cuando el valor entregado es continuo. El esquema propio todavía no está validado con costos de producción reales, pero es coherente con la arquitectura y cuenta con un antecedente de mercado que respalda su viabilidad.
 
 \paragraph{Plaza:}
 El proyecto no cuenta hoy con canal de distribución propio. Dos vías parecen más viables que una tienda física, dado el perfil de comprador relevado en el User Research, cuidadores que ya buscan de forma activa una solución y se informan por redes o grupos de mensajería. La primera es la venta directa por canal digital, y la segunda son las alianzas institucionales con geriátricos, obras sociales o municipios interesados en programas de cuidado domiciliario, una oportunidad que se apoya en el crecimiento poblacional proyectado por INDEC \parencite{INDEC2024}. Esta segunda vía tiene además la ventaja de acortar el problema de confianza señalado en el análisis de Porter, porque la institución actúa como validador ante la familia.
@@ -427,7 +427,7 @@ A partir del panorama competitivo, las cinco fuerzas de Porter y el posicionamie
     \item \textbf{Validación limitada.} El prototipo todavía no fue probado en múltiples hogares reales ni a escala.
     \item \textbf{Sin canal de distribución propio.} Todavía no existe una estructura comercial ni soporte disponible las 24 horas.
     \item \textbf{Dependencia de conectividad domiciliaria.} El envío de alertas requiere una conexión a internet estable, algo que no está garantizado en todos los hogares.
-    \item \textbf{Modelo de costos sin validar.} A diferencia de AltumView Sentinare, que ya tiene un precio de referencia de mercado (USD 200-230 sin cuota mensual), el sistema propuesto todavía no cuenta con un costo de producción ni una estructura de precios validada frente a esa referencia.
+    \item \textbf{Modelo de costos sin validar.} A diferencia de AltumView Sentinare, que ya tiene un precio de referencia de mercado (USD 200-230 sin cuota mensual), el costo de producción y el precio de venta del sistema propuesto, proyectados en la Sección~\ref{sec:modelo-negocio}, todavía no están validados con ventas ni con costos reales de producción a escala.
 \end{itemize}
 
 \paragraph{Amenazas:}
@@ -480,8 +480,7 @@ Por lo tanto, permitir cámaras arbitrarias del usuario introduciría una depend
 En consecuencia, el kit incluye cámaras seleccionadas por el equipo para funcionar con la controladora, de modo que la privacidad que el sistema promete no dependa de una configuración que el usuario deba resolver por su cuenta.
 
 En cuanto al costo, se resume a continuación el presupuesto estimado, calculado a partir de una controladora y tres cámaras, la configuración prevista para el prototipo.
-Este presupuesto cubre únicamente el hardware del prototipo y no constituye un costo de producción ni una estructura de precios de venta, aspecto que queda señalado como pendiente de validar en la Sección~\ref{sec:foda}.
-Los costos de infraestructura en la nube tampoco se incluyen en la tabla y quedan pendientes de estimar.
+Este presupuesto cubre únicamente el hardware del prototipo y no constituye un costo de producción ni una estructura de precios de venta a escala; la proyección de ambos, junto con los costos de infraestructura en la nube, se desarrolla en la Sección~\ref{sec:modelo-negocio} y queda señalada como pendiente de validar en la Sección~\ref{sec:foda}.
 
 \begin{table}[h!]
 \centering
@@ -599,22 +598,23 @@ Se define qué se vende y a qué precio, a cuánta gente se puede llegar y cuán
 
 La oferta se compone de un kit inicial y una suscripción mensual.
 El kit incluye una Raspberry Pi 5 de 8 GB, una cámara IP, la fuente de alimentación, la tarjeta microSD y una carcasa con disipador, y se entrega configurado para su uso.
-Se propone un precio final de USD 230 por el kit y de USD 30 por mes por la suscripción, que incluye el procesamiento en la nube de la línea base, los reportes, las notificaciones y las actualizaciones.
+Se propone un precio final de USD 250 por el kit y de USD 30 por mes por la suscripción, que incluye el procesamiento en la nube de la línea base, los reportes, las notificaciones y las actualizaciones.
+Cada cámara IP adicional, hasta el máximo de tres por controladora descripto en la Sección~\ref{sec:viabilidad-tecnica}, se cobra por separado a USD 19 con IVA incluido, un precio que cubre su costo unitario de USD 15 relevado en la Tabla~\ref{tab:presupuesto-hardware} una vez descontado el IVA.
 
 Ambos precios incluyen IVA.
 En el modelo se cargan sin IVA, es decir, divididos por 1,21, porque ese impuesto se cobra al cliente pero se entrega al fisco y no constituye un ingreso del negocio.
 Por la misma razón el análisis se realiza sobre valores netos y tampoco incorpora el impuesto sobre los ingresos brutos.
 
 Como referencia, AltumView Sentinare cuesta entre USD 200 y 230 sin cuota mensual \parencite{AltumView}, mientras que Ato cobra un dispositivo de entre USD 179 y 200 más USD 29 por mes \parencite{Ato}.
-El kit queda en el extremo superior de ese rango y la suscripción en línea con la de Ato, aunque a diferencia de AltumView se cobra una cuota mensual.
+El kit queda por encima de ese rango y la suscripción en línea con la de Ato, aunque a diferencia de AltumView se cobra una cuota mensual.
 La encuesta no relevó disposición a pagar, por lo que este valor constituye un supuesto que debe validarse en etapas posteriores.
 
 La lógica del negocio se entiende mejor mirando a un cliente promedio del escenario Base.
-El kit cuesta USD 200 en componentes, a lo que se suman USD 25 de armado y envío y USD 10 de garantía.
+El kit cuesta USD 230 en componentes, a lo que se suman USD 25 de armado y envío y USD 12 de garantía.
 Además hay que sumar el costo de conseguir al cliente, que en el primer año es de USD 130.
-En total se gastan unos USD 365 por cada cliente nuevo.
-Por el kit se cobran USD 230 con IVA incluido, y lo que queda para el negocio después de descontar el IVA, la comisión de cobro y la estructura comercial es de unos USD 133.
-La inversión neta por cliente es entonces de unos USD 232, como muestra la Tabla~\ref{tab:cuenta-cliente}.
+En total se gastan unos USD 397 por cada cliente nuevo.
+Por el kit se cobran USD 250 con IVA incluido, y lo que queda para el negocio después de descontar el IVA, la comisión de cobro y la estructura comercial es de unos USD 145.
+La inversión neta por cliente es entonces de unos USD 252, como muestra la Tabla~\ref{tab:cuenta-cliente}.
 
 \begin{table}[H]
 \centering
@@ -624,25 +624,25 @@ La inversión neta por cliente es entonces de unos USD 232, como muestra la Tabl
 \hline
 \textbf{Concepto} & \textbf{USD} \\
 \hline
-Costo del kit (hardware) & 200 \\
+Costo del kit (hardware) & 230 \\
 \hline
 Armado y envío & 25 \\
 \hline
-Garantía (5\,\% del costo del kit) & 10 \\
+Garantía (5\,\% del costo del kit) & 12 \\
 \hline
 Costo de conseguir al cliente (año 1) & 130 \\
 \hline
-\textbf{Total que sale por cliente nuevo} & \textbf{365} \\
+\textbf{Total que sale por cliente nuevo} & \textbf{397} \\
 \hline
-Se resta el ingreso neto de la venta del kit (sin IVA, comisiones ni estructura comercial) & 133 \\
+Se resta el ingreso neto de la venta del kit (sin IVA, comisiones ni estructura comercial) & 145 \\
 \hline
-\textbf{Inversión neta por cliente} & \textbf{232} \\
+\textbf{Inversión neta por cliente} & \textbf{252} \\
 \hline
 \end{tabular}
 \end{table}
 
 Cada mes de suscripción deja unos USD 17 luego de descontar la comisión de cobro, la estructura comercial y la nube.
-Con ese margen, cada cliente recupera su inversión en unos catorce meses y desde ese momento genera ganancia.
+Con ese margen, cada cliente recupera su inversión en unos quince meses y desde ese momento genera ganancia.
 En otras palabras, el kit se vende por debajo de su costo para facilitar la compra, y la rentabilidad proviene de la suscripción.
 La cuenta es orientativa, ya que no incluye al equipo ni los gastos fijos, que sí forman parte del modelo completo.
 
@@ -650,7 +650,7 @@ Ese plazo de recuperación es el punto sensible del negocio, porque un cliente q
 Por eso la suscripción se ofrece con una permanencia mínima de 12 meses.
 En la práctica, el cliente acepta esa permanencia al contratar y, si se da de baja antes, abona un cargo proporcional a lo que resta de los 12 meses.
 De este modo el riesgo de bajas tempranas queda cubierto durante casi todo el período de recuperación.
-La forma concreta de instrumentarla, incluido su encuadre en la normativa de defensa del consumidor, debe definirse con asesoramiento legal.
+La forma concreta de instrumentarla, en particular su compatibilidad con el derecho a dar de baja un servicio contratado a distancia en cualquier momento que establece el artículo 10 ter de la Ley N.º 24.240 de Defensa del Consumidor y su reglamentación \parencite{Argentina2018}, debe definirse con asesoramiento legal profesional.
 
 \subsubsection{Mercado objetivo}
 \label{sec:mercado-objetivo}
@@ -694,12 +694,14 @@ El año 0 corresponde al desarrollo y al lanzamiento.
 El desarrollo se estima en USD 20 por hora y 160 horas mensuales, aplicados a dos personas durante nueve meses, lo que da USD 57.600.
 A ese monto se suman USD 6.000 de lanzamiento y aspectos legales.
 
-El costo del kit varía según el escenario y es de USD 250, 200 y 190 en Bear, Base y Bull, respectivamente.
-La diferencia refleja descuentos por volumen.
-La Raspberry Pi 5 de 8 GB, que es el componente principal, cuesta USD 175 \parencite{PiShop2026} a la escala de compra mayorista prevista para producción, un valor menor al de la unidad relevada en Mercado Libre para el prototipo (Sección~\ref{sec:viabilidad-tecnica}), ya que la producción a escala contempla además la posibilidad de importar directamente.
+El costo del kit varía según el escenario y es de USD 250, 230 y 220 en Bear, Base y Bull, respectivamente.
+La Raspberry Pi 5 de 8 GB, que es el componente principal, se fija en USD 175 a precio minorista \parencite{PiShop2026} y se mantiene en ese valor en los tres escenarios, sin suponer ningún descuento sobre la placa, un valor menor al de la unidad relevada en Mercado Libre para el prototipo (Sección~\ref{sec:viabilidad-tecnica}).
+Lo que varía entre escenarios es el resto del kit, la cámara, la fuente, la tarjeta microSD, la carcasa y la logística, que suma USD 75, 55 y 45 respectivamente, según el descuento por volumen y la posibilidad de importar directamente que se logren en cada caso.
+Es un supuesto propio que debe validarse con cotizaciones firmes, ya que los revendedores locales llegan a ofrecer la placa a un precio bastante mayor al de PiShop \parencite{Siranet2026}, por lo que alcanzar la escala prevista en Base y Bull requeriría un acuerdo de importación directa o de volumen con el proveedor.
 El hardware se compra con cuatro meses de anticipación, por lo que en los primeros años hay que pagar los kits antes de venderlos y esto aumenta el financiamiento necesario.
 
-El equipo se estima en USD 1.500 por persona por mes.
+El equipo en régimen se estima en USD 1.500 por persona por mes.
+La diferencia con la tarifa de desarrollo del año 0 se debe a que ese desarrollo inicial se valúa a precio de mercado por hora, como un trabajo puntual de profesionales especializados en visión por computadora y aprendizaje automático, mientras que el equipo estable de los años 1 a 5 se estima por su costo mensual total en relación de dependencia, con perfiles de distintos niveles; ambos valores son supuestos propios.
 Se parte de un núcleo de desarrollo y gestión que crece con cada escenario y se agrega un agente de soporte cada 500 suscripciones.
 La estructura comercial y de gerencia se calcula como el 25\,\% de las ventas, bajo el supuesto de que la parte comercial está tercerizada y se paga por comisiones de canal.
 Para el impuesto a las ganancias se toma la alícuota de 35\,\% \parencite{ARCA2026}, con compensación de quebrantos de años anteriores.
@@ -712,7 +714,7 @@ La Figura~\ref{fig:supuestos} muestra la hoja del modelo con los supuestos comun
 Como el proyecto pierde dinero durante los primeros años, se financia con rondas de inversión de capital y no con deuda.
 Se supone una ronda pre-seed en el año 0 y una ronda seed al inicio del año 2, con montos crecientes según el escenario (Tabla~\ref{tab:rondas}).
 En los tres casos el capital levantado supera el financiamiento máximo necesario, lo que deja un colchón de caja.
-Una vez incorporadas las rondas, la caja mínima es de USD 281.000 en Bear, USD 446.000 en Base y USD 286.000 en Bull.
+Una vez incorporadas las rondas, la caja mínima es de USD 358.000 en Bear, USD 392.000 en Base y USD 230.000 en Bull.
 
 \begin{table}[H]
 \centering
@@ -722,13 +724,13 @@ Una vez incorporadas las rondas, la caja mínima es de USD 281.000 en Bear, USD 
 \hline
 \textbf{Concepto} & \textbf{Bear} & \textbf{Base} & \textbf{Bull} \\
 \hline
-Ronda pre-seed (año 0) & 900.000 & 1.200.000 & 1.400.000 \\
+Ronda pre-seed (año 0) & 900.000 & 1.300.000 & 1.500.000 \\
 \hline
-Ronda seed (inicio del año 2) & 800.000 & 1.100.000 & 1.500.000 \\
+Ronda seed (inicio del año 2) & 800.000 & 1.300.000 & 1.800.000 \\
 \hline
-\textbf{Total levantado} & \textbf{1.700.000} & \textbf{2.300.000} & \textbf{2.900.000} \\
+\textbf{Total levantado} & \textbf{1.700.000} & \textbf{2.600.000} & \textbf{3.300.000} \\
 \hline
-Financiamiento máximo necesario & 1.419.000 & 1.767.000 & 2.211.000 \\
+Financiamiento máximo necesario & 1.342.000 & 2.208.000 & 2.776.000 \\
 \hline
 \end{tabular}
 \end{table}
@@ -741,9 +743,9 @@ La tasa de descuento representa el rendimiento mínimo que exigiría un inversor
 Se calcula con el modelo de valoración de activos de capital, conocido como CAPM \parencite{Sharpe1964}, al que se suma el riesgo país de Argentina.
 Como el proyecto se financia solo con capital propio y sin deuda, el costo promedio ponderado del capital (WACC) coincide con el costo del capital propio.
 
-La tasa libre de riesgo corresponde al bono del Tesoro de Estados Unidos a 10 años al 29 de septiembre de 2026.
+La tasa libre de riesgo corresponde al bono del Tesoro de Estados Unidos a 10 años al 29 de septiembre de 2026 \parencite{Treasury2026}.
 La beta es el promedio de las betas desapalancadas de tres industrias cercanas al producto, que son el software, la tecnología de la información en salud y la electrónica de consumo, publicadas en la base de datos sectorial de enero de 2026 \parencite{Damodaran2026}.
-El riesgo país es el EMBI de Argentina al 28 de septiembre de 2026.
+El riesgo país es el EMBI de Argentina al 28 de septiembre de 2026, día en el que cerró en 628 puntos básicos tras una jornada de fuerte volatilidad \parencite{Infobae2026}.
 La prima por tamaño y etapa temprana es un supuesto propio que puede modificarse en el modelo.
 El resultado es una tasa de 19,83\,\%, que se utiliza en todo el análisis, según el detalle de la Figura~\ref{fig:wacc}.
 
@@ -767,8 +769,8 @@ Cada escenario informa además las personas alcanzadas, cuyo criterio de cálcul
 
 En el escenario Bear, que es el pesimista, la penetración es del 1\,\%, el kit cuesta USD 250 y el CAC parte de USD 150 y baja solo 5\,\% por año.
 El resultado operativo es negativo hasta el año 3 y recién pasa a ser positivo en el año 4.
-El flujo acumulado toca su punto más bajo en USD $-$1,42 millones, que es el financiamiento máximo necesario, y se vuelve levemente positivo en el año 5, con USD 247.000.
-El VAN es de USD $-$321.903 y la TIR de 5,6\,\%, muy por debajo de la tasa de descuento, por lo que el proyecto no alcanza el rendimiento exigido.
+El flujo acumulado toca su punto más bajo en USD $-$1,34 millones, que es el financiamiento máximo necesario, y se vuelve positivo en el año 5, con USD 349.000.
+El VAN es de USD $-$257.967 y la TIR de 8,2\,\%, muy por debajo de la tasa de descuento, por lo que el proyecto no alcanza el rendimiento exigido.
 Además llega a 40.800 personas, por debajo de la meta de 100.000.
 Con poca adopción, un hardware caro y clientes difíciles de conseguir, el negocio sobrevive pero no compensa el riesgo asumido.
 
@@ -778,12 +780,12 @@ Con poca adopción, un hardware caro y clientes difíciles de conseguir, el nego
 \subsubsection{Escenario Base}
 
 El escenario Base es el principal.
-Supone una penetración del 2,5\,\% (34.000 kits), un kit que cuesta USD 200 en componentes y un CAC que parte de USD 130 y baja 10\,\% por año hasta USD 85.
+Supone una penetración del 2,5\,\% (34.000 kits), un kit que cuesta USD 230 en componentes y un CAC que parte de USD 130 y baja 10\,\% por año hasta USD 85.
 Los años 1 a 3 son de pérdida, porque se compra hardware por adelantado y se consiguen clientes antes de cobrar las suscripciones.
-En el año 4 el EBITDA pasa a ser positivo, con un margen del 16\,\%, y en el año 5 llega a USD 3,7 millones, con un margen del 36\,\%.
-El flujo acumulado toca su punto más bajo en USD $-$1,77 millones y la inversión se recupera en 4,1 años.
-El VAN es de USD 575.998 y la TIR de 34,1\,\%, por encima del 19,83\,\% exigido, y el escenario alcanza 102.000 personas, con lo que cumple la meta social.
-El proyecto es rentable en el escenario esperado, con la particularidad de que requiere un capital inicial importante, de USD 2,3 millones en dos rondas, porque tarda cuatro años en recuperarse.
+En el año 4 el EBITDA pasa a ser positivo, con un margen del 13\,\%, y en el año 5 llega a USD 3,6 millones, con un margen del 34\,\%.
+El flujo acumulado toca su punto más bajo en USD $-$2,21 millones y la inversión se recupera en 4,2 años.
+El VAN es de USD 273.683 y la TIR de 26,0\,\%, por encima del 19,83\,\% exigido, y el escenario alcanza 102.000 personas, con lo que cumple la meta social.
+El proyecto es rentable en el escenario esperado, con la particularidad de que requiere un capital inicial importante, de USD 2,6 millones en dos rondas, porque tarda cuatro años en recuperarse.
 
 % CAPTURA 4: hoja "Base", filas 2 a 15 (kits, suscripciones, CAC e ingresos por año).
 \figuraexcel{captura_base_datos.png}{0.95}{Kits, suscripciones, costo de adquisición e ingresos del escenario Base.}{fig:base-datos}
@@ -793,13 +795,13 @@ El proyecto es rentable en el escenario esperado, con la particularidad de que r
 
 \subsubsection{Escenario Bull}
 
-En el escenario Bull, que es el optimista, la penetración es del 4,4\,\% (60.000 kits), el kit cuesta USD 190 y el CAC parte de USD 110 y baja 12\,\% por año hasta USD 66.
+En el escenario Bull, que es el optimista, la penetración es del 4,4\,\% (60.000 kits), el kit cuesta USD 220 y el CAC parte de USD 110 y baja 12\,\% por año hasta USD 66.
 Además se cuentan dos personas indirectas por kit.
-El EBITDA es positivo desde el año 3 y el flujo acumulado supera el cero en el año 4, con un payback de 3,7 años.
-En el año 5 el margen EBITDA es de 38\,\%.
-El VAN es de USD 1.867.933 y la TIR de 49,7\,\%, claramente por encima de la tasa de descuento, y el escenario alcanza 240.000 personas.
+El EBITDA es positivo desde el año 3 y el flujo acumulado supera el cero en el año 4, con un payback de 4,0 años.
+En el año 5 el margen EBITDA es de 37\,\%.
+El VAN es de USD 1.344.075 y la TIR de 39,3\,\%, claramente por encima de la tasa de descuento, y el escenario alcanza 240.000 personas.
 Si la adopción crece según lo previsto, el negocio no solo se paga sino que deja retorno de sobra.
-Por ser más grande, también necesita más capital, con un financiamiento máximo de USD 2,21 millones.
+Por ser más grande, también necesita más capital, con un financiamiento máximo de USD 2,78 millones.
 
 % CAPTURA 6: hoja "Bull", filas 17 a 47.
 \figuraexcel{captura_bull_flujo.png}{0.95}{Flujo de caja y resultados del escenario Bull.}{fig:bull}
@@ -809,7 +811,7 @@ Por ser más grande, también necesita más capital, con un financiamiento máxi
 Además del resultado económico, el proyecto se propone alcanzar al menos 100.000 personas.
 Por cada kit vendido se cuentan el adulto mayor, que es el beneficiario directo, el cuidador, que es el usuario directo, y una persona indirecta, como otro familiar que se entera del estado del adulto mayor.
 En el escenario Bull se cuentan dos personas indirectas por kit.
-La encuesta respalda que en cada caso hay más de una persona involucrada además del cuidador principal.
+Aunque el monitoreo se realiza sobre un único adulto mayor por instalación, como se estableció en el Alcance (Sección~\ref{sec:limitaciones-exclusiones}), el impacto de cada kit alcanza a más de una persona, ya que además del cuidador principal suele haber otros familiares que también reciben la información del sistema, tal como surge de la entrevistada que se turna con sus hermanos para visitar a su madre y del User Persona de la cuidadora a distancia, que necesita coordinarse con sus hermanos con información objetiva (Anexo~\ref{anexo:entrevistas}; Anexo~\ref{anexo:user_persona}).
 Con este criterio, el escenario Base alcanza 102.000 personas, que surgen de multiplicar por tres los 34.000 kits vendidos.
 
 \subsubsection{Comparación de escenarios}
@@ -830,25 +832,25 @@ Penetración a 5 años & 1\,\% & 2,5\,\% & 4,4\,\% \\
 \hline
 Kits vendidos en 5 años & 13.600 & 34.000 & 60.000 \\
 \hline
-Costo del kit (USD) & 250 & 200 & 190 \\
+Costo del kit (USD) & 250 & 230 & 220 \\
 \hline
 CAC del año 1 al año 5 (USD) & 150 a 122 & 130 a 85 & 110 a 66 \\
 \hline
-Capital levantado (USD) & 1.700.000 & 2.300.000 & 2.900.000 \\
+Capital levantado (USD) & 1.700.000 & 2.600.000 & 3.300.000 \\
 \hline
-Ingresos del año 5 (USD) & 4.153.000 & 10.383.000 & 18.322.000 \\
+Ingresos del año 5 (USD) & 4.196.000 & 10.489.000 & 18.511.000 \\
 \hline
-EBITDA del año 5 (USD) & 1.255.000 & 3.739.000 & 6.995.000 \\
+EBITDA del año 5 (USD) & 1.285.000 & 3.610.000 & 6.768.000 \\
 \hline
-Margen EBITDA del año 5 & 30\,\% & 36\,\% & 38\,\% \\
+Margen EBITDA del año 5 & 31\,\% & 34\,\% & 37\,\% \\
 \hline
-Financiamiento máximo necesario (USD) & 1.419.000 & 1.767.000 & 2.211.000 \\
+Financiamiento máximo necesario (USD) & 1.342.000 & 2.208.000 & 2.776.000 \\
 \hline
-VAN al 19,83\,\% (USD) & $-$321.903 & 575.998 & 1.867.933 \\
+VAN al 19,83\,\% (USD) & $-$257.967 & 273.683 & 1.344.075 \\
 \hline
-TIR & 5,6\,\% & 34,1\,\% & 49,7\,\% \\
+TIR & 8,2\,\% & 26,0\,\% & 39,3\,\% \\
 \hline
-Payback (años) & 4,8 & 4,1 & 3,7 \\
+Payback (años) & 4,7 & 4,2 & 4,0 \\
 \hline
 Personas alcanzadas & 40.800 & 102.000 & 240.000 \\
 \hline
@@ -863,11 +865,11 @@ Cumple la meta de 100.000 personas & No & Sí & Sí \\
 Estos resultados deben leerse con algunas precauciones.
 En primer lugar, todo depende de la penetración y del canal de venta.
 En el escenario Base se venden 1.700 kits en el primer año y casi 11.000 en el cuarto, y sostener ese ritmo requiere que la adopción efectivamente acelere año a año como prevé el modelo, algo que todavía debe validarse.
-En segundo lugar, el costo del kit es la variable que más mueve el resultado, ya que con un kit de USD 250 en lugar de USD 200 el VAN del escenario Base pasa a ser negativo.
+En segundo lugar, el costo del kit es la variable que más mueve el resultado, ya que con un costo de kit de USD 250 en lugar de USD 230 el VAN del escenario Base pasa a ser negativo.
 Por eso resulta importante asegurar precios de volumen con los proveedores.
 En tercer lugar, el modelo trabaja con suscripciones netas, es decir, no descuenta clientes que se dan de baja.
 Para medir cuánto pesa este supuesto se repitió el cálculo del escenario Base aplicando una tasa de bajas anual sobre las suscripciones (Tabla~\ref{tab:bajas}).
-El VAN se hace cero con bajas de alrededor de 12\,\% anual, de modo que el negocio soporta cierta rotación pero no una alta.
+El VAN se hace cero con bajas de alrededor de 5\,\% anual, de modo que el negocio soporta muy poca rotación de suscriptores.
 Como los datos de retención no existen todavía y el prototipo no permite medirlos, la permanencia mínima y la validación en un piloto son las principales defensas frente a este riesgo.
 
 \begin{table}[H]
@@ -878,17 +880,17 @@ Como los datos de retención no existen todavía y el prototipo no permite medir
 \hline
 \textbf{Bajas anuales} & \textbf{VAN (USD)} & \textbf{TIR} \\
 \hline
-0\,\% (modelo) & 575.998 & 34,1\,\% \\
+0\,\% (modelo) & 273.683 & 26,0\,\% \\
 \hline
-5\,\% & 331.620 & 28,3\,\% \\
+5\,\% & 19.394 & 20,3\,\% \\
 \hline
-10\,\% & 94.736 & 22,3\,\% \\
+10\,\% & $-$217.534 & 14,8\,\% \\
 \hline
-15\,\% & $-$121.942 & 16,6\,\% \\
+15\,\% & $-$434.213 & 9,6\,\% \\
 \hline
-20\,\% & $-$337.777 & 10,9\,\% \\
+20\,\% & $-$650.048 & 4,3\,\% \\
 \hline
-30\,\% & $-$724.651 & 0,3\,\% \\
+30\,\% & $-$1.127.473 & $-$8,3\,\% \\
 \hline
 \end{tabular}
 \end{table}
@@ -900,6 +902,7 @@ Se trata de una aproximación para comparar escenarios y no de un pronóstico.
 \subsection{Conclusión del análisis económico}
 
 El modelo mixto de kit y suscripción resulta viable en el escenario esperado y muy atractivo en el optimista, aunque requiere capital inicial y depende de alcanzar el volumen de ventas previsto.
-Con los supuestos adoptados, el escenario Base supera la tasa de descuento con una TIR de 34,1\,\%, recupera la inversión en 4,1 años y alcanza a 102.000 personas.
+Con los supuestos adoptados, el escenario Base supera la tasa de descuento con una TIR de 26,0\,\%, recupera la inversión en 4,2 años y alcanza a 102.000 personas.
 El escenario Bear, en cambio, no es rentable, lo que muestra que la adopción y el costo de conseguir clientes son los factores críticos.
+Esa viabilidad del escenario Base es, además, angosta, porque el VAN se anula con apenas 5\,\% de bajas anuales (Tabla~\ref{tab:bajas}), de modo que retener a los clientes durante el primer año es tan determinante para el resultado como conseguirlos.
 Los próximos pasos para reducir la incertidumbre son obtener cotizaciones firmes de los componentes, relevar la disposición a pagar de los cuidadores y validar con un piloto que el boca a boca reduce el costo de adquisición tal como asume el modelo.
