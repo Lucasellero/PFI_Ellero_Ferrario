@@ -93,9 +93,9 @@ A continuación se detallan los requerimientos no funcionales (RNF) del sistema.
 
 \begin{itemize}
     \item \textbf{RNF1:} El video debe procesarse dentro del hogar, sin enviarse a servidores externos para preservar la privacidad del residente.
-    \item \textbf{RNF2:} La detección de una caída debe generar el evento en el orden de segundos, no de minutos.
+    \item \textbf{RNF2:} La detección de una caída debe generar el evento en menos de 5 segundos desde que ocurre, en el orden de segundos y no de minutos.
     \item \textbf{RNF3:} La detección de inmovilidad prolongada debe evaluarse en una ventana de tiempo configurable, de 3 minutos por defecto.
-    \item \textbf{RNF4:} El módulo de estimación de pose debe procesar cada frame en fracciones de segundo, permitiendo una operación cercana al tiempo real.
+    \item \textbf{RNF4:} El módulo de estimación de pose debe procesar cada frame en menos de 200 milisegundos, permitiendo una operación cercana al tiempo real sin depender de GPU.
     \item \textbf{RNF5:} Los módulos de estimación de pose y de clasificación de actividades deben ejecutarse sobre el mismo hardware embebido, sin GPU.
     \item \textbf{RNF6:} El sistema debe seguir registrando eventos localmente ante cortes de conexión a internet.
     \item \textbf{RNF7:} El sistema debe sincronizar con la nube los eventos locales al restablecerse la conexión.
@@ -207,7 +207,7 @@ Del lado de la nube, la construcción de la línea base de comportamiento (RF6) 
 La Figura~\ref{fig:diagrama_componentes} documenta cómo está organizado el código fuente del sistema, ya validado corriendo sobre la Raspberry Pi que constituye el hardware de borde del despliegue objetivo (Sección~\ref{sec:diagrama_arquitectura}).
 Ese despliegue objetivo también incluye la nube alojada en AWS y la aplicación móvil, presentadas más adelante en la misma sección, pero ninguna de las dos está implementada todavía a la fecha de esta entrega.
 Por eso el diagrama no incluye esos componentes, que pertenecen al despliegue final y todavía no forman parte de esta etapa del desarrollo.
-Lo que muestra en cambio es el software validado hasta esta entrega, correspondiente al 50\,\% del avance del proyecto, organizado en siete módulos independientes que ya corren sobre la Raspberry Pi.
+Lo que muestra en cambio es el software validado hasta esta entrega, correspondiente al 50\,\% del avance del proyecto, organizado en siete módulos, de los cuales cinco ya corren sobre la Raspberry Pi y dos, \texttt{baseline/} y \texttt{evaluation/}, todavía no arrancaron.
 
 El módulo \texttt{runner/} es el orquestador central del sistema y el único que importa directamente el código de \texttt{vision/} y \texttt{vlm/}, a los que invoca por cada cámara activa y de los que recibe el resultado de la detección correspondiente.
 Por su parte, \texttt{vision/} implementa una heurística de dos fases sobre descriptores de pose, sin una red neuronal propia más allá de la estimación de pose de base, para detectar caídas e inmovilidad prolongada, en línea con RF1, RF3 y RF4.
@@ -906,3 +906,119 @@ Con los supuestos adoptados, el escenario Base supera la tasa de descuento con u
 El escenario Bear, en cambio, no es rentable, lo que muestra que la adopción y el costo de conseguir clientes son los factores críticos.
 Esa viabilidad del escenario Base es, además, angosta, porque el VAN se anula con apenas 5\,\% de bajas anuales (Tabla~\ref{tab:bajas}), de modo que retener a los clientes durante el primer año es tan determinante para el resultado como conseguirlos.
 Los próximos pasos para reducir la incertidumbre son obtener cotizaciones firmes de los componentes, relevar la disposición a pagar de los cuidadores y validar con un piloto que el boca a boca reduce el costo de adquisición tal como asume el modelo.
+
+% Requiere graphicx y biblatex (citas con \parencite). Claves nuevas en biblio.bib.
+\providecommand{\figuramarca}[4]{%
+  % #1 archivo, #2 ancho relativo, #3 epígrafe, #4 etiqueta
+  \begin{figure}[H]
+    \centering
+    \IfFileExists{#1}{\includegraphics[width=#2\textwidth]{#1}}{\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}Insertar imagen \texttt{\detokenize{#1}}\vspace{1.5cm}}}}
+    \caption{#3}
+    \label{#4}
+  \end{figure}
+}
+
+\newcommand{\marca}{Lares}
+\newcommand{\modcont}{Lar}   % nombre de la controladora
+\newcommand{\modcam}{Vela}    % nombre de cada cámara
+
+\section{Branding}
+\label{sec:branding}
+
+Esta sección define la identidad de marca del sistema, es decir, el nombre con el que se presentaría al mercado, su logo y los criterios visuales que lo acompañan, y los vincula con el análisis de marketing de las secciones anteriores.
+En particular, responde a la amenaza que el análisis FODA identificó en la percepción de intrusión, es decir, el rechazo que la sola presencia de una cámara puede generar en algunas familias, y vuelve visible la propuesta de valor del modelo de negocio, que es cuidar sin invadir.
+La identidad se apoya en tres datos del análisis.
+El comprador es el familiar responsable y no el adulto mayor, por lo que la marca debe tranquilizar a quien paga.
+La promesa central del producto es acompañar de manera inmediata y constante sin invadir la intimidad de la persona monitoreada.
+Y la aplicación usa el color como código de severidad, por lo que la marca no puede competir con ese código.
+
+\subsection{Nombre}
+\label{sec:branding-nombre}
+
+El sistema se presenta bajo el nombre \marca.
+Un nombre de marca eficaz debe ser fácil de recordar, significativo y transferible a distintos productos y mercados \parencite{Keller1993}.
+\marca{} cumple con esos criterios por las siguientes razones.
+
+En primer lugar, es una palabra del español que significa \emph{casa u hogar}, y que en la Antigua Roma designaba a los dioses protectores de la casa \parencite{RAE-lar}.
+Por lo tanto, el nombre se entiende sin necesidad de explicación y evoca exactamente lo que el producto cuida.
+En segundo lugar, refuerza la decisión de arquitectura más importante del sistema, que es procesar el video dentro del hogar y enviar a la nube únicamente los eventos detectados, sin imágenes ni video.
+El nombre pone al hogar en el centro, y ese es el lugar donde ocurre el procesamiento.
+En tercer lugar, es una sola palabra corta, de pronunciación directa en español, lo que facilita que un familiar la recuerde y la busque en una tienda de aplicaciones.
+Por último, el nombre no menciona cámaras, vigilancia ni inteligencia artificial, vocabulario que podría despertar rechazo en el adulto mayor y en su familia y que contradice el carácter no invasivo del sistema.
+
+La frase que acompaña al nombre es \emph{La distancia deja de ser un problema}.
+Está dirigida al comprador, que vive lejos de su pariente y es quien siente esa distancia, y plantea el beneficio del producto y no su tecnología.
+Esa coherencia entre nombre, frase y arquitectura es deliberada, porque una marca gana credibilidad cuando lo que promete coincide con lo que el producto hace \parencite{Keller2013}.
+
+Antes de una eventual comercialización, el nombre debería verificarse formalmente en el registro de marcas del Instituto Nacional de la Propiedad Industrial, en las clases de la clasificación de Niza correspondientes a software y dispositivos (clase 9) y a servicios de software como servicio (clase 42).
+Una búsqueda preliminar en el buscador público del INPI muestra que existieron registros previos de la denominación \emph{Lares} en ambas clases, uno en clase 9 con vencimiento en 1991 y otro en clase 42 con ingreso en 1995, pero ambos figuran caducos y sin vigencia a la fecha de esta entrega.
+Esto no reemplaza una búsqueda fonética arancelada ni el dictamen de un agente de marcas, que siguen siendo un paso previo recomendado antes de cualquier lanzamiento comercial.
+
+\subsection{Logo}
+\label{sec:branding-logo}
+
+El logo se compone de un símbolo y del nombre escrito en mayúsculas, como muestra la Figura~\ref{fig:logo}.
+El símbolo representa una casa formada por dos piezas que se inclinan una hacia la otra, como un techo que abriga, y una figura humana protegida debajo.
+Con ello comunica la idea central del producto, que es una persona cuidada en su propio hogar, y evita la imagen de un dispositivo de seguridad.
+Las formas de bordes redondeados y los colores suaves transmiten calidez, y la tipografía sin serifa de trazo grueso y proporciones amplias del nombre aporta solidez y legibilidad.
+
+Las recomendaciones sobre diseño de logos indican que conviene preferir formas simples, naturales y con un significado que no dependa de una explicación \parencite{Henderson1998}.
+El símbolo propuesto cumple con esa pauta, y se reconoce en tamaños pequeños, lo que importa porque su uso principal es como ícono de la aplicación móvil (Figura~\ref{fig:icono}).
+También se definió una variante sobre fondo verde oscuro, que mantiene la legibilidad cuando el logo deba ubicarse sobre la carcasa del dispositivo o sobre material impreso (Figura~\ref{fig:logo-oscuro}).
+
+\figuramarca{logo_principal.png}{0.60}{Logo principal de \marca{} con su frase de posicionamiento. Fuente: Elaboración propia.}{fig:logo}
+
+\figuramarca{icono_app.png}{0.30}{Ícono de la aplicación móvil. Fuente: Elaboración propia.}{fig:icono}
+
+\figuramarca{logo_oscuro.png}{0.60}{Variante del logo sobre fondo verde oscuro. Fuente: Elaboración propia.}{fig:logo-oscuro}
+
+\subsection{Paleta de color y tipografía}
+\label{sec:branding-paleta}
+
+La paleta se organiza en dos grupos que no se mezclan, como se ve en la Figura~\ref{fig:paleta}.
+El primero reúne los colores de marca, que son un verde profundo, un verde suave secundario, un fondo claro y un neutro cálido.
+El color de una marca comunica atributos de personalidad, como la competencia que suele asociarse a los tonos fríos \parencite{Labrecque2012}, por lo que se elige en función de lo que el comprador debe percibir.
+Se optó por un verde profundo, asociado comúnmente con la calma, la naturaleza y la salud, porque debe transmitir serenidad sin perder seriedad ante un familiar que confía la seguridad de un pariente a un sistema.
+El verde suave y el neutro cálido acompañan al principal y alejan a la marca del aspecto frío de los productos de vigilancia.
+
+El segundo grupo reúne los colores de severidad, que se corresponden con la prioridad de cada evento: rojo para la prioridad alta, que corresponde a las caídas, amarillo para la media, que corresponde a la inactividad prolongada, y verde para la baja, que corresponde a los eventos de rutina.
+Siguen la convención de semáforo de los colores de seguridad normalizados \parencite{ISO3864}, con tonos moderados para no generar alarma permanente.
+Estos colores se reservan para el estado de las alertas y cada uno conserva siempre el mismo significado dentro de la aplicación.
+Como el verde de marca y el verde de baja prioridad pertenecen a la misma familia, se diferencian por tono, siendo el de marca mucho más oscuro, y por contexto, ya que el de baja prioridad aparece únicamente en las tarjetas de eventos normales.
+
+Para la tipografía se utiliza una fuente sin serifa de trazo geométrico y formas redondeadas, en peso grueso para el nombre y los títulos y en peso regular para los textos de apoyo.
+Su legibilidad en pantallas pequeñas y el carácter amable de sus formas acompañan el tono de la marca.
+
+\figuramarca{paleta.png}{0.90}{Paleta de color de \marca. Fuente: Elaboración propia.}{fig:paleta}
+
+\subsection{Ecosistema de producto}
+\label{sec:branding-ecosistema}
+
+El producto se entrega como un kit cerrado, compuesto por una controladora, entre una y tres cámaras y la aplicación móvil.
+Para que el usuario comprenda la arquitectura del sistema sin conocimientos técnicos, y como parte de la identidad de marca, cada elemento recibe un nombre y una función definidos, como muestra la Figura~\ref{fig:ia-kit}.
+
+\modcont{} es la controladora, una mini-computadora alojada en una carcasa negra con el logo de \marca{} y una luz verde de estado.
+En su interior se ejecuta el procesamiento local del video, de modo que es el punto del sistema del que el video no sale.
+Su nombre remite al lar como centro de la casa, y refuerza que la inteligencia del sistema vive dentro del hogar.
+\modcam{} designa a cada cámara, de forma redondeada y color blanco, pensada para integrarse al ambiente sin llamar la atención.
+Su nombre alude a \emph{velar} por alguien, que es acompañar y cuidar sin invadir, y no a vigilar.
+Cada \modcam{} envía el video únicamente a \modcont{} dentro de la red del hogar.
+Por último, la aplicación \marca{} es lo que utiliza el familiar para recibir alertas y consultar el estado diario de su pariente.
+
+La Figura~\ref{fig:ia-kit} muestra la controladora sin su carcasa, con el disipador y el ventilador visibles, junto a dos cámaras, y el kit terminado, con la controladora en su carcasa y tres cámaras a su lado.
+La intención es hacer visible tanto lo que hay dentro del equipo como el aspecto que tendría ante el usuario.
+Un producto con partes nombradas, reconocibles y con una apariencia coherente se percibe como un sistema integral y no como una suma de dispositivos sueltos \parencite{Keller2013}.
+
+\figuramarca{ia_kit_interior_exterior.png}{0.95}{Representación conceptual del kit de \marca{}: interior de la controladora (izquierda) y kit terminado (derecha). Imágenes generadas con inteligencia artificial. Fuente: Elaboración propia.}{fig:ia-kit}
+
+\subsection{Comunicación visual del producto}
+\label{sec:branding-comunicacion}
+
+La marca se completa con imágenes que muestran al sistema en su contexto de uso, pensadas para piezas de comunicación como una página de presentación o publicaciones en redes, que son el canal de venta directa descripto en el modelo de negocio.
+La Figura~\ref{fig:ia-app} muestra al comprador, un familiar que consulta la aplicación con tranquilidad, y la Figura~\ref{fig:ia-camara} muestra una cámara integrada al ambiente del hogar mientras la persona mayor sigue con su rutina.
+Ambas imágenes, igual que las del kit, se generaron con una herramienta de inteligencia artificial generativa a partir de descripciones escritas por los autores, y por lo tanto son representaciones conceptuales del producto y no fotografías del prototipo construido.
+Se las incluye para ilustrar el posicionamiento, que muestra un producto discreto, integrado al hogar y orientado al familiar, y no para documentar el hardware efectivamente desarrollado, que se describe en la Sección~\ref{sec:demo}.
+
+\figuramarca{ia_app_familiar.png}{0.85}{Representación conceptual de una familiar consultando la aplicación. Imagen generada con inteligencia artificial. Fuente: Elaboración propia.}{fig:ia-app}
+
+\figuramarca{ia_camara_hogar.png}{0.85}{Representación conceptual de una cámara integrada al ambiente del hogar. Imagen generada con inteligencia artificial. Fuente: Elaboración propia.}{fig:ia-camara}
