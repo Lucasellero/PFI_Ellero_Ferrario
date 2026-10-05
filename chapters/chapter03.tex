@@ -80,10 +80,11 @@ A continuación se detallan los requerimientos funcionales (RF) del sistema.
     \item \textbf{RF7:} El sistema debe detectar desvíos significativos respecto a la línea base de comportamiento y generar un evento de alerta ante un posible deterioro.
     \item \textbf{RF8:} El sistema debe notificar a los familiares responsables cuando se detecte un evento crítico (caída, inmovilidad prolongada o desvío conductual).
     \item \textbf{RF9:} El sistema debe permitir a los familiares consultar reportes periódicos del estado y la rutina del adulto mayor a través de una aplicación móvil.
-    \item \textbf{RF10:} El sistema debe permitir dar de alta, configurar e iniciar o detener el monitoreo de cada cámara IP desde un panel de administración local.
+    \item \textbf{RF10:} El sistema debe permitir que el familiar asigne desde la aplicación móvil la ubicación de cada cámara del kit dentro del hogar.
     \item \textbf{RF11:} El sistema debe permitir visualizar en vivo el video de cada cámara con la detección de pose superpuesta, para verificar el funcionamiento del pipeline.
     \item \textbf{RF12:} El sistema debe gestionar el acceso mediante autenticación, de forma que solo los familiares autorizados de un hogar puedan ver sus alertas y reportes.
     \item \textbf{RF13:} El sistema debe permitir consultar el historial de eventos registrados, filtrando por tipo de evento y rango de fechas.
+    \item \textbf{RF14:} El sistema debe permitir vincular un kit con la cuenta de un familiar mediante un código QR, dejándolo como responsable principal del hogar.
 \end{itemize}
 \vspace*{2pt}
 
@@ -131,9 +132,10 @@ RF6, RF7 & \textit{Como responsable a cargo, quiero que el sistema me avise si l
 RF8 & \textit{Como responsable a cargo, quiero recibir una notificación en mi celular apenas ocurra algo grave, para reaccionar sin tener que estar pendiente del sistema todo el tiempo.} \\[6pt]
 RF9 & \textit{Como responsable a cargo, quiero ver un resumen periódico del estado y la rutina de mi familiar, para estar tranquilo aunque no haya recibido ninguna alerta.} \\[6pt]
 RF5, RF13 & \textit{Como responsable a cargo, quiero poder revisar el historial de eventos de días anteriores, para entender qué pasó si algo salió mal y no lo advertí a tiempo.} \\[6pt]
-RF10 & \textit{Como responsable a cargo, quiero poder instalar y configurar las cámaras del hogar sin ayuda técnica, para poner el sistema en marcha yo mismo.} \\[6pt]
+RF10 & \textit{Como responsable a cargo, quiero indicar en qué lugar de la casa está cada cámara, para saber de dónde viene cada alerta.} \\[6pt]
 RF11 & \textit{Como responsable a cargo, quiero comprobar en el momento de la instalación que la cámara detecta correctamente a la persona, para confiar en que las alertas van a funcionar.} \\[6pt]
-RF12 & \textit{Como responsable a cargo, quiero que solo las personas autorizadas de la familia puedan acceder a las alertas y reportes del hogar, para que esa información quede resguardada.} \\
+RF12 & \textit{Como responsable a cargo, quiero que solo las personas autorizadas de la familia puedan acceder a las alertas y reportes del hogar, para que esa información quede resguardada.} \\[6pt]
+RF14 & \textit{Como responsable a cargo, quiero vincular el kit escaneando un código, para ponerlo en marcha sin ayuda técnica.} \\
 \end{longtable}
 
 \section{Mockups}
@@ -167,13 +169,43 @@ Por último, la pantalla \textit{Día en orden} (05) representa el estado sin al
 \end{figure}
 \FloatBarrier
 
+La aplicación también cubre la puesta en marcha del kit, que el familiar hace una sola vez y que por eso no forma parte del recorrido anterior. La Figura~\ref{fig:mockup_flujo3} muestra su primer tramo. La pantalla de \textit{Crear cuenta} (06) está pensada para quien recibe el kit y todavía no tiene usuario, y pide solo nombre, correo y contraseña. Las reglas de la contraseña se marcan a medida que se cumplen y el error de confirmación aparece debajo del campo antes de enviar el formulario, de modo que el familiar no descubre los problemas recién al tocar el botón. El acceso con correo y contraseña resuelve RNF10. Luego, la pantalla \textit{Vinculá tu kit} (07) resume la instalación en tres pasos numerados, conectar la controladora al router con un cable de red, buscar la etiqueta con el código QR en su base y escanearla, y abre una configuración de tres pasos que el indicador superior mantiene a la vista hasta el final. El escaneo (08) usa la cámara del celular, y en cuanto reconoce el código vincula el kit con la cuenta del familiar, que queda como responsable principal del hogar (RF14). Que la instalación se reduzca a apuntar el celular a una etiqueta es lo que permite poner el sistema en marcha sin ayuda técnica, y la aclaración de privacidad del login se repite en esta pantalla para recordar que el código solo vincula el kit y que el video nunca sale del hogar.
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=\textwidth]{Imagenes/Mockup_Mobile_Flujo3.png}
+    \caption[Mockup de la aplicación móvil: alta de cuenta y vinculación del kit.]{Mockup de la aplicación móvil: creación de cuenta (06), instrucciones de vinculación (07) y escaneo del código QR (08). Elaboración propia.}
+    \label{fig:mockup_flujo3}
+\end{figure}
+\FloatBarrier
+
+La Figura~\ref{fig:mockup_flujo4} completa la configuración. Si la cámara del celular no logra leer el QR, el familiar puede tipear el código impreso debajo (09). Son ocho caracteres elegidos para que no se confundan entre sí, y la aplicación tolera mayúsculas, espacios y la confusión entre la letra O y el cero, porque un error de tipeo no debería frenar la instalación. Una vez vinculado el kit, el segundo paso (10) pide el nombre del residente, que es el que aparece en las alertas y los reportes, y un teléfono opcional, el mismo que usa el botón ``Llamar a Rosa'' del detalle de alerta (03). El tercer paso (11) resuelve RF10, ya que el familiar asigna una ubicación a cada cámara, eligiendo entre sugerencias como ``Living'' o ``Cocina'' o escribiendo una propia, para que cada alerta indique dónde ocurrió. La cantidad de cámaras a ubicar no se elige en la aplicación, sino que la fija el plan del kit, definido de fábrica entre una y tres cámaras, de modo que la pantalla muestra exactamente las cámaras que el familiar compró. La nota sobre el baño traslada a la interfaz la sugerencia del hijo cuidador entrevistado, que propuso apuntar la cámara hacia la puerta y no hacia el interior, de forma que una demora inusual en salir igual genere una alerta. Por último, la pestaña \textit{Perfil} (12) reúne los datos del hogar, el residente, el kit vinculado y el rol del familiar, y permite elegir entre modo claro, oscuro o el que use el celular. En las cuatro pantallas se repite el criterio de RNF8, con un único botón principal por pantalla y textos que explican para qué se pide cada dato.
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=\textwidth]{Imagenes/Mockup_Mobile_Flujo4.png}
+    \caption[Mockup de la aplicación móvil: configuración inicial y perfil.]{Mockup de la aplicación móvil: ingreso manual del código (09), datos del residente (10), ubicación de la cámara según el plan del kit (11) y perfil (12). Elaboración propia.}
+    \label{fig:mockup_flujo4}
+\end{figure}
+\FloatBarrier
+
+El modo oscuro que se elige desde el perfil se aplica a toda la aplicación, como muestra la Figura~\ref{fig:mockup_oscuro} con las pantallas principales, y conserva el mismo código de color de severidad, de modo que una alerta urgente se reconoce igual sin importar la apariencia elegida.
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=\textwidth]{Imagenes/Mockup_Mobile_Oscuro1.png}
+    \caption[Mockup de la aplicación móvil en modo oscuro.]{Mockup de la aplicación móvil en modo oscuro: inicio de sesión (01), notificaciones (02), detalle de alerta (03), reportes (04) y estado sin alertas activas (05). Elaboración propia.}
+    \label{fig:mockup_oscuro}
+\end{figure}
+\FloatBarrier
+
 \section{Diagramas}
 
 \subsection{Diagrama de Casos de Uso}
 
 A partir de los requerimientos funcionales y las historias de usuario presentadas, se construyó el diagrama de casos de uso de la Figura~\ref{fig:casos_uso}, que organiza las capacidades del sistema en tres actores y tres bloques funcionales. Los actores \textit{Cámara IP} y \textit{Temporizador del Sistema} representan las dos formas en que se dispara el procesamiento sobre el video, ya sea frame a frame o de forma periódica, mientras que \textit{Responsable a Cargo} es el actor humano identificado en el User Research.
 
-En cuanto a la organización interna del Sistema, el Bloque 1 agrupa el procesamiento sobre el video que ocurre dentro del hogar (estimación de pose, detección de caídas, de inmovilidad prolongada y clasificación de actividades), coherente con el procesamiento local exigido por RNF1. El caso de uso \textit{Detectar Inmovilidad Prolongada} engloba tanto RF3 (sedentarismo, postura sentada) como RF4 (piso, postura acostada), ya que ambos comparten el mismo mecanismo de detección basado en pose y se distinguen internamente mediante un atributo de postura. El registro de eventos y todo lo que depende de él, la construcción y actualización de la línea base de comportamiento, la detección de desvíos y la generación de reportes, se ejecutan del lado de la nube; RNF6 solo exige que el dispositivo conserve los eventos de forma transitoria ante cortes de conexión, hasta poder sincronizarlos (RNF7). El Bloque 2 agrupa las funcionalidades expuestas al responsable a cargo desde la aplicación móvil, y el Bloque 3 agrupa la administración y validación local de las cámaras.
+En cuanto a la organización interna del Sistema, el Bloque 1 agrupa el procesamiento sobre el video que ocurre dentro del hogar (estimación de pose, detección de caídas, de inmovilidad prolongada y clasificación de actividades), coherente con el procesamiento local exigido por RNF1. El caso de uso \textit{Detectar Inmovilidad Prolongada} engloba tanto RF3 (sedentarismo, postura sentada) como RF4 (piso, postura acostada), ya que ambos comparten el mismo mecanismo de detección basado en pose y se distinguen internamente mediante un atributo de postura. El registro de eventos y todo lo que depende de él, la construcción y actualización de la línea base de comportamiento, la detección de desvíos y la generación de reportes, se ejecutan del lado de la nube; RNF6 solo exige que el dispositivo conserve los eventos de forma transitoria ante cortes de conexión, hasta poder sincronizarlos (RNF7). El Bloque 2 agrupa las funcionalidades expuestas al responsable a cargo desde la aplicación móvil, incluida la puesta en marcha del hogar, que consiste en vincular el kit escaneando su código QR (RF14) y asignar la ubicación de cada cámara (RF10). El Bloque 3 agrupa la administración y validación local de las cámaras desde el panel de control, de uso opcional para la familia.
 
 Además de la agrupación en bloques, las relaciones punteadas entre casos de uso representan dependencias \textit{include}, ya que todo evento detectado (caída, inmovilidad prolongada o desvío de rutina) incluye siempre su registro (RF5) y su notificación al responsable a cargo (RF8), y toda funcionalidad de la aplicación móvil y del panel de control incluye la autenticación del usuario (RF12).
 
@@ -216,7 +248,7 @@ Sin embargo, y a diferencia de lo que podría suponerse a partir de sus nombres,
 En ese esquema, \texttt{events/} funciona como el único punto de acuerdo formal entre los módulos del sistema, mediante el esquema compartido \texttt{MonitoringEvent} y \texttt{EventType} junto con un almacenamiento local en SQLite, importado hoy como una librería de Python dentro del mismo proceso y sin exponerse todavía como servicio o API.
 Esta decisión mantiene a cada módulo desacoplado de la implementación interna de los demás, dado que alcanza con que todos respeten el esquema de eventos para poder desarrollarse y probarse de forma independiente.
 
-\texttt{dashboard/} cumple un doble rol operativo, ya que por un lado controla a \texttt{runner/}, iniciándolo y deteniéndolo como subproceso y gestionando la configuración de cámaras en \texttt{cameras.yaml}, y por otro lee los eventos almacenados en \texttt{events/} para mostrarlos en un panel de operación local, en línea con RF10.
+\texttt{dashboard/} cumple un doble rol operativo, ya que por un lado controla a \texttt{runner/}, iniciándolo y deteniéndolo como subproceso y gestionando la configuración de cámaras en \texttt{cameras.yaml}, y por otro lee los eventos almacenados en \texttt{events/} para mostrarlos en un panel de operación local. La configuración habitual del hogar se hace desde la aplicación móvil, por lo que el panel queda como una herramienta opcional. La familia puede entrar desde un navegador conectado a la red de la casa si quiere ver el video en vivo o controlar el monitoreo, y el soporte técnico lo usa de forma presencial cuando necesita resolver un problema puntual en el domicilio.
 Este panel es una herramienta de desarrollo y operación que corre directamente sobre la Raspberry Pi, distinta de la futura API pública que se expondrá sobre \texttt{events/} y \texttt{baseline/} para la aplicación móvil descripta en la Sección~\ref{sec:diagrama_arquitectura}.
 
 \texttt{baseline/} y \texttt{evaluation/} aparecen en el diagrama con trazo punteado porque a la fecha de esta entrega ninguno de los dos módulos fue iniciado, aunque su diseño ya está definido dentro de la arquitectura del sistema.
@@ -244,7 +276,7 @@ Los diagramas de la sección anterior describen el comportamiento del sistema de
 \subsection{Diagrama de Arquitectura}
 \label{sec:diagrama_arquitectura}
 
-A diferencia del diagrama de componentes de la Sección~\ref{sec:diagrama_componentes}, que documentó la organización del código en su fase de validación local, la Figura~\ref{fig:arquitectura} muestra el despliegue físico del sistema, desde la cámara IP hasta la aplicación móvil. Del lado del borde, la Raspberry Pi aloja el nodo de inferencia que ejecuta el pipeline de YOLO para estimación de pose y CLIP para clasificación de actividades sobre el video capturado por la cámara, coherente con RNF5, que exige que ambos módulos corran sobre el mismo hardware embebido y sin GPU. El video nunca sale de ese nodo, cumpliendo con RNF1, y lo único que cruza hacia la nube son los eventos generados, nunca imágenes. Esos eventos se persisten localmente en SQLite antes de sincronizarse, la implementación concreta del requisito de continuidad ante cortes de conexión que exige RNF6, y esa misma base es la que se vuelca hacia la nube una vez que la conexión se restablece, según RNF7.
+A diferencia del diagrama de componentes de la Sección~\ref{sec:diagrama_componentes}, que documentó la organización del código en su fase de validación local, la Figura~\ref{fig:arquitectura} muestra el despliegue físico del sistema, desde la cámara IP hasta la aplicación móvil. Del lado del borde, la Raspberry Pi aloja el nodo de inferencia que ejecuta el pipeline de YOLO para estimación de pose y CLIP para clasificación de actividades sobre el video capturado por la cámara, coherente con RNF5, que exige que ambos módulos corran sobre el mismo hardware embebido y sin GPU. Las cámaras no se conectan a la red de la casa, sino a una red wifi privada que arma la propia controladora y que no tiene salida a internet, mientras que la controladora es la única que sale a internet, mediante un cable de red conectado al router del hogar. El video nunca sale de ese nodo, cumpliendo con RNF1, y esa separación de redes lo refuerza, porque las cámaras no tienen forma de enviar video hacia afuera aunque estuvieran configuradas para hacerlo. Lo único que cruza hacia la nube son los eventos generados, nunca imágenes. Esos eventos se persisten localmente en SQLite antes de sincronizarse, la implementación concreta del requisito de continuidad ante cortes de conexión que exige RNF6, y esa misma base es la que se vuelca hacia la nube una vez que la conexión se restablece, según RNF7.
 
 Del lado de la nube, AWS Elastic Beanstalk aloja la aplicación que recibe los eventos sincronizados y los persiste en Amazon RDS sobre PostgreSQL, junto con la línea base de comportamiento construida a partir de ellos (RF6). Desde ahí, Firebase Cloud Messaging es el servicio que entrega las notificaciones push a la aplicación móvil, desarrollada en React Native, cerrando el circuito que exige RF8 entre la detección de un evento crítico y el aviso al responsable a cargo.
 
@@ -263,17 +295,23 @@ El Diagrama de Arquitectura mostró dónde vive cada nodo del sistema. Lo que fa
 
 El modelo local es una única entidad, EVENTO, sin relaciones ni claves foráneas, y eso no es una limitación a disculpar sino un reflejo fiel del código real de \texttt{events/schema.py} y \texttt{events/store.py}. El campo \texttt{video\_id} funciona como un proxy informal de residente y día, tal como lo describe \texttt{baseline/README.md}, pero no tiene una clave foránea declarada dado que el sistema asume hoy un único residente por instalación (RNF11), la misma restricción que más adelante justifica la relación uno a uno entre HOGAR y RESIDENTE en el modelo de nube. El campo \texttt{metadata} es un JSON de forma variable según el \texttt{event\_type} (\texttt{fall}, \texttt{immobility}, \texttt{activity}), cada uno con sus propios campos internos, en lugar de columnas fijas para cada tipo de evento, ya que forzar un esquema rígido hubiera significado agregar columnas vacías para la mayoría de los eventos cada vez que se sume un tipo nuevo.
 
-El modelo de nube parte de HOGAR y RESIDENTE en una relación estrictamente uno a uno, no uno a muchos, porque RNF11 restringe el sistema a un único residente monitoreado por instalación. Cada HOGAR tiene, a su vez, una o varias CAMARA registradas (\texttt{hogar\_id} como clave foránea), con un identificador local que coincide con el que usa \texttt{cameras.yaml} en el borde (Sección~\ref{sec:diagrama_componentes}), una ubicación descriptiva dentro del hogar y un estado activo que habilita darlas de alta o de baja desde el panel de administración, tal como exige RF10. Cada evento se origina en una cámara puntual, de ahí la clave foránea \texttt{camara\_id} en EVENTO, pero además referencia directamente al residente mediante \texttt{residente\_id}, una desnormalización deliberada que evita recorrer la cadena \texttt{camara} hacia \texttt{hogar} hacia \texttt{residente} cada vez que el módulo de línea base necesita traer todos los eventos de una persona, algo que va a hacer con frecuencia ya que la relación hogar-residente es uno a uno.
+El modelo de nube parte de HOGAR y RESIDENTE en una relación estrictamente uno a uno, no uno a muchos, porque RNF11 restringe el sistema a un único residente monitoreado por instalación. HOGAR guarda un nombre descriptivo, como ``Casa de Rosa'', la fecha de alta, que coincide con el momento en que se vincula el kit, y una dirección opcional, que la aplicación no exige porque no la necesita para funcionar y es un dato sensible más sobre el residente. RESIDENTE, por su parte, suma un teléfono opcional, que es el que usa el botón ``Llamar a Rosa'' del detalle de alerta.
 
-Frente al EVENTO local, el EVENTO de la nube difiere en dos campos. El \texttt{video\_\allowbreak timestamp\_\allowbreak s}, relativo al archivo de video que se está procesando, se traduce a \texttt{occurred\_at}, un timestamp real, porque en la nube hay que poder ordenar eventos entre distintos hogares y videos, algo que un tiempo relativo al archivo no permite. Y se agrega \texttt{es\_alerta}, un booleano derivado de la severidad del evento, en lugar de modelar una entidad Notificación aparte, porque RF7 y RF8 solo necesitan distinguir si un evento dispara una alerta al responsable a cargo, no llevar un historial propio de notificaciones enviadas. El campo \texttt{synced\_at} registra cuándo llegó el evento a la nube, distinto de \texttt{occurred\_at}, que registra cuándo ocurrió, la misma separación que sostiene la continuidad ante cortes de conexión que exigen RNF6 y RNF7.
+KIT representa el aparato físico, la controladora junto con sus cámaras, y se modela como una entidad separada de HOGAR por dos razones. La primera es que la credencial con la que la controladora se autentica ante el backend (\texttt{device\_api\_key\_hash}) pertenece al aparato y no a la casa, de modo que si la controladora se rompe y hay que reemplazarla, se da de baja el kit viejo y se vincula uno nuevo al mismo hogar sin perder el historial de eventos ni la línea base. La segunda es que el kit existe desde fábrica, antes de que haya un hogar al que pertenecer, por lo que su \texttt{hogar\_id} queda nulo hasta que un familiar escanea el código QR desde la aplicación (RF14). Además, KIT concentra todo lo que necesita la vinculación, con un número de serie único, el código de vinculación guardado como hash y nunca en claro, quién vinculó el kit y cuándo, y un campo \texttt{ultima\_conexion\_at} que la controladora actualiza periódicamente para que la aplicación pueda mostrar si está en línea. Guarda también \texttt{cantidad\_camaras}, el plan comprado, de una a tres cámaras, ya que el kit incluye una cámara y cada cámara adicional se cobra por separado a USD 19, hasta un máximo de tres por controladora.
 
-FAMILIAR y HOGAR\_FAMILIAR resuelven la relación entre hogares y responsables a cargo. Un hogar puede tener varios familiares autorizados, tal como exige RF12, y un mismo familiar podría estar vinculado a más de un hogar, así que la relación es de muchos a muchos y se resuelve con HOGAR\_FAMILIAR como tabla intermedia, con clave primaria compuesta por \texttt{hogar\_id} y \texttt{familiar\_id}, más un campo \texttt{rol} que distingue el tipo de vínculo de cada familiar con ese hogar en particular. FAMILIAR no tiene contraseña propia en el modelo, sino un campo \texttt{firebase\_uid}, dado que la autenticación se delega completamente a Firebase Authentication, ya justificado en la Sección~\ref{sec:backend_nube}.
+Las cámaras dependen del kit y no directamente del hogar. Se crean en fábrica junto con él, tantas como indica \texttt{cantidad\_camaras} y ya emparejadas con la red privada de la controladora, y reciben el \texttt{hogar\_id} recién cuando el kit se vincula, por lo que esa clave foránea admite nulos. Cada CAMARA conserva un identificador local que coincide con el que usa \texttt{cameras.yaml} en el borde (Sección~\ref{sec:diagrama_componentes}) y que es único dentro de su kit, una ubicación descriptiva que el familiar asigna desde la aplicación móvil, tal como exige RF10, y un estado activo que habilita darlas de alta o de baja. El backend hace cumplir que un kit nunca tenga más cámaras que su plan y rechaza cualquier cámara adicional que la controladora intente registrar, de modo que sumar una cámara requiere comprarla y actualizar el plan del kit.
+
+La mayoría de los eventos se origina en una cámara puntual, de ahí la clave foránea \texttt{camara\_id} en EVENTO, que sin embargo admite nulos porque los desvíos de rutina (RF7) surgen del análisis de la línea base y no de una cámara en particular. Además, cada evento referencia directamente al residente mediante \texttt{residente\_id}, una desnormalización deliberada que evita recorrer la cadena \texttt{camara} hacia \texttt{hogar} hacia \texttt{residente} cada vez que el módulo de línea base necesita traer todos los eventos de una persona, algo que va a hacer con frecuencia ya que la relación hogar-residente es uno a uno.
+
+Frente al EVENTO local, el EVENTO de la nube difiere en dos campos. El \texttt{video\_\allowbreak timestamp\_\allowbreak s}, relativo al archivo de video que se está procesando, se traduce a \texttt{occurred\_at}, un timestamp real, porque en la nube hay que poder ordenar eventos entre distintos hogares y videos, algo que un tiempo relativo al archivo no permite. Y se agrega \texttt{es\_alerta}, un booleano derivado de la severidad del evento, en lugar de modelar una entidad Notificación aparte, porque RF7 y RF8 solo necesitan distinguir si un evento dispara una alerta al responsable a cargo, no llevar un historial propio de notificaciones enviadas. El campo \texttt{synced\_at} registra cuándo llegó el evento a la nube, distinto de \texttt{occurred\_at}, que registra cuándo ocurrió, la misma separación que sostiene la continuidad ante cortes de conexión que exigen RNF6 y RNF7. A eso se suman \texttt{resuelta\_at} y \texttt{resuelta\_por}, que registran cuándo y qué familiar marcó una alerta como atendida desde el detalle de alerta. Estos campos conviven con \texttt{es\_alerta} sin superponerse, ya que \texttt{es\_alerta} indica si el evento debía avisarse y los campos de resolución indican si alguien ya se hizo cargo, algo necesario cuando varios familiares reciben la misma alerta.
+
+FAMILIAR y HOGAR\_FAMILIAR resuelven la relación entre hogares y responsables a cargo. Un hogar puede tener varios familiares autorizados, tal como exige RF12, y un mismo familiar podría estar vinculado a más de un hogar, así que la relación es de muchos a muchos y se resuelve con HOGAR\_FAMILIAR como tabla intermedia, con clave primaria compuesta por \texttt{hogar\_id} y \texttt{familiar\_id}, más un campo \texttt{rol} que distingue el tipo de vínculo de cada familiar con ese hogar en particular. FAMILIAR no tiene contraseña propia en el modelo, sino un campo \texttt{firebase\_uid}, dado que la autenticación se delega completamente a Firebase Authentication, ya justificado en la Sección~\ref{sec:backend_nube}. El campo \texttt{rol} toma dos valores. El familiar que vinculó el kit queda como \texttt{responsable\_principal} y puede invitar y quitar a otros familiares, mientras que el resto queda como \texttt{familiar} y solo consulta alertas y reportes. Por ahora la invitación alcanza solo a quienes ya crearon su cuenta, y dejar una invitación pendiente para alguien que todavía no la tiene requeriría una entidad propia, que queda como mejora futura. FAMILIAR guarda además el token de Firebase Cloud Messaging con el que el backend le envía las notificaciones push a su celular (RF8), que se actualiza cada vez que el familiar inicia sesión, ya que Firebase lo renueva periódicamente.
 
 Por último, LINEA\_BASE\_COMPORTAMIENTO corresponde al módulo \texttt{baseline/} (RF6, Secciones~\ref{sec:aprendizaje_adaptativo_marco} y~\ref{sec:rutinas}) y guarda, por residente, los parámetros del clustering dinámico junto con la fecha de la última actualización. La estructura de esta entidad todavía es provisoria, ya que \texttt{baseline/} no arrancó a la fecha de esta entrega (Sección~\ref{sec:diagrama_componentes}), y el campo \texttt{parametros\_cluster} en formato JSON se eligió justamente por esa razón, para no comprometerse hoy con una estructura de salida que probablemente cambie una vez que el módulo esté en desarrollo.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\textwidth]{Imagenes/Diagrama_Base_Datos_Local.png}
+    \includegraphics[width=0.28\textwidth]{Imagenes/Diagrama_Base_Datos_Local.png}
     \caption[Diagrama de base de datos local.]{Diagrama de base de datos local, implementado sobre SQLite. Elaboración propia.}
     \label{fig:diagrama_bd_local}
 \end{figure}
@@ -281,8 +319,8 @@ Por último, LINEA\_BASE\_COMPORTAMIENTO corresponde al módulo \texttt{baseline
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{Imagenes/Diagrama_Base_Datos_Nube.png}
-    \caption[Diagrama de base de datos en la nube.]{Diagrama de base de datos en la nube, propuesto sobre PostgreSQL. Elaboración propia.}
+    \includegraphics[width=\textwidth,height=0.66\textheight,keepaspectratio]{Imagenes/Diagrama_Base_Datos_Nube.png}
+    \caption[Diagrama de base de datos en la nube.]{Diagrama de base de datos en la nube, sobre PostgreSQL. Elaboración propia.}
     \label{fig:diagrama_bd_cloud}
 \end{figure}
 \FloatBarrier
@@ -478,6 +516,7 @@ Además, esta incompatibilidad no es solo teórica.
 Durante el desarrollo, el equipo intentó conectar el sistema a cámaras domésticas ya instaladas en el hogar de uno de los integrantes, pero la conexión fue rechazada por tratarse de un canal de video cifrado por el propio fabricante, lo que impidió el acceso directo que requiere el procesamiento local.
 Por lo tanto, permitir cámaras arbitrarias del usuario introduciría una dependencia no controlada por el equipo sobre si esa cámara transmite o no video a un tercero, o expone su video de forma accesible, algo que no puede garantizarse sin validar cada modelo de forma individual.
 En consecuencia, el kit incluye cámaras seleccionadas por el equipo para funcionar con la controladora, de modo que la privacidad que el sistema promete no dependa de una configuración que el usuario deba resolver por su cuenta.
+Además, esas cámaras no tienen salida a internet, porque vienen configuradas de fábrica para conectarse solo a una red wifi privada que arma la propia controladora, de modo que no podrían enviar video a un tercero aunque su firmware estuviera preparado para hacerlo.
 
 En cuanto al costo, se resume a continuación el presupuesto estimado, calculado a partir de una controladora y tres cámaras, la configuración prevista para el prototipo.
 Este presupuesto cubre únicamente el hardware del prototipo y no constituye un costo de producción ni una estructura de precios de venta a escala; la proyección de ambos, junto con los costos de infraestructura en la nube, se desarrolla en la Sección~\ref{sec:modelo-negocio} y queda señalada como pendiente de validar en la Sección~\ref{sec:foda}.
@@ -498,12 +537,17 @@ Cámara IP & 3 & USD 15 & USD 45 \\
 \end{tabular}
 \end{table}
 
-Este presupuesto corresponde a la etapa de prototipo, y el diseño contempla varias cámaras simultáneas sobre una misma controladora (RNF9), con un máximo previsto de tres, en línea con la arquitectura descripta en la Sección~\ref{sec:diagrama_componentes} (Diagrama de Componentes), donde el módulo orquestador invoca los módulos de detección por cada cámara activa sin necesidad de una controladora adicional por cámara.
+Este presupuesto corresponde a la etapa de prototipo, y el diseño contempla varias cámaras simultáneas sobre una misma controladora (RNF9), con un máximo previsto de tres, ya que el módulo orquestador invoca los módulos de detección por cada cámara activa sin necesidad de una controladora adicional por cámara.
 Por lo tanto, un kit doméstico típico, con una controladora y entre una y tres cámaras según la cantidad de ambientes a cubrir, se mantiene dentro de ese mismo orden de magnitud.
 
 Asimismo, tanto la Raspberry Pi 5 como las cámaras IP utilizadas son componentes disponibles comercialmente en Argentina a través de múltiples proveedores, sin depender de un fabricante único ni de importación directa por parte del equipo, lo que reduce el riesgo de desabastecimiento como barrera para producir el kit a pequeña escala.
 
-Finalmente, el kit se entrega armado y preconfigurado, por lo que la instalación por parte del usuario se limita a conectarlo y asignarle una ubicación descriptiva a cada cámara mediante la aplicación móvil, sin requerir conocimientos técnicos ni intervención de personal especializado en el domicilio.
+Finalmente, el kit se entrega armado y preconfigurado, sin requerir conocimientos técnicos ni intervención de personal especializado en el domicilio.
+La controladora no necesita monitor, teclado ni mouse, y se conecta a internet con un cable de red al router de la casa, que no viene incluido en el kit porque la mayoría de los routers ya traen uno.
+Las cámaras llegan emparejadas de fábrica con la controladora, y el software arranca solo al encenderla, incluso después de un corte de luz.
+Una luz de estado en la controladora indica si le falta internet, si está esperando la vinculación, si funciona con normalidad o si hay un problema, y la aplicación muestra lo mismo en palabras.
+Para ponerlo en marcha, el familiar escanea con la aplicación el código QR de la etiqueta de la controladora (RF14) y asigna una ubicación a cada cámara (RF10).
+El kit sale de fábrica con la cantidad de cámaras del plan comprado, entre una y tres, que coincide con el máximo por controladora que contempla RNF9, de modo que al vincularlo el familiar solo ubica esas cámaras.
 
 % Requiere graphicx y biblatex (citas con \parencite).
 \providecommand{\figuraexcel}[4]{%
@@ -599,7 +643,7 @@ Se define qué se vende y a qué precio, a cuánta gente se puede llegar y cuán
 La oferta se compone de un kit inicial y una suscripción mensual.
 El kit incluye una Raspberry Pi 5 de 8 GB, una cámara IP, la fuente de alimentación, la tarjeta microSD y una carcasa con disipador, y se entrega configurado para su uso.
 Se propone un precio final de USD 250 por el kit y de USD 30 por mes por la suscripción, que incluye el procesamiento en la nube de la línea base, los reportes, las notificaciones y las actualizaciones.
-Cada cámara IP adicional, hasta el máximo de tres por controladora descripto en la Sección~\ref{sec:viabilidad-tecnica}, se cobra por separado a USD 19 con IVA incluido, un precio que cubre su costo unitario de USD 15 relevado en la Tabla~\ref{tab:presupuesto-hardware} una vez descontado el IVA.
+Cada cámara IP adicional, hasta un máximo de tres por controladora, se cobra por separado a USD 19 con IVA incluido, un precio que cubre su costo unitario de USD 15 relevado en la Tabla~\ref{tab:presupuesto-hardware} una vez descontado el IVA.
 
 Ambos precios incluyen IVA.
 En el modelo se cargan sin IVA, es decir, divididos por 1,21, porque ese impuesto se cobra al cliente pero se entrega al fisco y no constituye un ingreso del negocio.
@@ -695,7 +739,7 @@ El desarrollo se estima en USD 20 por hora y 160 horas mensuales, aplicados a do
 A ese monto se suman USD 6.000 de lanzamiento y aspectos legales.
 
 El costo del kit varía según el escenario y es de USD 250, 230 y 220 en Bear, Base y Bull, respectivamente.
-La Raspberry Pi 5 de 8 GB, que es el componente principal, se fija en USD 175 a precio minorista \parencite{PiShop2026} y se mantiene en ese valor en los tres escenarios, sin suponer ningún descuento sobre la placa, un valor menor al de la unidad relevada en Mercado Libre para el prototipo (Sección~\ref{sec:viabilidad-tecnica}).
+La Raspberry Pi 5 de 8 GB, que es el componente principal, se fija en USD 175 a precio minorista \parencite{PiShop2026} y se mantiene en ese valor en los tres escenarios, sin suponer ningún descuento sobre la placa, un valor menor a los USD 230 de la unidad relevada en Mercado Libre para el prototipo.
 Lo que varía entre escenarios es el resto del kit, la cámara, la fuente, la tarjeta microSD, la carcasa y la logística, que suma USD 75, 55 y 45 respectivamente, según el descuento por volumen y la posibilidad de importar directamente que se logren en cada caso.
 Es un supuesto propio que debe validarse con cotizaciones firmes, ya que los revendedores locales llegan a ofrecer la placa a un precio bastante mayor al de PiShop \parencite{Siranet2026}, por lo que alcanzar la escala prevista en Base y Bull requeriría un acuerdo de importación directa o de volumen con el proveedor.
 El hardware se compra con cuatro meses de anticipación, por lo que en los primeros años hay que pagar los kits antes de venderlos y esto aumenta el financiamiento necesario.
@@ -811,7 +855,7 @@ Por ser más grande, también necesita más capital, con un financiamiento máxi
 Además del resultado económico, el proyecto se propone alcanzar al menos 100.000 personas.
 Por cada kit vendido se cuentan el adulto mayor, que es el beneficiario directo, el cuidador, que es el usuario directo, y una persona indirecta, como otro familiar que se entera del estado del adulto mayor.
 En el escenario Bull se cuentan dos personas indirectas por kit.
-Aunque el monitoreo se realiza sobre un único adulto mayor por instalación, como se estableció en el Alcance (Sección~\ref{sec:limitaciones-exclusiones}), el impacto de cada kit alcanza a más de una persona, ya que además del cuidador principal suele haber otros familiares que también reciben la información del sistema, tal como surge de la entrevistada que se turna con sus hermanos para visitar a su madre y del User Persona de la cuidadora a distancia, que necesita coordinarse con sus hermanos con información objetiva (Anexo~\ref{anexo:entrevistas}; Anexo~\ref{anexo:user_persona}).
+Aunque el monitoreo se realiza sobre un único adulto mayor por instalación, como se estableció en el Alcance, el impacto de cada kit alcanza a más de una persona, ya que además del cuidador principal suele haber otros familiares que también reciben la información del sistema, tal como surge de la entrevistada que se turna con sus hermanos para visitar a su madre y del User Persona de la cuidadora a distancia, que necesita coordinarse con sus hermanos con información objetiva (Anexo~\ref{anexo:entrevistas}; Anexo~\ref{anexo:user_persona}).
 Con este criterio, el escenario Base alcanza 102.000 personas, que surgen de multiplicar por tres los 34.000 kits vendidos.
 
 \subsubsection{Comparación de escenarios}
@@ -1002,8 +1046,12 @@ En su interior se ejecuta el procesamiento local del video, de modo que es el pu
 Su nombre remite al lar como centro de la casa, y refuerza que la inteligencia del sistema vive dentro del hogar.
 \modcam{} designa a cada cámara, de forma redondeada y color blanco, pensada para integrarse al ambiente sin llamar la atención.
 Su nombre alude a \emph{velar} por alguien, que es acompañar y cuidar sin invadir, y no a vigilar.
-Cada \modcam{} envía el video únicamente a \modcont{} dentro de la red del hogar.
+Cada \modcam{} envía el video únicamente a \modcont{}, a través de una red privada que arma la propia controladora y que no tiene salida a internet.
 Por último, la aplicación \marca{} es lo que utiliza el familiar para recibir alertas y consultar el estado diario de su pariente.
+
+La luz de estado de \modcont{} resume su situación sin necesidad de abrir la aplicación.
+Titila en ámbar cuando no tiene internet, titila en verde mientras espera la vinculación, queda fija en verde cuando todo funciona y se enciende en rojo ante un problema, como no detectar ninguna cámara.
+En la base de \modcont{}, una etiqueta con el código QR, el número de serie y el código de vinculación es todo lo que el familiar necesita para ponerla en marcha desde la aplicación, de modo que la experiencia de instalación se reduce a enchufar el equipo y escanear el código.
 
 La Figura~\ref{fig:ia-kit} muestra la controladora sin su carcasa, con el disipador y el ventilador visibles, junto a dos cámaras, y el kit terminado, con la controladora en su carcasa y tres cámaras a su lado.
 La intención es hacer visible tanto lo que hay dentro del equipo como el aspecto que tendría ante el usuario.
