@@ -186,6 +186,12 @@
 \usepackage[normalem]{ulem}
 
 \usepackage{float}
+% Páginas de solo figuras: apilarlas arriba en lugar de repartirlas en toda la página.
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{1.5\baselineskip}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
 
 \usepackage{setspace}
 \onehalfspacing
