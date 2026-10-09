@@ -63,7 +63,7 @@ Del lado de la persistencia en la nube, el backend usa Amazon RDS sobre PostgreS
 
 La autenticación de la aplicación móvil se apoya en Firebase Authentication en lugar de un esquema de tokens propio administrado por el backend, principalmente porque el sistema ya depende de Firebase Cloud Messaging para las notificaciones push (RF8). Sumar también Firebase Authentication evita administrar un segundo proveedor de identidad y aprovecha que el SDK de Firebase en el cliente móvil (React Native) ya integra ambos servicios de forma nativa. El costo es una dependencia mayor de un proveedor externo, pero se trata de un servicio de autenticación estándar, con inicio de sesión por correo y contraseña o proveedores federados, y no de un componente que procese datos sensibles del video ni de la línea base de comportamiento, por lo que no compromete el requisito de privacidad desarrollado en el Marco Teórico (Sección~\ref{sec:edge_marco}). En el prototipo no se exige verificar el correo electrónico al crear la cuenta, y sumar esa verificación antes de vincular el kit queda como mejora futura para reforzar el control de acceso que exigen RNF10 y RF12.
 
-Por último, la aplicación móvil está desarrollada en React Native. Desarrollar de forma nativa en Swift y en Kotlin por separado no se justifica en este caso, porque la aplicación no requiere acceso a funcionalidades de bajo nivel del dispositivo más allá de recibir notificaciones push, usar la cámara del celular para escanear el código QR del kit y consumir una API REST, necesidades que React Native cubre con las librerías del ecosistema Expo, y duplicar ese desarrollo tiene poco sentido para un equipo de dos personas con un cronograma acotado. Esta decisión es además independiente de RNF8, que exige que la aplicación sea simple, clara e intuitiva, un objetivo de diseño de interfaz que no depende de si el código corre sobre un framework nativo o multiplataforma.
+Por último, la aplicación móvil está desarrollada en React Native. Desarrollar de forma nativa en Swift y en Kotlin por separado no se justifica en este caso, porque la aplicación no requiere acceso a funcionalidades de bajo nivel del dispositivo más allá de recibir notificaciones push, usar la cámara del celular para escanear el código QR del kit y consumir una API REST, necesidades que React Native cubre con las librerías del ecosistema Expo, y duplicar ese desarrollo tiene poco sentido para un equipo de dos personas con un cronograma acotado. Esta decisión es además independiente de RNF8, que exige que la aplicación sea simple, clara e intuitiva, un objetivo de diseño de interfaz que no depende de si el código corre sobre un framework nativo o multiplataforma. La aplicación está construida con Expo y escrita en TypeScript, lo que permite probarla directamente en el celular durante el desarrollo y detectar al revisar el código cualquier diferencia con los datos que devuelve la API. El código se organiza en una carpeta por funcionalidad, y todas las pantallas acceden al backend a través de una única capa de acceso a datos, que además puede trabajar con datos de prueba, lo que permitió diseñar y probar las pantallas antes de que el backend estuviera disponible.
 
 \subsection{Datasets y pipeline de datos}
 \label{sec:datasets}
@@ -228,7 +228,12 @@ Las credenciales, como la contraseña de la base de datos y la clave de servicio
 \section{Demo}
 \label{sec:demo}
 
-Todas las decisiones tecnológicas descriptas hasta aquí ya se traducen en un sistema que corre y detecta eventos en tiempo real sobre la Raspberry Pi de destino. Las capturas de esta sección corresponden al panel de operación local (\texttt{dashboard/}) construido sobre FastAPI y WebSockets, tal como se justificó más arriba. A través de él, el equipo ya puede dar de alta cámaras o archivos de video, iniciar y detener el monitoreo, y visualizar en vivo el resultado de la detección superpuesto sobre cada fuente, resolviendo así RF11 desde la propia controladora.
+Todas las decisiones tecnológicas descriptas hasta aquí ya se traducen en un sistema que funciona de punta a punta, desde la detección en la Raspberry Pi hasta la aplicación móvil del familiar.
+
+\subsection{Panel de operación local}
+\label{sec:demo_panel}
+
+Las capturas de esta subsección corresponden al panel de operación local (\texttt{dashboard/}) construido sobre FastAPI y WebSockets, tal como se justificó más arriba. A través de él, el equipo ya puede dar de alta cámaras o archivos de video, iniciar y detener el monitoreo, y visualizar en vivo el resultado de la detección superpuesto sobre cada fuente, resolviendo así RF11 desde la propia controladora.
 
 En primer lugar, la Figura~\ref{fig:demo_caida} muestra la vista de una única fuente sobre el video \texttt{fall}, con el esqueleto de keypoints de YOLO superpuesto sobre la persona detectada en el piso. A la derecha, la pestaña Postura · YOLO lista cuatro eventos de caída detectada, no porque haya cuatro caídas distintas, sino porque \texttt{fall} es un clip corto de prueba configurado en bucle, y el sistema vuelve a detectar la caída correctamente en cada repetición, con el aspect ratio del cuadro delimitador y el ángulo del cuerpo que \texttt{vision/} usa para esa detección (RF1). La pestaña Actividad · CLIP de esa misma fuente no registra eventos, algo que confirma en la práctica lo que ya describía el Diagrama de Flujo de Información, que las dos ramas de detección corren de forma independiente sobre cada frame.
 
@@ -269,3 +274,47 @@ Por último, la Figura~\ref{fig:demo_alta} muestra el panel de fuentes de video,
     \label{fig:demo_alta}
 \end{figure}
 \FloatBarrier
+
+\subsection{Aplicación móvil}
+\label{sec:demo_app}
+
+La aplicación móvil está implementada siguiendo los mockups de la Sección~\ref{sec:mockups} y funciona conectada al backend en AWS, con inicio de sesión a través de Firebase Authentication.
+El familiar crea su cuenta e indica si tiene un kit para vincular o si otro familiar ya usa Lares y lo va a invitar a su hogar.
+En el primer caso vincula el kit escaneando su código QR con la cámara del celular y carga los datos del residente y la ubicación de las cámaras.
+Desde ese momento recibe en la pantalla de notificaciones los eventos y alertas del hogar, puede ver el detalle de cada alerta y marcarla como atendida.
+La pantalla de reportes resume la rutina del residente frente a lo que es habitual para él, muestra su evolución a lo largo del tiempo y permite consultar el historial de eventos filtrado por período y por tipo.
+Desde el perfil, el responsable principal puede modificar los datos del residente y de las cámaras y administrar a los familiares que tienen acceso al hogar, y cualquier familiar puede elegir entre el modo claro y el oscuro.
+
+La Figura~\ref{fig:demo_app} muestra algunas de estas pantallas, con los datos de un hogar de prueba cargado en el backend.
+
+\begin{figure}[!htbp]
+    \centering
+    \begin{minipage}[t]{0.27\textwidth}\centering
+        \includegraphics[width=\textwidth]{Imagenes/App_Inicio.png}\\[2pt]
+        \footnotesize (a) Inicio
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.27\textwidth}\centering
+        \includegraphics[width=\textwidth]{Imagenes/App_EscaneoQR.png}\\[2pt]
+        \footnotesize (b) Escaneo del código QR
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.27\textwidth}\centering
+        \includegraphics[width=\textwidth]{Imagenes/App_Notificaciones.png}\\[2pt]
+        \footnotesize (c) Notificaciones
+    \end{minipage}
+
+    \vspace{8pt}
+    \begin{minipage}[t]{0.27\textwidth}\centering
+        \includegraphics[width=\textwidth]{Imagenes/App_Reportes.png}\\[2pt]
+        \footnotesize (d) Reportes
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.27\textwidth}\centering
+        \includegraphics[width=\textwidth]{Imagenes/App_Camaras.png}\\[2pt]
+        \footnotesize (e) Ubicación de las cámaras
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.27\textwidth}\centering
+        \includegraphics[width=\textwidth]{Imagenes/App_Familiares.png}\\[2pt]
+        \footnotesize (f) Familiares
+    \end{minipage}
+    \caption[Demo de la aplicación móvil.]{Aplicación móvil conectada al backend en AWS. Captura propia.}
+    \label{fig:demo_app}
+\end{figure}
