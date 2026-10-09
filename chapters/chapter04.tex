@@ -179,6 +179,52 @@ En la práctica, una cámara del hogar apunta a una habitación vacía buena par
 Por eso se agregó un detector de movimiento muy liviano que pausa YOLO y CLIP mientras no hay nadie en cuadro.
 El detector solo despierta el procesamiento, y la decisión de volver a pausarlo la toma YOLO cuando confirma que no hay nadie durante un tiempo, porque una persona inmóvil en el piso no genera movimiento y es justamente el caso que el sistema no puede dejar de ver.
 
+\section{API del backend en la nube}
+\label{sec:api_backend}
+
+La aplicación móvil y la controladora se comunican con el backend a través de una API REST construida sobre FastAPI (Sección~\ref{sec:backend_nube}).
+FastAPI genera a partir del propio código una especificación OpenAPI y una documentación interactiva con Swagger UI, disponible en la ruta \texttt{/docs} del backend, que lista cada endpoint con su método, su ruta, los datos que recibe y los que devuelve.
+Como esa documentación sale del código, no puede quedar desactualizada respecto de lo que el backend efectivamente hace.
+La Figura~\ref{fig:swagger} muestra los endpoints agrupados por función.
+
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.66\textwidth]{Imagenes/Swagger_API_1.png}\\[2pt]
+    \includegraphics[width=0.66\textwidth]{Imagenes/Swagger_API_2.png}
+    \caption[Documentación de la API en Swagger.]{Documentación de la API en Swagger, con los endpoints agrupados por función. Captura propia.}
+    \label{fig:swagger}
+\end{figure}
+
+Los endpoints del grupo Controladora son los únicos que usa la Raspberry Pi, para registrar sus cámaras y enviar los eventos detectados, y se autentican con la clave del kit.
+El resto los usa la aplicación móvil y se autentican con el token que Firebase le entrega al familiar al iniciar sesión, que el backend verifica en cada pedido.
+El candado que muestra la documentación junto a cada endpoint indica que requiere una de esas dos credenciales.
+Además, el backend verifica en cada pedido qué puede hacer el familiar sobre ese hogar según su rol (Sección~\ref{sec:diagrama_base_datos}), y nunca deja un hogar sin responsable principal, por lo que rechaza quitarle ese rol o desvincular al único que lo tiene.
+
+Cuando llega un evento desde la controladora, el backend decide si es una alerta, es decir, si hay que avisar a la familia.
+Lo son una caída confirmada, una inmovilidad en el piso y un desvío de rutina, mientras que las actividades se registran pero nunca generan un aviso.
+Ante una alerta, el backend envía una notificación push a través de Firebase Cloud Messaging a todos los familiares vinculados al hogar (RF8).
+
+La propia API ejecuta la línea base una vez por día, a las 3 de la mañana, sobre el día anterior completo de cada hogar, y si hubiera más de una instancia del backend, un candado en la base de datos evita que se ejecute dos veces al mismo tiempo.
+El proceso reutiliza el código del módulo \texttt{baseline/} sin duplicarlo, y solo agrega la conversión de los eventos guardados en la base al formato \texttt{MonitoringEvent} que ese módulo ya consume.
+Si detecta un desvío lo guarda como un evento más, que sigue el mismo camino que cualquier alerta, y si se lo vuelve a ejecutar sobre el mismo día no duplica los desvíos ya registrados.
+
+Por último, la pantalla de Reportes de la aplicación se apoya en indicadores de rutina que calcula el backend, como el tiempo que el residente pasa sentado o el horario de su primera comida, comparados con su propio historial y no con un valor genérico, en línea con el enfoque personalizado del Marco Teórico (Sección~\ref{sec:aprendizaje_adaptativo_marco}).
+Para cada indicador el backend devuelve el valor del período, el rango habitual del residente y si hay un desvío, y también su evolución día por día, que alimenta el gráfico de esa pantalla.
+\FloatBarrier
+
+\section{Despliegue en la nube}
+\label{sec:despliegue}
+
+El backend corre en AWS dentro de un contenedor Docker, desplegado sobre AWS Elastic Beanstalk.
+La imagen del contenedor incluye, además del código del backend, el del módulo \texttt{baseline/} y el esquema de \texttt{events/}, de modo que la línea base que corre en la nube usa exactamente el mismo código que se desarrolló y evaluó de forma local.
+Empaquetar el backend en un contenedor hace que el entorno de ejecución sea el mismo en la máquina de desarrollo y en AWS, y que cambiar de proveedor o de forma de alojamiento no requiera modificar el código.
+Elastic Beanstalk administra la instancia que ejecuta ese contenedor, y cada nueva versión se publica subiendo un paquete con el código, sin intervenir la instancia a mano.
+El contenedor ejecuta la API y, dentro de ella, la tarea que calcula la línea base una vez por día a las 03:00, hora de Argentina (Sección~\ref{sec:api_backend}), por lo que no hace falta ningún servicio adicional de AWS para programarla.
+
+La base de datos PostgreSQL corre en Amazon RDS y no es accesible desde internet.
+Una regla de red solo admite conexiones desde la instancia de Elastic Beanstalk, de modo que a los datos de los hogares únicamente se llega a través de la API y sus controles de acceso.
+Las credenciales, como la contraseña de la base de datos y la clave de servicio de Firebase con la que el backend verifica los tokens y envía las notificaciones, no se guardan en el repositorio, sino que se cargan como variables de entorno de Elastic Beanstalk.
+
 \section{Demo}
 \label{sec:demo}
 
