@@ -1,6 +1,6 @@
 \chapter{Descripción}\label{chapter03}
 
-El estado del arte revisado en el capítulo anterior identificó una brecha, la ausencia de un sistema que integre detección de eventos agudos, comprensión semántica de actividades y modelado longitudinal de rutinas con procesamiento local. Antes de traducir esa brecha en un diseño concreto, este capítulo la contrasta con las necesidades reales de cuidadores y adultos mayores mediante un proceso de investigación de usuarios. Primero se presenta el User Research, del cual se derivan los requerimientos funcionales y no funcionales, las historias de usuario y los mockups de la aplicación móvil. Luego se documentan los diagramas de diseño del sistema y el modelo de datos, y por último se analiza el panorama competitivo y el posicionamiento del proyecto en el mercado.
+El estado del arte revisado en el capítulo anterior identificó una brecha, la ausencia de un sistema que integre detección de eventos agudos, comprensión semántica de actividades y modelado longitudinal de rutinas con procesamiento local. Antes de traducir esa brecha en un diseño concreto, este capítulo la contrasta con las necesidades reales de cuidadores y adultos mayores mediante un proceso de investigación de usuarios. Primero se presenta el User Research, del cual se derivan los requerimientos funcionales y no funcionales, las historias de usuario y los mockups de la aplicación móvil. Luego se documentan los diagramas de diseño del sistema y el modelo de datos, y se analiza el panorama competitivo y el posicionamiento del proyecto en el mercado. Por último se evalúa su viabilidad legal, técnica y económica, y se define la identidad de marca con la que el sistema se presentaría al público.
 
 \section{User Research}
 
@@ -18,7 +18,7 @@ El nivel de preocupación que expresan es alto. El 69\,\% indicó los valores m�
 
 El contacto que ya mantienen tampoco alcanza para disipar esa preocupación. Solo el 19\,\% considera que el nivel de contacto actual es suficiente para estar tranquilo, mientras que el 50\,\% todavía tiene dudas pese a ese contacto y el 31\,\% necesitaría más información o más contacto (Figura~\ref{fig:encuesta_q6}).
 
-Frente a eso, las soluciones que usan hoy son limitadas. El 76\,\% depende exclusivamente del teléfono celular como mecanismo de contacto y seguimiento, y solo el 7\,\% utiliza algún sistema de videovigilancia o botón de pánico (Figura~\ref{fig:encuesta_q7}). El problema no es únicamente la falta de herramientas; el 41\,\% reporta que el adulto mayor olvida o rechaza el dispositivo disponible, y un 37\,\% directamente no usa ninguna solución (Figura~\ref{fig:encuesta_q8}). Hay una brecha concreta entre lo que los cuidadores necesitan y lo que tienen disponible hoy.
+Frente a eso, las soluciones que usan hoy son limitadas. El 76\,\% usa el teléfono celular como mecanismo de contacto y seguimiento, y solo el 7\,\% utiliza algún sistema de videovigilancia o botón de pánico (Figura~\ref{fig:encuesta_q7}). El problema no es únicamente la falta de herramientas; el 41\,\% reporta que el adulto mayor olvida o rechaza el dispositivo disponible, y un 37\,\% directamente no usa ninguna solución (Figura~\ref{fig:encuesta_q8}). Hay una brecha concreta entre lo que los cuidadores necesitan y lo que tienen disponible hoy.
 
 Al presentarles la propuesta, el 89\,\% la calificó con 4 o 5 sobre 5 en términos de utilidad percibida (Figura~\ref{fig:encuesta_q9}). Los aspectos más valorados fueron las alertas en tiempo real (45\,\%) y que el adulto mayor no deba operar ningún dispositivo (40\,\%) (Figura~\ref{fig:encuesta_q10}). Este segundo punto refleja algo que los encuestados comprenden bien, y es que el obstáculo no está en ellos sino en lograr que quien debe ser cuidado adopte y mantenga el uso de una herramienta.
 
@@ -50,9 +50,9 @@ Al indagar sobre situaciones de riesgo, la entrevistada no reportó incidentes g
 
 Respecto a la tecnología, la entrevistada ya utiliza un sistema de alarma del hogar con botón de pánico, que le genera sensación de seguridad porque la conecta con servicios de emergencia sin necesidad de hacer nada especial. Esto indica una predisposición favorable hacia dispositivos de monitoreo pasivo, siempre que no requieran interacción activa de su parte.
 
-Ante la propuesta de un sistema de cámaras que alerte a sus hijos solo ante eventos graves, la entrevistada respondió de forma positiva y sostuvo que ``lo tomaría bien, no para preocuparlos, sino para que vengan si me pasó algo grave y no hay nadie a quien yo pueda llamar''.
+Ante la propuesta de un sistema de cámaras que alerte a sus hijos solo ante eventos graves, la entrevistada respondió de forma positiva y sostuvo que \textit{``lo tomaría bien, no para preocuparlos, sino para que vengan si me pasó algo grave y no hay nadie a quien yo pueda llamar''} (Anexo~\ref{anexo:entrevistas}).
 
-La entrevistada también aportó un caso de referencia de su entorno, el de una conocida con Alzheimer incipiente a quien sus hijos instalaron cámaras en el hogar. En un incidente, una persona desconocida ingresó al domicilio y comenzó a agredirla. Los hijos, que se encontraban a distancia, detectaron la situación a través de la cámara e intervinieron a tiempo. Sin embargo, la entrevistada señaló una limitación importante de ese esquema, ya que consideró que ``lo ideal sería algo que avise solo cuando pasa algo urgente, no que los hijos tengan que estar mirando todo el tiempo''.
+La entrevistada también aportó un caso de referencia de su entorno, el de una conocida con Alzheimer incipiente a quien sus hijos instalaron cámaras en el hogar. En un incidente, una persona desconocida ingresó al domicilio y comenzó a agredirla. Los hijos, que se encontraban a distancia, detectaron la situación a través de la cámara e intervinieron a tiempo. Sin embargo, la entrevistada señaló una limitación importante de ese esquema, ya que consideró que \textit{``lo ideal sería algo que avise solo cuando pasa algo urgente, no que los hijos tengan que estar mirando todo el tiempo''} (Anexo~\ref{anexo:entrevistas}).
 
 \subsubsection{Síntesis}
 
@@ -223,7 +223,7 @@ Mientras que el diagrama de casos de uso responde qué hace el sistema, el diagr
 
 Sobre el lado del borde, ambas ramas parten de la misma detección de pose por frame, pero se disparan con lógicas distintas. La detección de caídas e inmovilidad se evalúa en cada frame, consistente con la operación cercana al tiempo real que exige RNF4, mientras que la clasificación de actividad con CLIP se consulta cada 10 segundos sobre una ventana de 3 segundos, la cadencia periódica descripta en la Sección~\ref{sec:vlm_marco} para compensar su mayor costo computacional frente a la estimación de pose. Ambas ramas incorporan además un filtro antes de generar un evento (la evaluación de \textit{situación de riesgo} en un caso, el umbral de confianza y la deduplicación frente a la actividad anterior en el otro), de modo que no todo lo detectado se traduce automáticamente en un evento registrado.
 
-Del lado de la nube, la construcción de la línea base de comportamiento (RF6) ocurre a partir de cada evento sincronizado, y de ahí en más el flujo se bifurca en dos caminos independientes. Uno evalúa si existe un desvío relevante y, en ese caso, dispara la notificación push y la alerta al responsable a cargo (RF7, RF8); el otro actualiza los reportes de rutina (RF9) sin condicionarse a que haya habido una alerta. Esta bifurcación es intencional, ya que el responsable a cargo debe poder consultar el estado y la rutina del adulto mayor en cualquier momento, haya o no un evento que lo amerite, tal como se expresa en la historia de usuario asociada a RF9.
+Del lado de la nube, la construcción de la línea base de comportamiento (RF6) se apoya en los eventos sincronizados y se recalcula una vez por día (Sección~\ref{sec:api_backend}), y de ahí en más el flujo se bifurca en dos caminos independientes. Uno evalúa si existe un desvío relevante y, en ese caso, dispara la notificación push y la alerta al responsable a cargo (RF7, RF8); el otro actualiza los reportes de rutina (RF9) sin condicionarse a que haya habido una alerta. Esta bifurcación es intencional, ya que el responsable a cargo debe poder consultar el estado y la rutina del adulto mayor en cualquier momento, haya o no un evento que lo amerite, tal como se expresa en la historia de usuario asociada a RF9.
 
 \begin{figure}[htbp]
     \centering
@@ -292,7 +292,7 @@ Del lado de la nube, AWS Elastic Beanstalk aloja la API que recibe los eventos s
 
 El Diagrama de Arquitectura mostró dónde vive cada nodo del sistema. Lo que falta es qué guarda cada uno. La Figura~\ref{fig:diagrama_bd_local} documenta el modelo de la controladora, sobre SQLite (Sección~\ref{sec:diagrama_componentes}), y la Figura~\ref{fig:diagrama_bd_cloud} documenta el modelo de la nube, implementado sobre PostgreSQL en Amazon RDS (Sección~\ref{sec:backend_nube}). El esquema de la nube se versiona con migraciones de Alembic, de modo que cada cambio en el modelo queda registrado y se aplica de la misma forma en desarrollo y en producción.
 
-El modelo local es una única entidad, EVENTO, sin relaciones ni claves foráneas, y eso no es una limitación a disculpar sino un reflejo fiel del código real de \texttt{events/schema.py} y \texttt{events/store.py}. El campo \texttt{video\_id} funciona como un proxy informal de residente y día, tal como lo describe \texttt{baseline/README.md}, pero no tiene una clave foránea declarada dado que el sistema asume hoy un único residente por instalación (RNF11), la misma restricción que más adelante justifica la relación uno a uno entre HOGAR y RESIDENTE en el modelo de nube. El campo \texttt{metadata} es un JSON de forma variable según el \texttt{event\_type} (\texttt{fall}, \texttt{immobility}, \texttt{activity}), cada uno con sus propios campos internos, en lugar de columnas fijas para cada tipo de evento, ya que forzar un esquema rígido hubiera significado agregar columnas vacías para la mayoría de los eventos cada vez que se sume un tipo nuevo.
+El modelo local es una única entidad, EVENTO, sin relaciones ni claves foráneas, y eso no es una limitación a disculpar sino un reflejo del código real de \texttt{events/schema.py} y \texttt{events/store.py}. El diagrama muestra los campos centrales, y la implementación suma dos auxiliares, \texttt{wall\_clock\_ts}, con la hora real del evento cuando proviene de una cámara en vivo, y \texttt{cloud\_synced\_at}, que registra cuándo se confirmó su envío a la nube. El campo \texttt{video\_id} funciona como un proxy informal de residente y día, tal como lo describe \texttt{baseline/README.md}, pero no tiene una clave foránea declarada dado que el sistema asume hoy un único residente por instalación (RNF11), la misma restricción que más adelante justifica la relación uno a uno entre HOGAR y RESIDENTE en el modelo de nube. El campo \texttt{metadata} es un JSON de forma variable según el \texttt{event\_type} (\texttt{fall}, \texttt{immobility}, \texttt{activity}), cada uno con sus propios campos internos, en lugar de columnas fijas para cada tipo de evento, ya que forzar un esquema rígido hubiera significado agregar columnas vacías para la mayoría de los eventos cada vez que se sume un tipo nuevo.
 
 El modelo de nube parte de HOGAR y RESIDENTE en una relación estrictamente uno a uno, no uno a muchos, porque RNF11 restringe el sistema a un único residente monitoreado por instalación. HOGAR guarda un nombre descriptivo, como ``Casa de Rosa'', la fecha de alta, que coincide con el momento en que se vincula el kit, y una dirección opcional, que la aplicación no exige porque no la necesita para funcionar y es un dato sensible más sobre el residente. RESIDENTE, por su parte, suma un teléfono opcional, que es el que usa el botón ``Llamar a Rosa'' del detalle de alerta.
 
@@ -304,7 +304,7 @@ La mayoría de los eventos se origina en una cámara puntual, de ahí la clave f
 
 Frente al EVENTO local, el EVENTO de la nube difiere en dos campos. El \texttt{video\_\allowbreak timestamp\_\allowbreak s}, relativo al archivo de video que se está procesando, se traduce a \texttt{occurred\_at}, un timestamp real, porque en la nube hay que poder ordenar eventos entre distintos hogares y videos, algo que un tiempo relativo al archivo no permite. Y se agrega \texttt{es\_alerta}, un booleano derivado de la severidad del evento, en lugar de modelar una entidad Notificación aparte, porque RF7 y RF8 solo necesitan distinguir si un evento dispara una alerta al responsable a cargo, no llevar un historial propio de notificaciones enviadas. El campo \texttt{synced\_at} registra cuándo llegó el evento a la nube, distinto de \texttt{occurred\_at}, que registra cuándo ocurrió, la misma separación que sostiene la continuidad ante cortes de conexión que exigen RNF6 y RNF7. A eso se suman \texttt{resuelta\_at} y \texttt{resuelta\_por}, que registran cuándo y qué familiar marcó una alerta como atendida desde el detalle de alerta. Estos campos conviven con \texttt{es\_alerta} sin superponerse, ya que \texttt{es\_alerta} indica si el evento debía avisarse y los campos de resolución indican si alguien ya se hizo cargo, algo necesario cuando varios familiares reciben la misma alerta.
 
-FAMILIAR y HOGAR\_FAMILIAR resuelven la relación entre hogares y responsables a cargo. Un hogar puede tener varios familiares autorizados, tal como exige RF12, y un mismo familiar podría estar vinculado a más de un hogar, así que la relación es de muchos a muchos y se resuelve con HOGAR\_FAMILIAR como tabla intermedia, con clave primaria compuesta por \texttt{hogar\_id} y \texttt{familiar\_id}, más un campo \texttt{rol} que distingue el tipo de vínculo de cada familiar con ese hogar en particular. FAMILIAR no tiene contraseña propia en el modelo, sino un campo \texttt{firebase\_uid}, dado que la autenticación se delega completamente a Firebase Authentication, ya justificado en la Sección~\ref{sec:backend_nube}. El campo \texttt{rol} toma dos valores. El familiar que vinculó el kit queda como \texttt{responsable\_principal} y puede invitar y quitar a otros familiares, mientras que el resto queda como \texttt{familiar}, que consulta alertas y reportes y puede marcar una alerta como resuelta, pero no modifica la configuración del hogar. Por ahora la invitación alcanza solo a quienes ya crearon su cuenta, y dejar una invitación pendiente para alguien que todavía no la tiene requeriría una entidad propia, que queda como mejora futura. FAMILIAR guarda además el token de Firebase Cloud Messaging con el que el backend le envía las notificaciones push a su celular (RF8), que se actualiza cada vez que el familiar inicia sesión, ya que Firebase lo renueva periódicamente.
+FAMILIAR y HOGAR\_FAMILIAR resuelven la relación entre hogares y responsables a cargo. Un hogar puede tener varios familiares autorizados, tal como exige RF12, y un mismo familiar podría estar vinculado a más de un hogar, así que la relación es de muchos a muchos y se resuelve con HOGAR\_FAMILIAR como tabla intermedia, con clave primaria compuesta por \texttt{hogar\_id} y \texttt{familiar\_id}, más un campo \texttt{rol} que distingue el tipo de vínculo de cada familiar con ese hogar en particular. FAMILIAR no tiene contraseña propia en el modelo, sino un campo \texttt{firebase\_uid}, dado que la autenticación se delega completamente a Firebase Authentication, ya justificado en la Sección~\ref{sec:backend_nube}. El campo \texttt{rol} toma dos valores. El familiar que vinculó el kit queda como \texttt{responsable\_principal} y puede invitar y quitar a otros familiares, mientras que el resto queda como \texttt{familiar}, que consulta alertas y reportes y puede marcar una alerta como resuelta, pero no modifica la configuración del hogar. Por ahora la invitación alcanza solo a quienes ya crearon su cuenta, y dejar una invitación pendiente para alguien que todavía no la tiene requeriría una entidad propia, que queda como mejora futura. FAMILIAR guarda además el token de Firebase Cloud Messaging con el que el backend le envía las notificaciones push a su celular (RF8). El diseño prevé que la aplicación lo actualice cada vez que el familiar inicia sesión, ya que Firebase lo renueva periódicamente, un paso que todavía no está implementado del lado de la aplicación (Sección~\ref{sec:limitaciones}).
 
 Por último, LINEA\_BASE\_COMPORTAMIENTO corresponde al módulo \texttt{baseline/} (RF6, Secciones~\ref{sec:aprendizaje_adaptativo_marco} y~\ref{sec:rutinas}) y está prevista para guardar, por residente, los parámetros del clustering dinámico junto con la fecha de su última actualización. En la implementación actual la línea base no se almacena, sino que se recalcula cada día a partir del historial de eventos del residente, y lo que se guarda es su resultado, los desvíos de rutina, como registros de EVENTO. Recalcularla cada vez asegura que refleje siempre el historial más reciente, y la entidad queda disponible para guardar sus parámetros y evitar ese recálculo cuando el historial crezca.
 
@@ -380,7 +380,7 @@ Sistema propuesto                     & \checkmark & \checkmark & \checkmark & \
 \endgroup
 \end{table}
 
-{\footnotesize\textit{Nota. La tabla indica presencia o ausencia de cada capacidad en la solución comercial, siguiendo el mismo criterio metodológico utilizado en la Tabla~\ref{tab:comparacion} del Capítulo 2. No refleja diferencias de precisión o de calidad de implementación entre las distintas propuestas.}}
+{\footnotesize\textit{Nota. La tabla indica presencia o ausencia de cada capacidad en la solución comercial, siguiendo el mismo criterio metodológico utilizado en la Tabla~\ref{tab:comparacion} del Capítulo~\ref{chapter02}. No refleja diferencias de precisión o de calidad de implementación entre las distintas propuestas.}}
 
 \subsection{Cinco fuerzas de Porter}
 \label{sec:porter}
@@ -421,7 +421,7 @@ En los hechos, el proyecto compite contra estas tres categorías al mismo tiempo
 
 \medskip
 
-En conjunto, las cinco fuerzas dibujan un mercado accesible en lo técnico pero exigente en lo comercial. Por un lado, la amenaza de nuevos entrantes es baja en el corto plazo porque la confianza todavía no se construye rápido, aunque eso mismo advierte que un jugador global como AltumView podría entrar más adelante, y tanto los proveedores de hardware como los de infraestructura de nube tienen bajo poder de negociación, dado que ambos son reemplazables sin comprometer el producto. Sin embargo, esa ventaja del lado de la oferta se compensa con una fuerza mucho más determinante del lado de la demanda, el poder de negociación de los compradores, que cuentan con alternativas de bajo costo de cambio, y la amenaza de sustitutos ya instalados y de confianza, como la teleasistencia tradicional, un asistente de compañía como Ato o directamente un familiar que llama con frecuencia. En consecuencia, el desafío central no es tecnológico sino de adopción, algo consistente con lo que surgió en el User Research sobre la resistencia cultural a nuevas tecnologías entre adultos mayores y sus familias. Ese desafío, no obstante, es exactamente el que la propuesta de valor del proyecto está diseñada para resolver, dado que ninguna de las alternativas relevadas, ni siquiera la de mayor tracción reciente como Ato, ofrece monitoreo de seguridad sin requerir ninguna acción del adulto mayor.
+En conjunto, las cinco fuerzas dibujan un mercado accesible en lo técnico pero exigente en lo comercial. Por un lado, la amenaza de nuevos entrantes es media a alta, porque la barrera técnica es baja y lo único que demora el ingreso de un jugador global como AltumView es la confianza, que no se construye rápido. Por otro, tanto los proveedores de hardware como los de infraestructura de nube tienen un poder de negociación entre bajo y medio, dado que ambos son reemplazables sin comprometer el producto. Sin embargo, esa ventaja del lado de los proveedores se compensa con una fuerza mucho más determinante del lado de la demanda, el poder de negociación de los compradores, que cuentan con alternativas de bajo costo de cambio, y la amenaza de sustitutos ya instalados y de confianza, como la teleasistencia tradicional, un asistente de compañía como Ato o directamente un familiar que llama con frecuencia. En consecuencia, el desafío central no es tecnológico sino de adopción, algo consistente con lo que surgió en el User Research sobre la resistencia cultural a nuevas tecnologías entre adultos mayores y sus familias. Ese desafío, no obstante, es exactamente el que la propuesta de valor del proyecto está diseñada para resolver, dado que ninguna de las alternativas relevadas, ni siquiera la de mayor tracción reciente como Ato, ofrece monitoreo de seguridad sin requerir ninguna acción del adulto mayor.
 
 \subsection{Triple P}
 \label{sec:triple_p}
@@ -461,7 +461,7 @@ A partir del panorama competitivo, las cinco fuerzas de Porter y el posicionamie
 
 \paragraph{Debilidades:}
 \begin{itemize}
-    \item \textbf{Validación limitada.} El prototipo todavía no fue probado en múltiples hogares reales ni a escala.
+    \item \textbf{Validación limitada.} El prototipo se validó con datasets públicos y todavía no fue probado en hogares de usuarios ni a escala (Capítulo~\ref{chapter05}).
     \item \textbf{Sin canal de distribución propio.} Todavía no existe una estructura comercial ni soporte disponible las 24 horas.
     \item \textbf{Dependencia de conectividad domiciliaria.} El envío de alertas requiere una conexión a internet estable, algo que no está garantizado en todos los hogares.
     \item \textbf{Modelo de costos sin validar.} A diferencia de AltumView Sentinare, que ya tiene un precio de referencia de mercado (USD 200-230 sin cuota mensual), el costo de producción y el precio de venta del sistema propuesto, proyectados en la Sección~\ref{sec:modelo-negocio}, todavía no están validados con ventas ni con costos reales de producción a escala.
@@ -489,6 +489,20 @@ Esto implica, entre otras cosas, que el usuario o su familia deben prestar un co
 
 La prestación de ese consentimiento presenta una particularidad en el caso de adultos mayores con una incapacidad legal declarada, dado que en esos casos la ley exige que el consentimiento sea otorgado por su representante legal.
 Fuera de ese supuesto, el consentimiento debe provenir siempre del propio titular de los datos, sin que la opinión de terceros, familiares incluidos, pueda sustituirlo.
+
+El acceso a esos datos queda restringido por diseño.
+Solo los ven los familiares vinculados al hogar, con los permisos que les da su rol (RF12), y es el responsable principal quien decide a quién se invita y a quién se quita.
+El equipo técnico accede únicamente para tareas de soporte, y los datos no se ceden ni se comercializan a terceros.
+La infraestructura de nube está alojada en servidores de AWS ubicados fuera del país, lo que la ley trata como una transferencia internacional de datos, por lo que el consentimiento informado debe mencionarla de forma expresa.
+
+También se definió cuánto tiempo se conserva cada dato.
+El video no se guarda en ningún momento, ya que se procesa en la memoria de la controladora y se descarta, y la única imagen que queda en el equipo es la última de cada cámara, que se sobrescribe de forma continua para la vista en vivo del panel local, nunca sale de él y se elimina cuando la cámara deja de detectar presencia o el sistema se detiene.
+En la controladora, la base local funciona como un almacenamiento transitorio.
+Cada evento permanece allí hasta que se confirma su envío a la nube, lo que sostiene la continuidad ante cortes de conexión que exigen RNF6 y RNF7, y se elimina a los siete días de enviado, un margen que permite al panel local mostrar la actividad reciente.
+En la nube, los eventos de actividad se conservan doce meses, el período que necesita la línea base para comparar la rutina con la de la misma época del año anterior, y las alertas veinticuatro meses, como historial para la familia.
+Ante la baja del servicio o un pedido de supresión del titular, los datos del residente se eliminan dentro del plazo que fija la ley, y el kit queda desvinculado para poder asignarse a otro hogar.
+Estas reglas están implementadas en el código de la controladora y del backend y cubiertas por pruebas automatizadas (Sección~\ref{sec:pruebas_unitarias}).
+Los plazos de la nube se activan por configuración, y resta exponer la baja del hogar desde la aplicación móvil, que hoy solo está disponible en la API.
 
 Más allá del tratamiento de datos, la naturaleza del sistema exige un descargo de responsabilidad explícito sobre su uso.
 El sistema propuesto es una herramienta de apoyo al cuidado y no constituye un dispositivo médico ni reemplaza la supervisión profesional o familiar del adulto mayor.
@@ -563,7 +577,7 @@ El kit sale de fábrica con la cantidad de cámaras del plan comprado, entre una
 \label{sec:modelo-negocio}
 
 Esta sección estima si el sistema descripto podría sostenerse como producto comercial.
-El prototipo se valida únicamente en un entorno doméstico controlado, por lo que no existen ventas reales que permitan medir la demanda.
+El prototipo se validó con datasets públicos y no con clientes, por lo que no existen ventas reales que permitan medir la demanda.
 Por ese motivo las cifras que siguen no son predicciones, sino proyecciones de orden de magnitud construidas a partir de tres escenarios posibles.
 La sección se organiza en tres partes.
 Primero se describe el negocio con el Business Model Canvas, luego se definen la oferta, el mercado y los precios, y por último se proyectan los ingresos y egresos de cinco años para cada escenario.
@@ -603,7 +617,7 @@ Con el tiempo, a medida que las primeras familias comprueban que el sistema func
 \subsubsection{Relación con clientes}
 
 La relación se sostiene mediante la aplicación móvil, los reportes periódicos de rutina y un soporte remoto por mensajería.
-No se contempla visita presencial, a fin de mantener bajo el costo de servicio.
+La visita presencial no forma parte del servicio habitual y queda reservada para casos excepcionales, como el reemplazo de una cámara, a fin de mantener bajo el costo de servicio.
 
 \subsubsection{Fuentes de ingresos}
 
@@ -658,7 +672,7 @@ Esto muestra que ya hay familias que pagan una cuota mensual por este tipo de cu
 Aun así, el precio sigue siendo un supuesto que debe validarse en etapas posteriores.
 
 La lógica del negocio se entiende mejor mirando a un cliente promedio del escenario Base.
-El kit cuesta USD 230 en componentes, a lo que se suman USD 25 de armado y envío y USD 12 de garantía.
+El kit cuesta USD 230 en componentes puestos en el taller, a lo que se suman USD 25 por armarlo y enviarlo al domicilio del cliente y USD 12 de garantía.
 Además hay que sumar el costo de conseguir al cliente, que en el primer año es de USD 130.
 En total se gastan unos USD 397 por cada cliente nuevo.
 Por el kit se cobran USD 250 con IVA incluido, y lo que queda para el negocio después de descontar el IVA, la comisión de cobro y la estructura comercial es de unos USD 145.
@@ -674,7 +688,7 @@ La inversión neta por cliente es entonces de unos USD 252, como muestra la Tabl
 \hline
 Costo del kit (hardware) & 230 \\
 \hline
-Armado y envío & 25 \\
+Armado y envío al cliente & 25 \\
 \hline
 Garantía (5\,\% del costo del kit) & 12 \\
 \hline
@@ -759,7 +773,7 @@ Los valores en pesos se convierten al dólar oficial de \$1.545 del 29 de septie
 
 El costo del kit varía según el escenario y es de USD 250, 230 y 220 en Bear, Base y Bull, respectivamente.
 La Raspberry Pi 5 de 8 GB, que es el componente principal, se fija en USD 175 a precio minorista \parencite{PiShop2026} y se mantiene en ese valor en los tres escenarios, sin suponer ningún descuento sobre la placa, un valor menor a los USD 230 de la unidad relevada en Mercado Libre para el prototipo.
-Lo que varía entre escenarios es el resto del kit, la cámara, la fuente, la tarjeta microSD, la carcasa y la logística, que suma USD 75, 55 y 45 respectivamente, según el descuento por volumen y la posibilidad de importar directamente que se logren en cada caso.
+Lo que varía entre escenarios es el resto del kit, la cámara, la fuente, la tarjeta microSD, la carcasa y el flete de abastecimiento de esos componentes, que suma USD 75, 55 y 45 respectivamente, según el descuento por volumen y la posibilidad de importar directamente que se logren en cada caso.
 Es un supuesto propio que debe validarse con cotizaciones firmes, ya que los revendedores locales llegan a ofrecer la placa a un precio bastante mayor al de PiShop \parencite{Siranet2026}, por lo que alcanzar la escala prevista en Base y Bull requeriría un acuerdo de importación directa o de volumen con el proveedor.
 El hardware se compra con cuatro meses de anticipación, por lo que en los primeros años hay que pagar los kits antes de venderlos y esto aumenta el financiamiento necesario.
 
@@ -987,7 +1001,7 @@ Se trata de una aproximación para comparar escenarios y no de un pronóstico.
 El modelo mixto de kit y suscripción resulta viable en el escenario esperado y muy atractivo en el optimista, aunque requiere capital inicial y depende de alcanzar el volumen de ventas previsto.
 Con los supuestos adoptados, el escenario Base supera la tasa de descuento con una TIR de 31,6\,\%, recupera la inversión en 4,1 años y alcanza a 102.000 personas.
 El escenario Bear, en cambio, no es rentable, lo que muestra que la adopción, el costo de conseguir clientes y la permanencia de esos clientes son los factores críticos.
-La viabilidad del escenario Base depende de cuántos clientes se quedan y del precio, porque el VAN se anula con bajas de alrededor de 20\,\% anual (Tabla~\ref{tab:bajas}) y con una suscripción de USD 30 en lugar de USD 35.
+La viabilidad del escenario Base depende de cuántos clientes se quedan y del precio, porque el VAN se anula con bajas de alrededor de 20\,\% anual (Tabla~\ref{tab:bajas}) y pasa a ser negativo con una suscripción de USD 30 en lugar de USD 35.
 Retener a los clientes y sostener el precio es tan determinante como conseguirlos.
 Los próximos pasos para reducir la incertidumbre son obtener cotizaciones firmes de los componentes, relevar la disposición a pagar de los cuidadores y validar con un piloto que el boca a boca reduce el costo de adquisición y que las bajas son las supuestas.
 

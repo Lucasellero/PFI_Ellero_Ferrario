@@ -1,6 +1,146 @@
 \chapter{Discusión}\label{chapter06}
 
-% Analizar los resultados, limitaciones encontradas y diferencias entre el alcance
-% planificado y el real.
+\section{Análisis de los resultados}
+\label{sec:analisis_resultados}
 
-Completar.
+\subsection{Detección de caídas}
+
+El sistema registra el 83,5\,\% de las caídas de los datasets evaluados y genera nueve falsas alertas donde la heurística sola generaba 185, un resultado que confirma el diseño en etapas.
+La sensibilidad la fija casi por completo la heurística geométrica de la primera etapa, mientras que las etapas de confirmación eliminan el 95\,\% de las falsas alertas al costo de una sola caída.
+El clasificador temporal casi no se equivoca cuando tiene un esqueleto que analizar, con una caída descartada de más sobre 113, de modo que mejorar la confirmación ya no cambiaría la sensibilidad.
+Por lo tanto, lo que queda por ganar está en el disparador, y en particular en las caídas hacia la cámara, que la relación de aspecto del cuerpo no distingue.
+
+Además, la búsqueda exhaustiva de umbrales mostró que ese límite no se resuelve con calibración.
+Sentarse en un sillón bajo y caer al piso producen la misma firma geométrica en una imagen, y cada combinación de umbrales que recuperaba caídas sumaba falsas alertas en una proporción mayor.
+Ese resultado respalda la decisión de mantener una heurística simple como disparador y trasladar la decisión a un modelo que observe el movimiento, en línea con lo que plantean \textcite{Ramirez2022} y \textcite{Wang2024}.
+
+Por otra parte, el dato más alentador para el uso real es el de las cuatro grabaciones continuas de una persona sentada en un sillón, vista desde una cámara alta y lejana, que es justamente la situación más frecuente en un hogar.
+En esas 1,40 horas la heurística disparaba decenas de veces y el sistema completo no generó ninguna falsa alerta.
+Las nueve que quedan provienen de clips actuados con movimientos bruscos encadenados, de modo que la tasa esperable en una casa es sensiblemente menor que la medida sobre el conjunto.
+La contrapartida es que 12 caídas reales quedan como sospecha y solo avisan si la persona permanece inmóvil, un criterio conservador que privilegia que la familia pueda confiar en cada alerta.
+
+\subsection{Clasificación de actividades}
+
+La diferencia entre el 65,2\,\% medido al principio y el 43,6\,\% obtenido con participantes nuevos fue el hallazgo metodológico más importante del proyecto.
+Un modelo que parece funcionar sobre los videos con los que se lo ajustó puede estar reconociendo a las personas o a la cámara en lugar de la actividad, y solo la separación por participante lo pone en evidencia.
+A partir de ese punto todas las mediciones del proyecto se hicieron con esa separación, y los valores obtenidos sin ella se descartaron aunque fueran más altos.
+
+En cuanto a las señales utilizadas, los resultados confirman lo que anticipaba el Marco Teórico, que la postura no alcanza para distinguir actividades sedentarias (Sección~\ref{sec:vlm_marco}), y agregan que el contexto visual tampoco alcanza por sí solo.
+Ninguna de las señales supera el 78\,\% de forma aislada y la combinación llega al 82,8\,\%, lo que indica que el movimiento y la escena aportan información distinta.
+La zona del hogar resultó la señal de contexto más eficaz y la más barata, con la contrapartida de que alguien tiene que marcar las zonas de cada cámara al instalar el kit.
+
+Aun así, la categoría que agrupa comer, beber y tomar medicación quedó en torno al 57\,\% con todas las variantes probadas.
+Son gestos de uno o dos segundos que dependen de un objeto pequeño en la mano, casi siempre tapado por el propio cuerpo, y un encoder más grande tampoco los resolvió.
+El límite parece estar en lo que una única cámara de ambiente alcanza a ver y no en la capacidad del modelo.
+
+\subsection{Línea base}
+
+La línea base señala el 76,8\,\% de los desvíos inyectados, y el 80,1\,\% de aquellos en los que una actividad deja de ocurrir, un resultado sólido para un sistema que aprende la rutina de cada residente con solo siete días de historial y sin ninguna configuración manual.
+El valor se obtuvo además con hogares que no intervinieron en el ajuste, lo que permite esperar un comportamiento similar en un hogar nuevo.
+La contrapartida son los falsos positivos, cerca del 16\,\% de los días normales, que equivalen a un aviso infundado cada seis días.
+Esa tasa es el principal aspecto a mejorar, y las mediciones muestran el camino, ya que exigir dos días seguidos sin salir o un período de aprendizaje de 14 días la llevan al 14\,\% con una pérdida moderada de detección.
+
+Además, el tipo de desvío importa más que la calibración.
+El sistema detecta bien que algo dejó de ocurrir, como un día sin comer, sin cocinar o sin salir, y los cambios de grado, como pasar más tiempo de lo habitual en descanso, los capta mejor el indicador de sedentarismo que una alerta.
+Por eso estos últimos se resolvieron con indicadores en la pantalla de reportes, que muestran el cambio sin convertirlo en un aviso, y con ellos el sistema cubre el 60,4\,\% de los excesos.
+Esa división es coherente con el uso que el Marco Teórico le asigna a la línea base, la detección de un deterioro sostenido y no de una variación puntual (Sección~\ref{sec:aprendizaje_adaptativo_marco}).
+Lo mismo ocurre con los corrimientos de horario, ya que el detector correspondiente señaló dos de cada tres días normales y por eso sus alertas se desactivaron, lo que indica que la rutina de un adulto mayor en su casa es menos puntual de lo que el diseño suponía.
+
+El resultado más importante es que la línea base resiste el error del clasificador de actividades.
+Al aplicarle las confusiones medidas sobre el clasificador real, la detección global pasa del 76,8\,\% al 71,3\,\%, una baja de cinco puntos y medio.
+Esto se debe a que dos de sus señales no dependen de reconocer la actividad, las entradas y salidas, que se obtienen de la posición de la persona, y el indicador de sedentarismo, que suma los minutos del día.
+La variante sin entradas y salidas, en cambio, caía del 58,6\,\% al 33,5\,\%, lo que confirma que incorporarlas fue la decisión que le dio estabilidad al módulo.
+El costo del error se concentra en el día sin comida, que baja del 85,7\,\% al 46,6\,\%, porque una sola confusión con comer alcanza para ocultar esa ausencia, de modo que mejorar el clasificador de actividades es la vía más directa para seguir mejorando la línea base.
+
+Por último, la medicación, que con sensores es un evento propio, con una cámara queda unida a comer y beber.
+Un día sin medicación solo se detecta entonces cuando falta toda la actividad de comida, y no cuando la persona comió con normalidad pero no tomó la pastilla.
+
+\section{Limitaciones}
+\label{sec:limitaciones}
+
+\subsection{Limitaciones de la detección}
+
+El modelo de pose elegido por su bajo costo no reconoce de forma confiable a una persona acostada en un sillón cuando la cámara está alta y lejos.
+En la grabación analizada no la encontró en el 94,5\,\% de los frames, pese a que el cuerpo estaba a la vista.
+Esa falla condiciona dos funciones a la vez, porque sin esqueleto el clasificador temporal no puede descartar una falsa caída y el contador de inmovilidad se reinicia.
+Un modelo de pose de mayor tamaño probablemente la reduciría, con un costo de cómputo que habría que medir sobre la Raspberry Pi.
+
+Por otra parte, la inmovilidad prolongada en el piso, que es la consecuencia clínica más grave de una caída no atendida, no pudo validarse en su duración real.
+No existe un dataset público con personas que permanezcan varios minutos en el piso después de caer, y grabarlo con adultos mayores no es viable por razones éticas.
+La lógica quedó verificada por partes, con la postura comprobada sobre el final de clips de caída y el contador de tiempo comprobado en el caso de sedentarismo, pero la combinación de ambas en una situación real es una extrapolación.
+
+Asimismo, las caídas hacia la cámara y las que ocurren sobre la cama escapan a la heurística, como se detalló en la Sección~\ref{sec:pruebas_caidas}.
+Además, la confirmación con CLIP, que actúa cuando no hay esqueleto, dio respuestas distintas para un mismo evento visto desde dos cámaras sincronizadas, por lo que su comportamiento ante un cambio de ángulo no está caracterizado.
+
+Por último, el dataset Kaggle Multiple Cameras Fall no se incorporó a la evaluación.
+La tasa de frames que informan sus archivos produce caídas de un cuarto de segundo, un valor incompatible con el resto de los datasets, y no fue posible confirmar la tasa real.
+Se prefirió excluirlo antes que sumar a las métricas un conjunto con tiempos dudosos, y con eso se perdió la única fuente disponible con varias cámaras simultáneas sobre una misma escena.
+
+\subsection{Limitaciones de la validación}
+
+Cada módulo se validó con datos independientes, la detección sobre video de datasets públicos y la línea base sobre el comportamiento real registrado en CASAS.
+Las actividades y el sedentarismo se midieron con adultos mayores de entre 60 y 80 años, y la línea base con la rutina de adultos mayores que viven de forma independiente, mientras que las caídas fueron simuladas por voluntarios, de modo que la dinámica de una caída real en una persona mayor no está representada en la evaluación.
+Falta la prueba que los une sobre una misma persona, porque requiere una grabación continua de alrededor de un mes, necesaria para que la línea base tenga un historial contra el cual comparar.
+Esa prueba ya está en marcha, con el kit instalado en el hogar de una adulta mayor que dio su consentimiento informado, pero a la fecha de esta entrega el registro no reúne todavía las semanas de historial necesarias.
+Por eso sus resultados no forman parte de este informe, y completarla es la primera tarea pendiente para evaluar el sistema en condiciones reales de uso.
+
+Por la misma razón la línea base se evaluó con CASAS y con desvíos inyectados, no con eventos producidos por la cámara.
+El efecto del error de la cámara se estimó de forma indirecta, aplicando a CASAS las confusiones medidas en el clasificador, y con eso la detección baja del 76,8\,\% al 71,3\,\% (Sección~\ref{sec:pruebas_ruido}).
+Las entradas y salidas se validaron con clips en los que una persona entra o sale de un ambiente (Sección~\ref{sec:pruebas_puerta}), y resta comprobarlas sobre la puerta de calle de un hogar real.Tampoco hay forma de saber cuántos de los falsos positivos medidos son errores del sistema y cuántos son días realmente atípicos que CASAS no identifica como tales.
+
+Además, las pruebas de tendencia gradual y de inmovilidad se apoyan en muy pocos casos, tres hogares en la primera y ocho tramos en la segunda.
+Sus resultados muestran que el mecanismo funciona y no permiten estimar con precisión cuánto.
+
+Finalmente, el tiempo de procesamiento por frame sobre la Raspberry Pi no se midió.
+El sistema corre sobre ese hardware con una cámara en vivo y descarta los frames atrasados para no acumular demora, pero el cumplimiento del límite de 200 milisegundos de RNF4 no está verificado.
+
+\subsection{Limitaciones del prototipo}
+
+Las notificaciones push no llegan al celular, porque la aplicación todavía no registra el identificador del dispositivo.
+El backend genera el aviso ante cada alerta y el familiar la encuentra al abrir la aplicación, lo que cumple RF8 solo en parte y deja sin resolver el caso que más importa, el de una caída que requiere reacción inmediata.
+
+Además, durante los primeros siete días de uso el sistema no informa desvíos de rutina, porque no tiene historial suficiente, y el detector de tendencia gradual necesita alrededor de once semanas.
+Extender ese período inicial reduce los avisos infundados, pero también la detección (Sección~\ref{sec:pruebas_aprendizaje}).
+Las zonas del hogar que mejoran la clasificación se cargan a mano en un archivo de configuración, sin una pantalla que permita hacerlo a la familia.
+La comunicación entre la aplicación y el backend del prototipo no usa todavía una conexión cifrada, un paso obligatorio antes de cualquier uso con datos de una familia real.
+
+Los mockups de la Sección~\ref{sec:mockups} muestran además ejemplos que el prototipo no genera, como el evento ``Tomó la medicación'' o el indicador del horario de despertar.
+Son parte del diseño al que apunta el producto, y la aplicación implementada informa hoy la primera comida, el sedentarismo, el tiempo en la cocina y la movilidad.
+
+Se mantiene además la restricción de un único residente por hogar que ya se había fijado en el alcance (Sección~\ref{sec:limitaciones-exclusiones}).
+
+\section{Alcance planificado y alcance logrado}
+\label{sec:alcance_logrado}
+
+Los cambios de diseño respecto del planteo inicial se resumieron en la Tabla~\ref{tab:evolucion_diseno}.
+En todos los casos la pieza prevista se mantuvo y se complementó con otra, porque las pruebas mostraron que no alcanzaba por sí sola.
+La Tabla~\ref{tab:objetivos_logrados} contrasta los objetivos específicos de la Introducción con lo efectivamente alcanzado.
+
+\begin{table}[H]
+\centering
+\caption[Grado de cumplimiento de los objetivos específicos.]{Grado de cumplimiento de los objetivos específicos. Fuente: Elaboración propia.}
+\label{tab:objetivos_logrados}
+\small
+\begin{tabular}{@{}p{4.4cm}p{2.2cm}p{7.8cm}@{}}
+\toprule
+\textbf{Objetivo} & \textbf{Estado} & \textbf{Observación} \\
+\midrule
+Detección de caídas e inmovilidad con estimación de pose & Cumplido en parte & Caídas y sedentarismo validados; inmovilidad en el piso sin validar en su duración \\
+Clasificación de actividades con un VLM & Cumplido & Requirió entrenar un clasificador sobre CLIP y sumar el esqueleto y las zonas \\
+Línea base personalizada y detección de desvíos & Cumplido en parte & Implementada y evaluada sobre CASAS, sin eventos reales de cámara \\
+Procesamiento local del video & Cumplido & El video no sale de la controladora y solo se transmiten eventos \\
+Aplicación móvil con notificaciones y reportes & Cumplido en parte & Alertas, reportes, historial y familiares en funcionamiento; notificaciones push pendientes \\
+Validación en un entorno doméstico controlado & Cumplido en parte & Escenarios simulados de datasets públicos grabados en ambientes domésticos y rutina real de CASAS; prueba en un hogar iniciada y sin resultados todavía \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La diferencia más relevante con lo planificado está en la forma de validar.
+El proyecto preveía montar escenarios simulados en un único hogar, y se optó por validar cada módulo con datasets públicos que ya contienen esos escenarios, caídas simuladas y actividades cotidianas grabadas en ambientes domésticos, además de la rutina real de los hogares de CASAS.
+La decisión amplió el alcance de la validación.
+Las mediciones son repetibles, cubren 158 caídas, 31 actividades y 21 hogares, y abarcan distintas cámaras, distancias y personas, una variedad que un montaje propio en una sola casa no habría alcanzado.
+Lo que queda pendiente es completar la prueba en un hogar con su residente, ya iniciada, que permitirá observar todos los módulos operando juntos sobre una misma rutina.
+
+Por otro lado, dos componentes superaron lo previsto.
+El backend quedó desplegado en AWS y la aplicación funciona contra él con cuentas reales, vinculación del kit por código QR y administración de familiares con roles, un nivel de integración mayor que el de un prototipo local.
+Del lado de la detección, el clasificador temporal de caídas no figuraba en el planteo inicial y resultó la mejora individual más efectiva del sistema.

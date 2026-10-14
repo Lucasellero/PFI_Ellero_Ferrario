@@ -14,7 +14,9 @@
 \usepackage{lmodern}
 \usepackage{booktabs}
 
-\usepackage[backend=biber, style=iso-authoryear, language=spanish, maxcitenames=3, mincitenames=1]{biblatex}
+\usepackage[backend=biber, style=iso-authoryear, language=spanish, maxcitenames=2, mincitenames=1]{biblatex}
+% El instructivo pide 6pt de separación adicional entre referencias.
+\setlength{\bibitemsep}{6pt}
 \DeclareUnicodeCharacter{202F}{~} % Para reemplazar el caracter 202F por un espacio
 \bibliography{biblio.bib}
 \setcounter{tocdepth}{3}
@@ -286,8 +288,8 @@
 	\input{chapters/chapter02}
 	\input{chapters/chapter03}
 	\input{chapters/chapter04}
-	%\input{chapters/chapter05}
-	%\input{chapters/chapter06}
+	\input{chapters/chapter05}
+	\input{chapters/chapter06}
 	%\input{chapters/conclusion}
 
 	\addcontentsline{toc}{chapter}{Bibliograf\'{\i}a}

@@ -1,6 +1,6 @@
 \chapter{Metodología de Desarrollo}\label{chapter04}
 
-Este capítulo detalla el proceso de construcción del sistema descripto en el Capítulo~\ref{chapter03}, las tecnologías utilizadas y las decisiones de diseño detrás de ellas. La Sección~\ref{sec:herramientas_metodologia} describe la organización del equipo, la metodología de trabajo y las herramientas utilizadas; la Sección~\ref{sec:tecnologias} justifica, módulo por módulo, el stack tecnológico elegido frente a sus alternativas; y la Sección~\ref{sec:demo} muestra el estado actual del panel de operación local, ya en funcionamiento sobre la Raspberry Pi.
+Este capítulo detalla el proceso de construcción del sistema descripto en el Capítulo~\ref{chapter03}, las tecnologías utilizadas y las decisiones de diseño detrás de ellas. La Sección~\ref{sec:herramientas_metodologia} describe la organización del equipo, la metodología de trabajo y las herramientas utilizadas; la Sección~\ref{sec:tecnologias} justifica, módulo por módulo, el stack tecnológico elegido frente a sus alternativas; la Sección~\ref{sec:evolucion_diseno} explica cómo cambió el diseño al implementarlo; las Secciones~\ref{sec:api_backend} y~\ref{sec:despliegue} describen la API del backend y su despliegue en la nube; y la Sección~\ref{sec:demo} muestra el sistema en funcionamiento, tanto el panel de operación local como la aplicación móvil.
 
 \section{Organización, metodología y herramientas de trabajo}
 \label{sec:herramientas_metodologia}
@@ -11,7 +11,7 @@ El control de versiones del proyecto corre sobre GitHub, tanto para el código d
 
 El desarrollo del proyecto se organiza bajo un enfoque Kanban, en lugar de un marco con iteraciones de duración fija como Scrum. El trabajo se gestiona como un flujo continuo de tareas visualizadas en un tablero por columnas de estado, donde pueden convivir varias tareas en curso al mismo tiempo, en lugar de comprometerse de antemano a un lote fijo de tareas por sprint. Este enfoque resulta adecuado para un equipo de dos integrantes con una carga de tareas heterogénea entre secciones del informe, módulos de código y preparación de entregas, donde la prioridad cambia con frecuencia según el estado de cada frente y no se justifica la sobrecarga de coordinación de ceremonias como planning o daily stand-up.
 
-La planificación y el seguimiento de tareas del equipo se gestionan en un tablero Kanban en Trello, organizado en tres columnas (Pendiente, En curso y Hecho), donde se desglosan los hitos del cronograma en tareas concretas asignadas a cada integrante. El seguimiento con el tutor se realiza mediante reuniones periódicas por Microsoft Teams, donde se revisa el avance del tablero y se ajustan prioridades para el próximo período.
+La planificación y el seguimiento de tareas del equipo se gestionan en un tablero Kanban en Trello, organizado en tres columnas (Pendiente, En curso y Hecho), donde se desglosan los hitos del cronograma del proyecto, presentado como diagrama de Gantt en el Anexo~\ref{anexo:cronograma}, en tareas concretas asignadas a cada integrante. El seguimiento con el tutor se realiza mediante reuniones periódicas por Microsoft Teams, donde se revisa el avance del tablero y se ajustan prioridades para el próximo período.
 
 Los diagramas presentados en el Capítulo~\ref{chapter03} (Diagrama de Casos de Uso, de Flujo de Información, de Componentes y de Arquitectura) se elaboraron en Lucidchart, en lugar de una herramienta de dibujo genérica, porque ofrece plantillas y notación estándar para diagramas UML y de arquitectura, lo que agiliza mantener una consistencia visual entre los distintos diagramas del informe.
 
@@ -22,11 +22,11 @@ Notion se utiliza además como fuente centralizada de seguimiento general del pr
 \section{Tecnologías}
 \label{sec:tecnologias}
 
-El Marco Teórico (Sección~\ref{sec:vlm_marco}, Sección~\ref{sec:edge_marco}) ya justificó, desde una perspectiva académica y clínica, por qué YOLO, CLIP, el clustering dinámico y el paradigma de edge computing son las técnicas adecuadas para el problema que aborda este proyecto, y el Diagrama de Componentes (Sección~\ref{sec:diagrama_componentes}) y el Diagrama de Arquitectura (Sección~\ref{sec:diagrama_arquitectura}) ya mostraron cómo está organizado el código validado hasta esta entrega y cómo se despliega el sistema completo, desde la cámara IP hasta la aplicación móvil. Sobre esa base conceptual y de despliegue, lo que sigue es la decisión de ingeniería inmediatamente debajo de esas dos capas, es decir, qué lenguaje usa cada componente, qué frameworks y librerías concretas lo implementan, y qué protocolo de comunicación lo conecta con el resto del sistema, además de por qué se eligió cada uno frente a sus alternativas.
+El Marco Teórico (Sección~\ref{sec:vlm_marco}, Sección~\ref{sec:edge_marco}) y el Estado del Arte (Sección~\ref{sec:brecha}) presentaron, desde una perspectiva académica y clínica, las técnicas sobre las que se apoya este proyecto, YOLO, CLIP, el clustering dinámico y el paradigma de edge computing, y el Diagrama de Componentes (Sección~\ref{sec:diagrama_componentes}) y el Diagrama de Arquitectura (Sección~\ref{sec:diagrama_arquitectura}) ya mostraron cómo está organizado el código y cómo se despliega el sistema completo, desde la cámara IP hasta la aplicación móvil. Sobre esa base conceptual y de despliegue, lo que sigue es la decisión de ingeniería inmediatamente debajo de esas dos capas, es decir, qué lenguaje usa cada componente, qué frameworks y librerías concretas lo implementan, y qué protocolo de comunicación lo conecta con el resto del sistema, además de por qué se eligió cada uno frente a sus alternativas.
 
 \subsection{Lenguaje y stack de desarrollo}
 
-Todo el sistema, tanto el pipeline de visión que corre en el borde como el backend que va a correr en la nube, está escrito en Python (versión 3.12 o superior). La decisión responde en primer lugar al ecosistema, dado que las librerías de referencia para cada una de las tareas del sistema (Ultralytics para pose estimation, ONNX Runtime para la inferencia de CLIP, scikit-learn para clustering) están escritas o tienen sus \textit{bindings} principales en Python, y reescribir el pipeline en un lenguaje de más bajo nivel, como C++, hubiese significado renunciar a esas librerías o reimplementarlas sin necesidad, dado que RNF4 exige una operación cercana al tiempo real y no tiempo real estricto. En segundo lugar, usar el mismo lenguaje en el borde y en la nube reduce la fricción de mantener dos bases de código con convenciones distintas, y permite, en particular, reutilizar sin cambios el esquema de eventos definido con Pydantic (Sección~\ref{sec:diagrama_componentes}) tanto en el almacenamiento local de \texttt{events/} como en el futuro backend que lo va a exponer sobre la nube. El costo de esta decisión es previsible, ya que Python introduce un overhead de interpretación que un lenguaje compilado no tendría, pero ese costo ya está absorbido en el diseño, dado que ni la estimación de pose ni la inferencia de CLIP corren sobre el intérprete de Python en sí, sino delegadas a Ultralytics y a ONNX Runtime respectivamente, ambas con su núcleo de cómputo implementado en C++ y expuesto a Python solo como interfaz.
+Todo el sistema, tanto el pipeline de visión que corre en el borde como el backend que corre en la nube, está escrito en Python (versión 3.12 o superior). La decisión responde en primer lugar al ecosistema, dado que las librerías de referencia para cada una de las tareas del sistema (Ultralytics para pose estimation, ONNX Runtime para la inferencia de CLIP, scikit-learn para clustering) están escritas o tienen sus \textit{bindings} principales en Python, y reescribir el pipeline en un lenguaje de más bajo nivel, como C++, hubiese significado renunciar a esas librerías o reimplementarlas sin necesidad, dado que RNF4 exige una operación cercana al tiempo real y no tiempo real estricto. En segundo lugar, usar el mismo lenguaje en el borde y en la nube reduce la fricción de mantener dos bases de código con convenciones distintas, y permite, en particular, reutilizar sin cambios el esquema de eventos definido con Pydantic (Sección~\ref{sec:diagrama_componentes}) tanto en el almacenamiento local de \texttt{events/} como en el backend que lo expone desde la nube. El costo de esta decisión es previsible, ya que Python introduce un overhead de interpretación que un lenguaje compilado no tendría, pero ese costo ya está absorbido en el diseño, dado que ni la estimación de pose ni la inferencia de CLIP corren sobre el intérprete de Python en sí, sino delegadas a Ultralytics y a ONNX Runtime respectivamente, ambas con su núcleo de cómputo implementado en C++ y expuesto a Python solo como interfaz.
 
 \subsection{Frameworks y librerías por módulo}
 
@@ -79,20 +79,15 @@ GMDCSA-24 está alojado en Zenodo bajo el DOI 10.5281/zenodo.11216408, con licen
 A URFD se sumó además \texttt{ToyotaSmarthome\_FP}, un conjunto de clips largos que funciona como negativo duro adicional, y que cubre casos de falso positivo de caída (posturas en el piso o movimientos bruscos sin caída real) que las secuencias de casi caídas de URFD no representan.
 
 Se evaluó también el Kaggle Multiple Cameras Fall Dataset como candidato adicional, pero no se integró debido a un problema no resuelto en la tasa de frames por segundo del material original.
-Esta decisión se retoma como limitación en la Sección de Discusión.
+Esta decisión se retoma como limitación en la Sección~\ref{sec:limitaciones}.
 
 El detalle ampliado de origen, licencia y limitaciones de cada uno de estos datasets se documenta en los README de los módulos \texttt{videos/}, \texttt{vision/} y \texttt{vlm/} del repositorio.
-
-\subsubsection*{Datos propios en entorno real}
-
-El equipo está además recopilando su propio conjunto de datos en un hogar real, con el consentimiento informado de la residente.
-Este conjunto busca validar el pipeline completo de punta a punta bajo condiciones reales de uso, complementando los datasets públicos y el conjunto local descriptos anteriormente.
-La recolección está en curso a la fecha de esta entrega, y los resultados de esa validación se retoman en la Sección de Discusión.
 
 \subsubsection*{Dataset de eventos}
 
 El módulo \texttt{baseline/} se apoya en CASAS Smart Home Datasets, de la Washington State University, que reúne datos de sensores binarios de movimiento y puerta de 81 hogares reales, con un total aproximado de 26,3 millones de eventos registrados.
 CASAS está alojado en Zenodo bajo el DOI 10.5281/zenodo.15708568, con licencia CC BY 4.0.
+Según la documentación del dataset, los hogares utilizados pertenecen a adultos mayores que viven de forma independiente, parte de ellos en comunidades de jubilados y el resto en sus propias casas.
 A diferencia de los datasets de video, que son simulados o grabados en un entorno controlado, CASAS aporta comportamiento real de hogares a una escala que permite validar el clustering de línea base sobre una población amplia de residentes en lugar de sobre un único caso de prueba.
 Que la fuente original de estos eventos sean sensores binarios y no video no compromete su utilidad para este trabajo, dado que tanto el almacenamiento en la nube como el entrenamiento del módulo de línea base operan sobre el esquema abstracto de eventos (\texttt{MonitoringEvent}), independientemente de si el evento fue producido por un sensor o por el pipeline de visión.
 Su uso se cita según lo exige el dataset \parencite{Cook2013}, y el detalle ampliado de su tratamiento se documenta en \texttt{baseline/README.md}.
@@ -110,7 +105,7 @@ En la etapa silver, \texttt{activity\_map.py} mapea las 56 etiquetas heterogéne
 En la etapa gold, \texttt{build\_table.py} convierte los eventos validados en una tabla analítica tipada y genera un timeline resampleado en bins de tiempo fijo, que es la entrada que consume el clustering de \texttt{baseline/}, además de un reporte de calidad versionado junto con los datos.
 
 La corrida completa del pipeline sobre CASAS produjo 319.229 eventos válidos correspondientes a 80 residentes, distribuidos en las 19 clases canónicas, con un total aproximado de 63.370 horas etiquetadas y una tasa de solapamiento entre actividades del 0,1\,\%.
-La integración de esta salida con el clustering de \texttt{baseline/} está en curso y se retoma en la Sección de Discusión.
+Esta salida es la que consume el clustering de \texttt{baseline/}, cuya evaluación se presenta en la Sección~\ref{sec:pruebas_baseline}.
 
 \section{Del diseño inicial a la implementación}
 \label{sec:evolucion_diseno}
@@ -171,6 +166,10 @@ Un cambio concentrado en una actividad breve, como dejar de tomar la medicación
 Un corrimiento de horario, como almorzar tres horas más tarde, no altera la cantidad ni la duración de las actividades, por lo que tampoco se reflejaba.
 Y un deterioro gradual, el \textit{behavioral drift} que describen \textcite{Snoun2024}, produce días que individualmente parecen normales y solo se nota al comparar semanas.
 Por eso el clustering se complementó con tres detectores, uno por actividad, uno por horario habitual y uno de tendencia que compara bloques de semanas.
+Las entradas y salidas de la casa, que alimentan al detector por actividad, se obtienen sin un modelo adicional.
+La controladora ya calcula la posición de la cadera en cada muestra, y registra una salida cuando la última posición vista cae en la zona de la puerta y la persona no reaparece durante un tiempo mínimo, y una entrada cuando la primera detección posterior a esa ausencia cae en la misma zona.
+Con ellas el sistema avisa cuando el residente deja de salir, y no evalúa a qué hora lo hace.
+De los tres detectores, el de horario habitual quedó implementado pero sin emitir alertas, porque en las pruebas generó demasiados avisos sobre días normales (Sección~\ref{sec:pruebas_baseline}).
 
 \subsection{Filtro de movimiento}
 
@@ -201,7 +200,9 @@ El candado que muestra la documentación junto a cada endpoint indica que requie
 Además, el backend verifica en cada pedido qué puede hacer el familiar sobre ese hogar según su rol (Sección~\ref{sec:diagrama_base_datos}), y nunca deja un hogar sin responsable principal, por lo que rechaza quitarle ese rol o desvincular al único que lo tiene.
 
 Cuando llega un evento desde la controladora, el backend decide si es una alerta, es decir, si hay que avisar a la familia.
-Lo son una caída confirmada, una inmovilidad en el piso y un desvío de rutina, mientras que las actividades se registran pero nunca generan un aviso.
+Lo son una caída confirmada, una inmovilidad en el piso y un desvío de rutina.
+El sedentarismo prolongado (RF3) y las caídas sin confirmar no generan un aviso inmediato, pero la aplicación los muestra como señales moderadas, en amarillo y fijadas en la parte superior hasta que un familiar las atiende, tal como prevén los mockups de la Sección~\ref{sec:mockups}.
+Las actividades, por su parte, se registran pero nunca generan un aviso.
 Ante una alerta, el backend envía una notificación push a través de Firebase Cloud Messaging a todos los familiares vinculados al hogar (RF8).
 
 La propia API ejecuta la línea base una vez por día, a las 3 de la mañana, sobre el día anterior completo de cada hogar, y si hubiera más de una instancia del backend, un candado en la base de datos evita que se ejecute dos veces al mismo tiempo.
@@ -255,7 +256,7 @@ Por su parte, la Figura~\ref{fig:demo_actividad} muestra el mismo panel sobre la
 \end{figure}
 \FloatBarrier
 
-Además, la Figura~\ref{fig:demo_todas} muestra la vista completa del panel, con las cinco cámaras corriendo en simultáneo, cada una con su propio overlay de pose y un indicador de estado (RNF9). Debajo, el feed de eventos detectados reúne en un único listado cronológico los eventos de las cinco fuentes a la vez, caídas, actividades e inmovilidad mezcladas, pero cada tarjeta indica de qué cámara proviene ese evento en particular, por ejemplo \texttt{fall} o \texttt{video2}, de modo que verlas todas juntas no significa perder de dónde viene cada una, la misma lógica de registro centralizado que exige RF5.
+Además, la Figura~\ref{fig:demo_todas} muestra la vista completa del panel, con cinco fuentes de video de prueba corriendo en simultáneo, más de las tres cámaras que admite un kit, cada una con su propio overlay de pose y un indicador de estado (RNF9). Debajo, el feed de eventos detectados reúne en un único listado cronológico los eventos de las cinco fuentes a la vez, caídas, actividades e inmovilidad mezcladas, pero cada tarjeta indica de qué cámara proviene ese evento en particular, por ejemplo \texttt{fall} o \texttt{video2}, de modo que verlas todas juntas no significa perder de dónde viene cada una, la misma lógica de registro centralizado que exige RF5.
 
 \begin{figure}[H]
     \centering

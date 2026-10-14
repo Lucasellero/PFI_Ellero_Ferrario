@@ -1,5 +1,457 @@
 \chapter{Pruebas Realizadas}\label{chapter05}
 
-% Presentar los ensayos efectuados sobre el prototipo funcional.
+Cada módulo del sistema se evaluó por separado sobre datos que no intervinieron en su calibración ni en su entrenamiento, y el recorrido completo, desde el evento hasta la aplicación móvil, se probó después de punta a punta.
+Todas las mediciones de detección se hicieron en la máquina de desarrollo, procesando videos ya grabados, porque es la única forma de repetir una misma prueba después de cada cambio y comparar los resultados entre sí.
 
-Completar.
+\section{Criterios de evaluación}
+\label{sec:criterios_evaluacion}
+
+Las pruebas combinan cinco técnicas.
+Las pruebas funcionales de caja negra verifican cada requerimiento de detección comparando la salida del sistema con datos etiquetados, sin intervenir en su funcionamiento interno.
+Las pruebas de regresión repiten esas mismas mediciones después de cada cambio en el código, para confirmar que una mejora en un caso no empeora otro.
+Las pruebas unitarias automatizadas verifican por separado el comportamiento de cada pieza del código del sistema (Sección~\ref{sec:pruebas_unitarias}).
+Las pruebas de integración recorren el camino completo, desde el evento hasta la aplicación móvil, para verificar que los módulos funcionan en conjunto (Sección~\ref{sec:pruebas_integracion}).
+Por último, las pruebas de aceptación ponen la aplicación en manos de usuarios del perfil al que está dirigida, para comprobar que responde a lo que esperaban (Sección~\ref{sec:pruebas_usuarios}).
+
+Las pruebas de detección se resumen con dos medidas.
+Por un lado, la sensibilidad es la proporción de casos reales que el sistema detecta, por ejemplo cuántas caídas de las anotadas en un dataset generaron un evento.
+Por otro, los falsos positivos son los eventos que el sistema emite sin que haya ocurrido lo que informa.
+Entre las dos se priorizó reducir los falsos positivos, porque un sistema doméstico que avisa en falso de forma repetida pierde la confianza de la familia y termina ignorado, un riesgo de adopción tan concreto como el de no detectar un evento puntual.
+
+En todas las pruebas los datos de evaluación se separaron de los de ajuste por unidad completa y no por muestra.
+En caídas la separación es por video, en actividades por participante y en la línea base por hogar, de modo que ninguna persona ni ningún hogar aparece a la vez en el ajuste y en la medición.
+Esta decisión importa porque las primeras mediciones del proyecto, hechas sin esa separación, daban valores mucho más altos que no se sostenían con personas nuevas, como se detalla en la Sección~\ref{sec:pruebas_actividades}.
+
+La Tabla~\ref{tab:datasets_pruebas} resume qué datos se usaron en cada prueba.
+El origen y la licencia de cada dataset se describieron en la Sección~\ref{sec:datasets}.
+Las pruebas de sedentarismo y de clasificación de actividades se apoyan en Toyota Smarthome, cuyos participantes son 18 adultos mayores de entre 60 y 80 años grabados en un departamento \parencite{Das2019}.
+La línea base se evaluó con CASAS, cuyos hogares son de adultos mayores que viven de forma independiente \parencite{Cook2013}.
+Salvo la de caídas, las pruebas se hicieron entonces sobre la misma población a la que apunta el sistema.
+Las caídas son simuladas por voluntarios en todos los datasets disponibles.
+
+\begin{table}[H]
+\centering
+\caption[Datos utilizados en cada prueba.]{Datos utilizados en cada prueba. Fuente: Elaboración propia.}
+\label{tab:datasets_pruebas}
+\small
+\begin{tabular}{@{}p{3.6cm}p{5.2cm}p{5.6cm}@{}}
+\toprule
+\textbf{Prueba} & \textbf{Datos} & \textbf{Volumen} \\
+\midrule
+Detección de caídas & GMDCSA-24, CAUCAFall, URFD, Toyota Smarthome y \texttt{ToyotaSmarthome\_FP} & 292 clips con 158 caídas anotadas \\
+Sedentarismo e inmovilidad & Toyota Smarthome sin recortar & Ocho tramos de entre 64 y 484 segundos \\
+Clasificación de actividades & Toyota Smarthome completo & 14.561 muestras de 31 actividades \\
+Combinación con el esqueleto & Conjunto local categorizado por el equipo & 273 videos no usados en el entrenamiento \\
+Línea base & CASAS & 21 hogares con 4.362 días \\
+Recorrido completo & Hogar de prueba en el backend de AWS y un residente de CASAS & 151 eventos de prueba y 490 días de rutina real \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Detección de caídas}
+\label{sec:pruebas_caidas}
+
+\subsection{Calibración de la heurística geométrica}
+
+La heurística de primera etapa se calibró con una búsqueda exhaustiva de umbrales sobre los 179 clips de GMDCSA-24 y CAUCAFall, incluidos los 51 clips sin ninguna caída, que sirven para contar falsos positivos.
+En un primer momento, la versión ajustada solo con GMDCSA-24 detectaba el 91\,\% de las caídas de ese dataset pero apenas el 28\,\% de las de CAUCAFall, donde la distancia entre la cámara y la persona cambia de un sujeto a otro.
+La causa era que la velocidad de descenso de la cadera se medía en relación con el alto de la imagen, de manera que un mismo movimiento daba valores distintos según qué tan lejos estuviera la cámara.
+Al medirla en relación con la altura de la persona el resultado mejoró en los dos datasets a la vez, como muestra la Tabla~\ref{tab:caidas_calibracion}.
+
+\begin{table}[H]
+\centering
+\caption[Sensibilidad de la heurística geométrica antes y después de la recalibración.]{Sensibilidad de la heurística geométrica antes y después de la recalibración. Fuente: Elaboración propia.}
+\label{tab:caidas_calibracion}
+\small
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Dataset} & \textbf{Antes} & \textbf{Después} \\
+\midrule
+GMDCSA-24 (78 caídas) & 91,0\,\% & 96,2\,\% \\
+CAUCAFall (50 caídas) & 28,0\,\% & 68,0\,\% \\
+Combinado (128 caídas) & 66,4\,\% & 85,2\,\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+El evento se genera en promedio 2,3 segundos después del inicio real de la caída, medidos sobre el tiempo del video, dentro del límite de 5 segundos que fija RNF2.
+
+\subsection{Pipeline completo}
+
+La prueba principal recorre los cinco datasets de la Tabla~\ref{tab:datasets_pruebas}, que suman 158 caídas en 292 clips y 2,08 horas de video.
+Cuatro de esos clips son grabaciones continuas de entre 18 y 27 minutos de una persona sentada mirando televisión o leyendo, sin ninguna caída, y se incluyeron justamente porque en ellos la heurística disparaba decenas de veces.
+La Tabla~\ref{tab:caidas_pipeline} muestra el efecto de cada etapa, desde la heurística sola hasta el sistema tal como está desplegado, que confirma cada evento con el clasificador temporal descripto en la Sección~\ref{sec:evolucion_diseno} y, cuando no hay esqueleto o el clasificador no decide, con CLIP.
+
+\begin{table}[H]
+\centering
+\caption[Detección de caídas según las etapas del pipeline.]{Detección de caídas sobre 292 clips con 158 caídas anotadas, según las etapas del pipeline. Fuente: Elaboración propia.}
+\label{tab:caidas_pipeline}
+\small
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Configuración} & \textbf{Caídas con evento} & \textbf{Falsas alertas} \\
+\midrule
+Heurística geométrica sola & 133 de 158 (84,2\,\%) & 185 \\
+Heurística y clasificador temporal & 133 de 158 (84,2\,\%) & 91 \\
+Sistema desplegado, con confirmación por CLIP & 132 de 158 (83,5\,\%) & 9 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Como se observa, las dos etapas de confirmación redujeron las falsas alertas de 185 a 9 y en ese recorrido se perdió una sola de las caídas que la heurística había marcado.
+De las 132 caídas con evento, 120 generan la alerta de forma directa, el 75,9\,\% del total, y 12 quedan registradas como sospecha.
+Las sospechas son eventos en los que la persona aparece cortada contra el borde de la imagen, que el sistema guarda sin avisar y solo convierte en alerta si la persona queda inmóvil durante 45 segundos.
+Tratarlos de ese modo permite conservar las caídas en las que solo se ve el torso sin pagar por ellas en falsas alertas.
+
+Además, el resultado más relevante para el uso real está en las cuatro grabaciones continuas, que suman 1,40 horas de una persona en su casa, donde el sistema no generó ninguna falsa alerta.
+Las nueve restantes provienen de las 0,68 horas de clips actuados, en los que una persona se sienta, se agacha, se arrodilla y se acuesta una vez tras otra, una densidad de movimientos muy superior a la de la vida cotidiana.
+
+En cuanto al aporte de cada etapa, en los eventos donde YOLO había seguido a la persona durante los segundos previos el clasificador temporal descartó las 94 falsas alertas y perdió una sola de 113 caídas reales.
+Los 91 eventos sin esqueleto en tramos sin caída, la mayoría en las grabaciones continuas, quedaron a cargo de CLIP, que descartó 82.
+Cabe señalar que el clasificador temporal y la confirmación con CLIP se ajustaron con eventos de estos mismos clips, por lo que la medición de la cadena completa es optimista.
+Evaluado de forma aislada, con los videos de prueba separados de los de entrenamiento, el clasificador temporal reconoce el 96\,\% de las caídas y marca como caída el 2,8\,\% de las 10.362 ventanas de movimiento normal, un resultado consistente con el anterior.
+
+Por su parte, la sensibilidad total queda limitada por la primera etapa, ya que las etapas de confirmación solo pueden descartar eventos y no recuperar una caída que la heurística no marcó.
+Las caídas no detectadas se concentran en dos situaciones.
+En las caídas hacia adelante, en dirección a la cámara, el cuerpo termina encogido y su silueta no se ensancha, y nueve de los diez sujetos de CAUCAFall que caen de ese modo no generaron ningún evento.
+En las caídas hacia la cama desde el borde, la cadera casi no desciende porque la cama está a una altura parecida a la de la posición final.
+
+\section{Sedentarismo e inmovilidad en el piso}
+\label{sec:pruebas_inmovilidad}
+
+El umbral de movimiento se calibró con tramos reales de Toyota Smarthome sin recortar, en los que una persona se sienta, permanece sin hacer nada registrado y luego se levanta.
+El desplazamiento del cuerpo por segundo tiene una mediana de 0,0056 cuando la persona está sentada y quieta y de 0,0606 cuando camina, una separación de diez veces que permitió fijar el umbral en 0,02.
+La ventana de inmovilidad se estableció en 180 segundos, el valor por defecto de RNF3.
+
+Sobre ocho tramos de validación, el detector generó el evento de sedentarismo en los cuatro que superaban los 180 segundos y no generó ninguno en los cuatro más cortos, con la persona detectada en al menos el 99,6\,\% de los frames.
+La prueba descubrió además un error en el que un hueco de detección de más de 2,5 segundos reiniciaba la cuenta de inmovilidad, corregido con un historial propio que tolera huecos de hasta 15 segundos.
+
+En cambio, la inmovilidad en el piso no pudo validarse en toda su duración.
+Esto se debe a que ningún dataset disponible contiene a una persona que permanezca varios minutos en el piso después de caer, porque los clips de caída terminan pocos segundos después del impacto.
+Aun así, sobre el final de siete de esos clips se comprobó que el sistema detecta a la persona y clasifica su postura como acostada en seis casos.
+Como aproximación a una permanencia más larga se usaron tres tramos de entre 279 y 527 segundos de una persona acostada en un sillón, y en ninguno se generó el evento.
+En el único de los tres donde el cuerpo estaba a la vista y sin manta, YOLO no encontró a la persona en el 94,5\,\% de los frames, lo que ubica el problema en el modelo de pose y no en la lógica de inmovilidad.
+Esta limitación se analiza en la Sección~\ref{sec:limitaciones}.
+
+\section{Clasificación de actividades}
+\label{sec:pruebas_actividades}
+
+\subsection{CLIP sin entrenamiento frente al clasificador entrenado}
+
+La primera medición, con CLIP sin entrenamiento sobre 39 videos elegidos a mano, dio un 65,2\,\% de aciertos.
+Sin embargo, repetida sobre el dataset completo y con participantes que no aparecían en el ajuste, la misma configuración bajó a valores de entre el 40\,\% y el 48\,\%.
+Esa diferencia motivó el clasificador entrenado sobre las representaciones de CLIP que se describió en la Sección~\ref{sec:evolucion_diseno}.
+
+La comparación definitiva se hizo sobre 14.561 muestras de las 31 actividades de Toyota Smarthome, agrupadas en seis categorías, con cinco particiones distintas de participantes.
+CLIP sin entrenamiento acertó el 43,6\,\% de las muestras y el clasificador entrenado el 65,6\,\%.
+En cuanto a los errores, se concentran en las actividades que dependen de lo que la persona tiene en la mano, porque lavar platos o cortar pan sobre la mesada se parecen, en una imagen aislada, a servirse o comer.
+
+\subsection{Zonas del hogar y objetos cercanos}
+
+Sobre el mismo conjunto se midió cuánto aportan dos señales de contexto, la zona del hogar donde está la persona y los objetos detectados a su alrededor.
+Toyota Smarthome se grabó con siete cámaras fijas en un mismo departamento, lo que permitió marcar una sola vez las zonas de cada cámara y reutilizarlas en todas las muestras.
+La Tabla~\ref{tab:actividades_contexto} muestra el resultado por categoría.
+
+\begin{table}[H]
+\centering
+\caption[Aciertos por categoría según la señal de contexto agregada.]{Porcentaje de aciertos por categoría según la señal de contexto agregada al clasificador. Fuente: Elaboración propia.}
+\label{tab:actividades_contexto}
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Categoría} & \textbf{CLIP} & \textbf{Con objetos} & \textbf{Con zona} & \textbf{Con ambas} \\
+\midrule
+Cocinar & 80,2 & 82,6 & 86,0 & 84,4 \\
+Comer, beber o medicación & 56,7 & 55,7 & 56,7 & 56,4 \\
+Moverse & 70,8 & 70,5 & 69,7 & 69,5 \\
+Usar el teléfono & 58,6 & 61,5 & 63,3 & 59,8 \\
+Leer o usar una pantalla & 64,4 & 66,6 & 66,6 & 66,6 \\
+Descansar & 66,8 & 67,0 & 70,1 & 71,5 \\
+\midrule
+Global & 65,6 & 65,9 & 67,1 & 66,5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La zona fue la señal que más aportó, sobre todo en cocinar, y es además la más barata porque se calcula con la posición de la cadera que YOLO ya entrega.
+En cambio, sumar los objetos a la zona no mejoró el resultado, ya que una vez conocida la zona el objeto detectado en ella no agrega información y sí el ruido de sus propias detecciones fallidas.
+Por eso el sistema incorporó las zonas y descartó la detección de objetos.
+
+\subsection{Combinación con el clasificador temporal del esqueleto}
+
+La combinación de CLIP con el clasificador temporal se midió sobre 273 videos que ninguno de los dos modelos había visto, pertenecientes a las cuatro categorías que cubre el conjunto local.
+Una primera corrida sobre los mismos videos usados para entrenar había dado un 99,2\,\% y se descartó por no ser representativa.
+
+\begin{table}[H]
+\centering
+\caption[Aciertos de cada señal y de su combinación sobre videos no vistos.]{Porcentaje de aciertos de cada señal y de su combinación sobre 273 videos no vistos en el entrenamiento. Fuente: Elaboración propia.}
+\label{tab:actividades_fusion}
+\small
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Señal} & \textbf{Aciertos} \\
+\midrule
+CLIP con clasificador entrenado & 75,8\,\% \\
+Clasificador temporal del esqueleto & 78,0\,\% \\
+Combinación de ambas & 82,8\,\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La combinación supera a cada señal por separado, con siete puntos sobre CLIP y casi cinco sobre el esqueleto.
+No obstante, el resultado cubre 11 de las 18 actividades del conjunto, las únicas con videos sobrantes para medir sin repetir los del entrenamiento, y algunas tienen muy pocos casos, por lo que confirma el sentido de la mejora más que su magnitud exacta.
+
+\section{Línea base y detección de desvíos}
+\label{sec:pruebas_baseline}
+
+CASAS no indica qué días fueron anómalos para cada residente, así que la línea base se evaluó modificando de forma controlada días reales y midiendo si el sistema los señalaba.
+La evaluación usa las mismas clases que el sistema desplegado entrega a la línea base, es decir cocinar, comer o beber, descansar, ocio sentado y las entradas y salidas de la casa.
+La clase de movimiento por la casa no tiene equivalente en los sensores de CASAS y por eso quedó fuera de la medición.
+Se inyectaron cinco tipos de desvío, un día sin ninguna comida, un día sin cocinar, una semana sin salir de la casa, un exceso de descanso y un exceso de ocio sentado, y se tomaron como casos negativos días reales sin modificar.
+De los 80 hogares del dataset, 21 tienen al menos 60 días de historial, y sobre ellos, con tres semillas de inyección, se obtuvieron 678 días con desvío y 1.260 días normales.
+La semana sin salir aporta 441 de esos 678 días, porque cada semana inyectada suma varios días al conteo.
+
+La medición se hizo con validación cruzada por hogar en cinco particiones, eligiendo los parámetros con los hogares de ajuste de cada partición y midiendo sobre los restantes.
+Un ajuste previo, hecho y medido sobre los mismos siete hogares, había dado un 7,1\,\% de falsos positivos, la mitad del valor obtenido después con hogares no vistos.
+A partir de esa validación se fijó además un único juego de parámetros, el más elegido entre las particiones de ajuste, que es el que usa el sistema desplegado.
+La Tabla~\ref{tab:baseline_cv} muestra el resultado de la validación cruzada y, con los parámetros adoptados, el de las alertas que emite el sistema y el del sistema completo, donde un desvío cuenta como detectado si lo señala una alerta o el indicador correspondiente de la pantalla de reportes.
+
+\begin{table}[H]
+\centering
+\caption[Detección de desvíos de rutina con validación cruzada por hogar.]{Detección de desvíos de rutina sobre CASAS con las clases que emite el sistema. Fuente: Elaboración propia.}
+\label{tab:baseline_cv}
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+& & \textbf{Validación} & \multicolumn{2}{c}{\textbf{Parámetros adoptados}} \\
+\textbf{Desvío} & \textbf{Casos} & \textbf{cruzada} & \textbf{Alertas} & \textbf{Sistema completo} \\
+\midrule
+Día sin ninguna comida & 63 & 85,7\,\% & 85,7\,\% & 85,7\,\% \\
+Día sin cocinar & 63 & 85,7\,\% & 84,1\,\% & 84,1\,\% \\
+Semana sin salir & 441 & 77,8\,\% & 78,7\,\% & 78,7\,\% \\
+Exceso de descanso & 60 & 13,3\,\% & 35,0\,\% & 65,0\,\% \\
+Exceso de ocio sentado & 51 & 13,7\,\% & 25,5\,\% & 54,9\,\% \\
+\midrule
+Total de desvíos detectados & 678 & 68,7\,\% & 72,0\,\% & 76,8\,\% \\
+Falsos positivos & 1.260 & 15,2\,\% & 16,2\,\% & 16,9\,\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+El sistema señala tres de cada cuatro desvíos inyectados, y el resultado se sostiene con hogares que no intervinieron en el ajuste.
+Los desvíos que consisten en que algo deje de ocurrir, como no comer, no cocinar o no salir, se detectan en el 80,1\,\% de los casos, 454 de 567.
+Los excesos se detectan menos mediante alertas, lo que responde al diseño, ya que el detector por actividad cuenta cuántas veces ocurre cada actividad y no cuánto dura.
+Ese cambio de duración lo cubre el indicador de sedentarismo de la pantalla de reportes, y con él el sistema llega al 60,4\,\% de los excesos, 67 de 111.
+De este modo las alertas avisan cuando una actividad desaparece y los reportes muestran cuando cambia de magnitud.
+
+La validación cruzada eligió además avisar desde el primer día sin salir.
+Exigir dos días seguidos baja los falsos positivos al 14,0\,\%, pero reduce la detección al 64,0\,\%, de modo que se mantuvo el valor elegido por el procedimiento.
+Asimismo, se evaluó una variante sin las entradas y salidas, que detectó el 58,6\,\% de sus desvíos con un 10,6\,\% de falsos positivos, pero bajó al 33,5\,\% al aplicarle el error del clasificador de actividades.
+La comparación muestra que las entradas y salidas son la señal que le da estabilidad a la línea base, y por eso quedaron incorporadas.
+
+En cuanto al detector de horario habitual, se probó corriendo tres horas el horario de actividades reales, con la misma validación cruzada por hogar y tres semillas.
+Detectó el 51,3\,\% de los corrimientos, pero también señaló el 36,8\,\% de los casos sin modificar, y 207 de 315 días normales recibieron alguna alerta de horario.
+Se probó además calibrar el umbral por actividad, y al limitar los falsos positivos al 5\,\% la detección bajó al 15,8\,\%.
+Solo la medicación, que la cámara no distingue, mostró un horario lo bastante regular para este detector.
+Por ese motivo sus alertas quedaron desactivadas en el sistema, de modo que ni el horario de una comida ni el de una salida generan un aviso, y el horario habitual se conserva únicamente como dato informativo en la pantalla de reportes.
+
+A su vez, el detector de tendencia gradual se probó multiplicando por 0,4 o por 2 la frecuencia de una actividad durante tres semanas seguidas, y detectó 6 de 12 casos con un falso positivo sobre 12 negativos.
+Solo tres hogares tienen historial suficiente para esa prueba, por lo que el resultado es un primer indicio y no una calibración.
+
+\subsection{Detección de entradas y salidas con video}
+\label{sec:pruebas_puerta}
+
+Como CASAS registra las entradas y salidas con sensores de puerta, el mecanismo que las obtiene de la cámara se probó aparte con los clips de Toyota Smarthome en los que una persona entra o sale del ambiente.
+La zona de la puerta de cada cámara se fijó con nueve participantes y la medición se hizo con otros siete.
+El sistema detectó 112 de 133 entradas, el 84,2\,\%, y 92 de 107 salidas, el 86,0\,\%.
+Además, en las cuatro grabaciones continuas sin entradas ni salidas, que suman 84 minutos, no registró ninguna.
+
+\subsection{Efecto del error del clasificador de actividades}
+\label{sec:pruebas_ruido}
+
+Los resultados anteriores usan las etiquetas de CASAS, que no contienen errores, mientras que en el sistema real la línea base recibe las actividades que clasifica la cámara.
+Para medir ese efecto se obtuvo primero la matriz de confusión del clasificador tal como corre en la controladora, sobre 863 videos de Toyota Smarthome que no intervinieron en su ajuste, donde acierta el 75,9\,\% de las ventanas en las que emite un evento.
+Luego se alteraron las etiquetas de CASAS con esas mismas probabilidades de confusión y se repitió la medición del sistema completo, combinando tres semillas de inyección con tres de error.
+
+\begin{table}[H]
+\centering
+\caption[Detección de desvíos con y sin el error del clasificador.]{Detección de desvíos de rutina del sistema completo, con y sin el error del clasificador de actividades. Fuente: Elaboración propia.}
+\label{tab:baseline_ruido}
+\small
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Medida} & \textbf{Sin error} & \textbf{Con error} \\
+\midrule
+Total de desvíos detectados & 76,8\,\% & 71,3\,\% \\
+Falsos positivos & 16,9\,\% & 19,5\,\% \\
+Semana sin salir & 78,7\,\% & 78,6\,\% \\
+Día sin cocinar & 84,1\,\% & 60,8\,\% \\
+Día sin ninguna comida & 85,7\,\% & 46,6\,\% \\
+Exceso de descanso & 65,0\,\% & 68,9\,\% \\
+Exceso de ocio sentado & 54,9\,\% & 54,9\,\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La detección global se mantiene por encima del 70\,\% aun con el error del clasificador, con una baja de cinco puntos y medio.
+La pérdida se concentra en el día sin comida y en el día sin cocinar, porque basta que otra actividad se confunda con comer o con cocinar para que ese día deje de verse vacío.
+En cambio, la semana sin salir y los excesos no se modifican, la primera porque las entradas y salidas no pasan por el clasificador y los segundos porque el indicador de sedentarismo suma los minutos del día y un error aislado pesa poco en ese total.
+La matriz se midió sin la señal de esqueleto, que no estaba disponible en el equipo de medición, por lo que el error aplicado es algo mayor que el del clasificador completo.
+
+\subsection{Período de aprendizaje}
+\label{sec:pruebas_aprendizaje}
+
+El sistema no informa desvíos hasta reunir un mínimo de días de historial, y a partir de ahí recalcula la línea base cada día con los últimos 30 días, de modo que se adapta a los cambios lentos de la rutina.
+Además compara cada día con los del mismo tipo, de semana o de fin de semana, en cuanto reúne suficientes días de cada uno.
+Para saber cuántos días conviene exigir al inicio se repitió la medición de las alertas con períodos de 7, 14, 21 y 30 días.
+
+\begin{table}[H]
+\centering
+\caption[Detección de desvíos según los días de historial exigidos.]{Detección de desvíos de rutina según los días de historial exigidos antes de informar. Fuente: Elaboración propia.}
+\label{tab:baseline_dias}
+\small
+\begin{tabular}{@{}ccc@{}}
+\toprule
+\textbf{Días} & \textbf{Total detectados} & \textbf{Falsos positivos} \\
+\midrule
+7 & 72,0\,\% & 16,2\,\% \\
+14 & 67,3\,\% & 14,4\,\% \\
+21 & 65,2\,\% & 11,7\,\% \\
+30 & 53,7\,\% & 8,8\,\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Exigir más días reduce los falsos positivos, pero también la detección.
+Parte de esa baja se explica porque los días en que el sistema todavía no opina se cuentan como no detectados.
+Se mantuvo el período de siete días, con el que el sistema empieza a ser útil desde la segunda semana de uso.
+
+\section{Recorrido completo del sistema}
+\label{sec:pruebas_integracion}
+
+El recorrido de punta a punta se probó el 8 de octubre de 2026 con la aplicación instalada en un celular y conectada al backend desplegado en AWS.
+Se creó una cuenta con Firebase Authentication, se vinculó un kit de prueba escaneando su código, se cargaron los datos del residente y se llegó a la pantalla de inicio.
+Con la credencial de ese kit se enviaron al backend 151 eventos que simulan 21 días de rutina, una caída confirmada y una inmovilidad de severidad alta, por el mismo endpoint que usa la controladora.
+
+A continuación, desde el celular se verificó que la caída y la inmovilidad aparecen en la pantalla de notificaciones, que una alerta puede marcarse como atendida, que la pantalla de reportes muestra la rutina con un desvío de sedentarismo cargado a propósito, que los filtros por período y por tipo de evento funcionan, y que desde el perfil se pueden editar el residente, las cámaras y los familiares.
+El rechazo de un token inválido y el de un familiar que no pertenece al hogar se probaron con credenciales reales de Firebase, y la administración de familiares y roles con pruebas automatizadas del backend.
+
+Para que los reportes no dependieran solo de eventos generados, el cálculo de la rutina se probó además con el comportamiento real de un residente de CASAS, el hogar \texttt{hh113}, que tiene 490 días de registro.
+Con ese historial el backend calculó para la primera comida del día un horario habitual de entre las 07:36 y las 08:18, y señaló como desvío un día en el que esa comida se corrió a las 11:41.
+La cuenta de demostración de la aplicación quedó cargada con datos de CASAS, de modo que las pantallas de reportes muestran la variación de una rutina real y no una secuencia artificial.
+
+\subsection{Línea base por el camino de producción}
+
+Las mediciones de la Sección~\ref{sec:pruebas_baseline} se hicieron con programas de evaluación, y esta prueba verifica el mismo mecanismo con el código que corre en la nube.
+Se cargaron 60 días del hogar \texttt{hh113}, 14.529 eventos, por el mismo endpoint que usa la controladora, dejando el último día sin ninguna comida.
+El proceso diario generó el desvío de rutina por ausencia de comida, frente a una mediana histórica de siete registros por día, lo marcó como alerta y lo dejó disponible en el listado de alertas de la aplicación.
+Ejecutarlo dos veces sobre el mismo día no duplicó el desvío, y sobre ese mismo día con sus comidas reales no se generó ninguno.
+Del mismo modo se probó el recorrido de las entradas y salidas, desde los eventos de puerta que guarda la controladora hasta la alerta en la nube cuando el residente deja de salir, y se verificó que una salida a una hora inusual no genera ningún aviso.
+\subsection{Corte y reconexión}
+\label{sec:pruebas_corte}
+
+La continuidad ante cortes de conexión (RNF6 y RNF7) se probó con un backend real ejecutándose en un proceso aparte, que se apagó y se volvió a encender mientras la controladora generaba eventos.
+Cada evento lleva un identificador único que la controladora genera al guardarlo y repite en cada reenvío, de modo que la nube no vuelve a guardar un evento que ya recibió de ese kit.
+La Tabla~\ref{tab:corte_reconexion} resume los cinco escenarios.
+
+\begin{table}[H]
+\centering
+\caption[Entrega de eventos ante cortes de conexión.]{Entrega de eventos a la nube ante cortes de conexión. Fuente: Elaboración propia.}
+\label{tab:corte_reconexion}
+\small
+\begin{tabular}{@{}p{7.2cm}ccc@{}}
+\toprule
+\textbf{Escenario} & \textbf{Generados} & \textbf{Entregados} & \textbf{Duplicados} \\
+\midrule
+Backend apagado y luego encendido & 60 & 60 & 0 \\
+Corte entre dos envíos, con 30 eventos nuevos durante el corte & 480 & 480 & 0 \\
+Kit sin vincular, luego sin residente y luego completo & 40 & 40 & 0 \\
+Sincronización en curso durante el corte & 25 & 25 & 0 \\
+Respuesta de la nube perdida dos veces seguidas, con reenvío del lote ya guardado & 250 & 250 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+En los cinco escenarios llegaron los 855 eventos, ninguno se duplicó, y repetir la sincronización no volvió a enviar nada.
+El último escenario es el más exigente, porque la nube ya había guardado el lote cuando se perdió su respuesta, y aun así el reenvío no dejó ninguna fila repetida.
+
+\subsection{Alcance de estas pruebas}
+
+Estas pruebas verifican el camino que va del evento a la aplicación.
+La etapa anterior, la que convierte el video en eventos, se evaluó por separado en las secciones precedentes, porque unirlas sobre la rutina de una misma persona exige una grabación continua de alrededor de un mes.
+
+Por otro lado, las notificaciones push quedaron implementadas solo del lado del backend, que dispara el envío ante cada alerta.
+La aplicación todavía no registra el identificador del celular ni recibe la notificación, por lo que el familiar ve las alertas al abrir la aplicación y no en el momento en que ocurren.
+
+Finalmente, la Raspberry Pi 5 ejecuta el sistema completo leyendo una cámara en vivo, pero el tiempo de procesamiento por frame sobre ese hardware no se midió de forma sistemática, de modo que el límite de 200 milisegundos de RNF4 no pudo verificarse.
+
+\section{Pruebas unitarias automatizadas}
+\label{sec:pruebas_unitarias}
+
+El manejo de los datos en la controladora y en la nube se verifica con una suite de 254 pruebas escritas con pytest, que se ejecutan de forma automática y sin intervención de una persona, y que pasan en su totalidad.
+La mayoría son pruebas unitarias, y el resto son pruebas de integración que recorren el camino de la controladora a la nube, las de corte y reconexión y las de línea base por el camino de producción descriptas en la Sección~\ref{sec:pruebas_integracion}.
+Las pruebas de la nube corren contra una base de datos temporal, de modo que no pueden alterar los datos reales aunque el entorno esté configurado para producción.
+La Tabla~\ref{tab:pruebas_unitarias} resume qué cubre cada grupo.
+
+\begin{table}[H]
+\centering
+\caption[Pruebas automatizadas por módulo.]{Reglas que verifican las pruebas automatizadas en cada módulo. Fuente: Elaboración propia.}
+\label{tab:pruebas_unitarias}
+\small
+\begin{tabular}{@{}p{3.4cm}p{11cm}@{}}
+\toprule
+\textbf{Módulo} & \textbf{Qué verifican} \\
+\midrule
+Almacenamiento local & Cada evento recibe un identificador único que no cambia al reenviarlo, un evento que todavía no se envió a la nube nunca se elimina, y la eliminación respeta la cantidad de días configurada \\
+Orquestador & Una salida se registra solo cuando la persona desaparece desde la zona de la puerta y no vuelve en el tiempo mínimo, una entrada cuando reaparece en esa zona, y sin zona configurada no se emite nada. La limpieza corre como máximo una vez por hora, no corre si la controladora no sincroniza con la nube, la imagen de vista previa se borra al detener el sistema y cuando la cámara deja de procesar, y los eventos sobreviven a un corte de conexión \\
+Panel local & El panel responde de forma correcta cuando no existe imagen de vista previa \\
+Backend en la nube & Un evento recibido dos veces del mismo kit se guarda una sola vez, la retención se ejecuta después de calcular la línea base y solo si está configurada, un familiar sin rol de responsable principal no puede dar de baja el hogar, la línea base genera la alerta de desvío sin duplicarla, y el aviso que recibe el familiar usa el mismo texto que muestra la aplicación \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Para comprobar que la suite detecta errores reales se introdujeron a propósito siete defectos en el código, por ejemplo permitir la baja del hogar a cualquier familiar o eliminar eventos sin la configuración correspondiente.
+En los siete casos al menos una prueba falló, lo que confirma que las pruebas protegen las reglas que dicen verificar.
+Dos de esas reglas corresponden de forma directa a requerimientos del sistema, la conservación de los eventos pendientes de envío ante un corte de conexión (RNF6) y el control de acceso según el rol de cada familiar (RF12).
+La suite permitió además encontrar y corregir un error previo, que hacía fallar el cierre del sistema cuando la sincronización con la nube estaba activa.
+
+\section{Pruebas de aceptación con usuarios}
+\label{sec:pruebas_usuarios}
+
+Además de las pruebas funcionales que los dos integrantes del equipo hicieron sobre la aplicación durante todo el desarrollo, la aplicación se mostró en funcionamiento a dos de los cuidadores que habían participado del User Research, para comprobar si respondía a lo que habían planteado en las entrevistas.
+Ambos recorrieron la puesta en marcha del kit, la pantalla de notificaciones y los reportes.
+
+Los dos coincidieron en que la interfaz y el código de colores resultan claros y en que la aplicación era lo que esperaban a partir de lo conversado en las entrevistas.
+Destacaron en particular la vinculación del kit mediante el código QR, que consideraron sencilla, lo que respalda la decisión de reducir la instalación a ese único paso (RF14).
+También mostraron interés en la posibilidad de sumar a otros familiares al hogar para que accedan a la misma información (RF12), una necesidad que ya había aparecido en la primera entrevista, donde la cuidadora se turna con sus hermanos.
+
+Se trata de una validación cualitativa con dos personas, suficiente para confirmar que el diseño va en la dirección que los usuarios esperaban y para respaldar el criterio de simplicidad de RNF8, pero no para medir la usabilidad.
+Una prueba con más participantes, tareas definidas y un cuestionario estandarizado queda como paso siguiente.
+
+\section{Síntesis de resultados}
+
+La Tabla~\ref{tab:sintesis_pruebas} reúne el resultado de cada prueba frente al requerimiento que le corresponde.
+
+\begin{table}[H]
+\centering
+\caption[Síntesis de las pruebas realizadas por requerimiento.]{Síntesis de las pruebas realizadas por requerimiento. Fuente: Elaboración propia.}
+\label{tab:sintesis_pruebas}
+\small
+\begin{tabular}{@{}p{2.2cm}p{4.6cm}p{7.6cm}@{}}
+\toprule
+\textbf{Requerimiento} & \textbf{Prueba} & \textbf{Resultado} \\
+\midrule
+RF1, RNF2 & Caídas sobre 292 clips & 83,5\,\% de las caídas con evento y 75,9\,\% con alerta directa, 9 falsas alertas, ninguna de ellas en 1,40 horas de video doméstico continuo, y 2,3 segundos de demora promedio \\
+RF2 & Clasificación de actividades & 82,8\,\% de aciertos en cuatro categorías y 67,1\,\% en seis \\
+RF3, RNF3 & Sedentarismo en ocho tramos & Ocho de ocho correctos \\
+RF4 & Inmovilidad en el piso & Postura verificada en clips de caída, sin validar la duración completa \\
+RF6, RF7 & Desvíos inyectados en CASAS & 76,8\,\% de los desvíos señalados por el sistema y 72,0\,\% como alerta, con 16,2\,\% de falsos positivos, y 71,3\,\% al sumar el error del clasificador \\
+RNF6, RNF7 & Corte y reconexión & 855 eventos en cinco escenarios, todos entregados y sin duplicados \\
+RF8 & Notificaciones & Envío implementado en el backend, recepción en la aplicación sin implementar \\
+RF9, RF10, RF12, RF13, RF14 & Recorrido completo en un celular & Verificados contra el backend en AWS, con eventos de prueba y con la rutina real de un residente de CASAS \\
+RF12, RNF6 & Pruebas automatizadas & 254 pruebas que pasan en su totalidad, con siete defectos introducidos a propósito y todos detectados \\
+RNF8 & Aceptación con dos cuidadores & Interfaz clara y vinculación sencilla, sin medición de usabilidad \\
+RNF4 & Tiempo por frame & Sin medir sobre la Raspberry Pi \\
+\bottomrule
+\end{tabular}
+\end{table}
