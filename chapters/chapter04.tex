@@ -9,7 +9,7 @@ El control de versiones del proyecto corre sobre GitHub, tanto para el código d
 
 \subsection*{Metodología de desarrollo}
 
-El desarrollo del proyecto se organiza bajo un enfoque Kanban, en lugar de un marco con iteraciones de duración fija como Scrum. El trabajo se gestiona como un flujo continuo de tareas visualizadas en un tablero por columnas de estado, donde pueden convivir varias tareas en curso al mismo tiempo, en lugar de comprometerse de antemano a un lote fijo de tareas por sprint. Este enfoque resulta adecuado para un equipo de dos integrantes con una carga de tareas heterogénea entre secciones del informe, módulos de código y preparación de entregas, donde la prioridad cambia con frecuencia según el estado de cada frente y no se justifica la sobrecarga de coordinación de ceremonias como planning o daily stand-up.
+El desarrollo del proyecto se organiza bajo un enfoque Kanban, en lugar de un marco con iteraciones de duración fija como Scrum. Kanban, en la formulación de \textcite{Anderson2010}, es un método de gestión del trabajo que se basa en visualizar el flujo de tareas, limitar la cantidad de trabajo en curso y gestionar ese flujo de forma continua. En el proyecto, el trabajo se gestiona como un flujo continuo de tareas visualizadas en un tablero por columnas de estado, en lugar de comprometerse de antemano a un lote fijo de tareas por sprint. Este enfoque resulta adecuado para un equipo de dos integrantes con una carga de tareas heterogénea entre secciones del informe, módulos de código y preparación de entregas, donde la prioridad cambia con frecuencia según el estado de cada frente y no se justifica la sobrecarga de coordinación de ceremonias como planning o daily stand-up.
 
 La planificación y el seguimiento de tareas del equipo se gestionan en un tablero Kanban en Trello, organizado en tres columnas (Pendiente, En curso y Hecho), donde se desglosan los hitos del cronograma del proyecto, presentado como diagrama de Gantt en el Anexo~\ref{anexo:cronograma}, en tareas concretas asignadas a cada integrante. El seguimiento con el tutor se realiza mediante reuniones periódicas por Microsoft Teams, donde se revisa el avance del tablero y se ajustan prioridades para el próximo período.
 
@@ -26,12 +26,12 @@ El Marco Teórico (Sección~\ref{sec:vlm_marco}, Sección~\ref{sec:edge_marco}) 
 
 \subsection{Lenguaje y stack de desarrollo}
 
-Todo el sistema, tanto el pipeline de visión que corre en el borde como el backend que corre en la nube, está escrito en Python (versión 3.12 o superior). La decisión responde en primer lugar al ecosistema, dado que las librerías de referencia para cada una de las tareas del sistema (Ultralytics para pose estimation, ONNX Runtime para la inferencia de CLIP, scikit-learn para clustering) están escritas o tienen sus \textit{bindings} principales en Python, y reescribir el pipeline en un lenguaje de más bajo nivel, como C++, hubiese significado renunciar a esas librerías o reimplementarlas sin necesidad, dado que RNF4 exige una operación cercana al tiempo real y no tiempo real estricto. En segundo lugar, usar el mismo lenguaje en el borde y en la nube reduce la fricción de mantener dos bases de código con convenciones distintas, y permite, en particular, reutilizar sin cambios el esquema de eventos definido con Pydantic (Sección~\ref{sec:diagrama_componentes}) tanto en el almacenamiento local de \texttt{events/} como en el backend que lo expone desde la nube. El costo de esta decisión es previsible, ya que Python introduce un overhead de interpretación que un lenguaje compilado no tendría, pero ese costo ya está absorbido en el diseño, dado que ni la estimación de pose ni la inferencia de CLIP corren sobre el intérprete de Python en sí, sino delegadas a Ultralytics y a ONNX Runtime respectivamente, ambas con su núcleo de cómputo implementado en C++ y expuesto a Python solo como interfaz.
+Todo el sistema, tanto el pipeline de visión que corre en el borde como el backend que corre en la nube, está escrito en Python (versión 3.12 o superior). La decisión responde en primer lugar al ecosistema, dado que las librerías de referencia para cada una de las tareas del sistema (Ultralytics para estimación de pose, ONNX Runtime para la inferencia de CLIP, scikit-learn para clustering) están escritas o tienen sus \textit{bindings} principales en Python, y reescribir el pipeline en un lenguaje de más bajo nivel, como C++, hubiese significado renunciar a esas librerías o reimplementarlas sin necesidad, dado que RNF4 exige una operación cercana al tiempo real y no tiempo real estricto. En segundo lugar, usar el mismo lenguaje en el borde y en la nube reduce la fricción de mantener dos bases de código con convenciones distintas, y permite, en particular, reutilizar sin cambios el esquema de eventos definido con Pydantic (Sección~\ref{sec:diagrama_componentes}) tanto en el almacenamiento local de \texttt{events/} como en el backend que lo expone desde la nube. El costo de esta decisión es previsible, ya que Python introduce un overhead de interpretación que un lenguaje compilado no tendría, pero ese costo ya está absorbido en el diseño, dado que ni la estimación de pose ni la inferencia de CLIP corren sobre el intérprete de Python en sí, sino delegadas a Ultralytics y a ONNX Runtime respectivamente, ambas con su núcleo de cómputo implementado en C++ y expuesto a Python solo como interfaz.
 
 \subsection{Frameworks y librerías por módulo}
 
 \subsubsection*{Ultralytics, OpenCV y NumPy en \texttt{vision/}}
-El módulo \texttt{vision/} implementa la heurística de detección de caídas e inmovilidad (Sección~\ref{sec:diagrama_componentes}) sobre keypoints de pose obtenidos con YOLO11n-pose a través de la librería Ultralytics. Implementar la arquitectura de YOLO desde cero, o recurrir a una implementación de terceros menos consolidada, hubiera significado resignar lo que Ultralytics ya resuelve, una interfaz de alto nivel que integra la descarga del modelo, la inferencia y la exportación a otros formatos. Además, es la misma línea de modelos que valida \textcite{Giri2025} y que confirma \textcite{Wang2025} como la variante de referencia para hardware embebido (Sección~\ref{sec:edge-inference}), de modo que usarla evita apartarse de la literatura que ya validó la viabilidad del enfoque. OpenCV se usa para todo el manejo de frames (lectura de archivos y de streams, recorte, dibujo del overlay de esqueleto) y NumPy para las operaciones vectoriales sobre los keypoints (velocidad vertical, ángulo de orientación) que alimentan la heurística de caída, ambas librerías estándar de facto en visión artificial con Python.
+El módulo \texttt{vision/} implementa la heurística de detección de caídas e inmovilidad (Sección~\ref{sec:diagrama_componentes}) sobre keypoints de pose obtenidos con YOLO11n-pose a través de la librería Ultralytics. Implementar la arquitectura de YOLO desde cero, o recurrir a una implementación de terceros menos consolidada, hubiera significado resignar lo que Ultralytics ya resuelve, una interfaz de alto nivel que integra la descarga del modelo, la inferencia y la exportación a otros formatos. Además, es la misma línea de modelos que validan \textcite{Giri2025} y que confirman \textcite{Wang2025} como la variante de referencia para hardware embebido (Sección~\ref{sec:edge-inference}), de modo que usarla evita apartarse de la literatura que ya validó la viabilidad del enfoque. OpenCV se usa para todo el manejo de frames (lectura de archivos y de streams, recorte, dibujo del overlay de esqueleto) y NumPy para las operaciones vectoriales sobre los keypoints (velocidad vertical, ángulo de orientación) que alimentan la heurística de caída, ambas librerías estándar de facto en visión artificial con Python.
 
 \subsubsection*{ONNX Runtime para la clasificación semántica}
 CLIP se entrena y se exporta una única vez, en la máquina de desarrollo, con PyTorch, pero en el dispositivo de inferencia (la Raspberry Pi) corre exclusivamente sobre ONNX Runtime, sin dependencia de PyTorch en tiempo de ejecución. Esta separación es deliberada, ya que PyTorch es una dependencia pesada, pensada para entrenamiento y con un footprint de instalación que no se justifica en un dispositivo que solo hace inferencia, mientras que ONNX Runtime está diseñado específicamente para ese escenario, con un binario liviano y soporte de ejecución en CPU sin necesidad de GPU, coherente con RNF5. Exportar a ONNX tiene además la ventaja de desacoplar el modelo del framework en el que fue entrenado, de modo que si en el futuro conviene migrar la inferencia a otro runtime no hace falta reentrenar ni reexportar CLIP desde cero.
@@ -51,7 +51,7 @@ El módulo \texttt{runner/} corre un \textit{thread} por cámara para poder proc
 \subsection{Backend en la nube y arquitectura de red}
 \label{sec:backend_nube}
 
-Del lado de la nube, el backend que recibe los eventos de la Raspberry Pi, calcula la línea base y los expone a la aplicación móvil (Sección~\ref{sec:diagrama_arquitectura}) está construido sobre FastAPI, el mismo framework que ya corre en \texttt{dashboard/} para el panel de operación local. Reutilizar el mismo framework en ambas puntas tiene una razón concreta, permite compartir el mismo esquema Pydantic de \texttt{MonitoringEvent} entre el backend local y el de la nube sin duplicar la validación, ya que el equipo ya resolvió la curva de aprendizaje de FastAPI a partir de \texttt{dashboard/}, evitando sumar un framework nuevo, por ejemplo Flask o Django, exclusivamente para el backend en la nube sin una razón de peso que lo justifique.
+Del lado de la nube, el backend que recibe los eventos de la Raspberry Pi, calcula la línea base y los expone a la aplicación móvil (Sección~\ref{sec:diagrama_arquitectura}) está construido sobre FastAPI, el mismo framework que ya corre en \texttt{dashboard/} para el panel de operación local. Reutilizar el mismo framework en ambas puntas tiene dos razones concretas. Permite compartir el mismo esquema Pydantic de \texttt{MonitoringEvent} entre el backend local y el de la nube sin duplicar la validación, y aprovecha que el equipo ya resolvió la curva de aprendizaje de FastAPI con \texttt{dashboard/}, lo que evita sumar un framework nuevo, por ejemplo Flask o Django, exclusivamente para el backend en la nube.
 
 La comunicación entre la Raspberry Pi y el backend en AWS se resolvió sobre REST por HTTP, y no sobre un protocolo de mensajería como MQTT. La razón es el patrón de tráfico, ya que el sistema no transmite un flujo continuo de datos (el video nunca sale del dispositivo, según RNF1) sino eventos discretos y de baja frecuencia, como una caída, un cambio de actividad o una sincronización periódica de la línea base, un volumen para el que un modelo publish/subscribe agrega complejidad operativa, al requerir un broker adicional para administrar, sin un beneficio claro frente a llamadas HTTP directas. Desde el punto de vista de la arquitectura de red, la Raspberry Pi solo necesita realizar conexiones salientes hacia el endpoint de AWS, sin exponer ningún puerto entrante en la red doméstica, algo especialmente relevante porque el dispositivo corre dentro de la red interna del hogar, típicamente detrás de un router con NAT, sin IP pública ni administración remota de firewall a cargo del usuario. La controladora sale a internet por un cable de red conectado a ese router, mientras que las cámaras se conectan a una red wifi privada que arma la propia controladora y no tienen salida a internet, por lo que la Raspberry Pi es el único equipo del kit que se comunica con la nube. Para hacerlo se autentica con una credencial propia del kit, que se guarda en la controladora desde fábrica y en el backend solo como hash, y que identifica al aparato y no al familiar. Esa misma conexión saliente es la que se reintenta cuando se restablece la conectividad tras un corte (RNF7), sincronizando los eventos acumulados en SQLite durante ese lapso (RNF6).
 
@@ -70,13 +70,34 @@ Por último, la aplicación móvil está desarrollada en React Native. Desarroll
 
 El sistema utiliza dos familias de datasets según el módulo que los consume.
 Los módulos \texttt{vision/} y \texttt{vlm/} se calibran y validan sobre datasets de video, mientras que \texttt{baseline/} se apoya en un dataset de eventos de sensores.
+La Tabla~\ref{tab:datasets} resume el origen, la licencia, el contenido y el uso de cada uno.
+
+\begin{table}[H]
+\centering
+\caption[Datasets utilizados en el proyecto.]{Datasets utilizados en el proyecto. Fuente: Elaboración propia.}
+\label{tab:datasets}
+\footnotesize
+\begin{tabular}{@{}p{2.3cm}p{2.8cm}p{1.9cm}p{3.9cm}p{3.2cm}@{}}
+\toprule
+\textbf{Dataset} & \textbf{Origen} & \textbf{Licencia} & \textbf{Contenido} & \textbf{Uso en el proyecto} \\
+\midrule
+Toyota Smarthome \parencite{Das2019} & Inria y Toyota, departamento con siete cámaras fijas & Solo investigación académica & 31 actividades cotidianas de 18 adultos mayores de entre 60 y 80 años, en versión recortada y sin recortar & Clasificación de actividades, sedentarismo, entradas y salidas, y negativos de caída \\
+GMDCSA-24 \parencite{Alam2024} & Zenodo, DOI 10.5281/zenodo.11216408 & CC BY 4.0 & Caídas simuladas por cuatro actores en tres ambientes domésticos & Calibración y evaluación de la detección de caídas \\
+CAUCAFall \parencite{Eraso2022} & Universidad del Cauca, Mendeley Data & CC BY 4.0 & Diez sujetos, cinco tipos de caída y cinco actividades, en un ambiente doméstico no controlado & Calibración y evaluación de la detección de caídas \\
+URFD \parencite{Kwolek2014} & Universidad de Rzeszów & CC BY-NC-SA 4.0 & 30 caídas y 40 actividades que se asemejan a una caída & Negativos difíciles para la detección de caídas \\
+CASAS \parencite{Cook2013} & Washington State University, Zenodo, DOI 10.5281/zenodo.15708568 & CC BY 4.0 & Sensores de movimiento y puerta de 81 hogares reales, unos 26,3 millones de eventos & Construcción y evaluación de la línea base \\
+Multiple Cameras Fall \parencite{Auvinet2011} & Université de Montréal, publicado en Kaggle & -- & 24 escenarios grabados con ocho cámaras simultáneas & Evaluado y no incorporado \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsubsection*{Datasets de video}
 
-Los datasets Toyota Smarthome, GMDCSA-24, CAUCAFall y URFD ya fueron presentados en la Sección~\ref{sec:brecha}, junto con el rol que cumple cada uno en la calibración y validación del sistema.
-Sobre esa base, Toyota Smarthome se complementó con un conjunto propio de clips categorizados por el equipo, necesario porque el dataset público no cubre por sí solo los ángulos de cámara ni todas las actividades relevantes para el hogar objetivo del sistema.
-GMDCSA-24 está alojado en Zenodo bajo el DOI 10.5281/zenodo.11216408, con licencia CC BY 4.0.
-A URFD se sumó además \texttt{ToyotaSmarthome\_FP}, un conjunto de clips largos que funciona como negativo duro adicional, y que cubre casos de falso positivo de caída (posturas en el piso o movimientos bruscos sin caída real) que las secuencias de casi caídas de URFD no representan.
+El rol de cada dataset de video en la calibración y validación del sistema se presentó en la Sección~\ref{sec:brecha}.
+Toyota Smarthome se usa en sus dos versiones.
+De la versión recortada, en la que cada clip contiene una sola actividad, el equipo organizó por actividad unos 2.200 clips que cubren 18 de las 31 actividades, y con ellos entrenó los clasificadores de actividades.
+De la versión sin recortar se tomaron cuatro grabaciones continuas de entre 18 y 27 minutos, de una persona sentada mirando televisión o leyendo, que forman el conjunto \texttt{ToyotaSmarthome\_FP}.
+Este conjunto funciona como negativo difícil adicional para la detección de caídas, porque cubre falsos positivos que las secuencias de casi caídas de URFD no representan, como las posturas bajas en un sillón.
 
 Se evaluó también el Kaggle Multiple Cameras Fall Dataset como candidato adicional, pero no se integró debido a un problema no resuelto en la tasa de frames por segundo del material original.
 Esta decisión se retoma como limitación en la Sección~\ref{sec:limitaciones}.
@@ -85,19 +106,18 @@ El detalle ampliado de origen, licencia y limitaciones de cada uno de estos data
 
 \subsubsection*{Dataset de eventos}
 
-El módulo \texttt{baseline/} se apoya en CASAS Smart Home Datasets, de la Washington State University, que reúne datos de sensores binarios de movimiento y puerta de 81 hogares reales, con un total aproximado de 26,3 millones de eventos registrados.
-CASAS está alojado en Zenodo bajo el DOI 10.5281/zenodo.15708568, con licencia CC BY 4.0.
+El módulo \texttt{baseline/} se apoya en CASAS Smart Home Datasets, que reúne datos de sensores binarios de movimiento y puerta.
 Según la documentación del dataset, los hogares utilizados pertenecen a adultos mayores que viven de forma independiente, parte de ellos en comunidades de jubilados y el resto en sus propias casas.
 A diferencia de los datasets de video, que son simulados o grabados en un entorno controlado, CASAS aporta comportamiento real de hogares a una escala que permite validar el clustering de línea base sobre una población amplia de residentes en lugar de sobre un único caso de prueba.
 Que la fuente original de estos eventos sean sensores binarios y no video no compromete su utilidad para este trabajo, dado que tanto el almacenamiento en la nube como el entrenamiento del módulo de línea base operan sobre el esquema abstracto de eventos (\texttt{MonitoringEvent}), independientemente de si el evento fue producido por un sensor o por el pipeline de visión.
-Su uso se cita según lo exige el dataset \parencite{Cook2013}, y el detalle ampliado de su tratamiento se documenta en \texttt{baseline/README.md}.
+El detalle ampliado de su tratamiento se documenta en \texttt{baseline/README.md}.
 
 \subsubsection*{Pipeline de transformación}
 
 A diferencia de los datasets de video, que se consumen directamente, el dataset de eventos requiere un proceso de transformación antes de poder alimentar el módulo de línea base.
 El pipeline se organiza en tres etapas, siguiendo una arquitectura por capas de tipo bronze, silver y gold.
 
-En la etapa bronze, \texttt{etl.py} parsea cada archivo CSV por hogar, empareja los tramos begin y end de cada etiqueta, y descarta líneas corruptas o tramos de duración inválida u huérfanos.
+En la etapa bronze, \texttt{etl.py} parsea cada archivo CSV por hogar, empareja los tramos begin y end de cada etiqueta, y descarta líneas corruptas o tramos de duración inválida o huérfanos.
 Cada evento resultante se valida contra el esquema compartido \texttt{MonitoringEvent} (Sección~\ref{sec:diagrama_componentes}), y los hogares con baja cobertura o indicios de múltiples residentes se excluyen o se marcan explícitamente, en línea con la restricción de residente único (RNF11).
 
 En la etapa silver, \texttt{activity\_map.py} mapea las 56 etiquetas heterogéneas del dataset original a un vocabulario canónico de 19 clases de actividad, y a un subconjunto de 11 clases más generales, correspondiente a lo que un único punto de cámara puede detectar.
@@ -190,7 +210,7 @@ La Figura~\ref{fig:swagger} muestra los endpoints agrupados por función.
     \centering
     \includegraphics[width=0.66\textwidth]{Imagenes/Swagger_API_1.png}\\[2pt]
     \includegraphics[width=0.66\textwidth]{Imagenes/Swagger_API_2.png}
-    \caption[Documentación de la API en Swagger.]{Documentación de la API en Swagger, con los endpoints agrupados por función. Captura propia.}
+    \caption[Documentación de la API en Swagger.]{Documentación de la API en Swagger, con los endpoints agrupados por función. Fuente: Elaboración propia.}
     \label{fig:swagger}
 \end{figure}
 
@@ -241,7 +261,7 @@ En primer lugar, la Figura~\ref{fig:demo_caida} muestra la vista de una única f
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.90\textwidth]{Imagenes/Demo_Dashboard_Caida.png}
-    \caption[Demo del panel local: detección de caídas.]{Panel de operación local (\texttt{dashboard/}): vista única de la fuente \texttt{fall}, con overlay de pose YOLO y cuatro eventos de caída detectados. Captura propia.}
+    \caption[Demo del panel local: detección de caídas.]{Panel de operación local (\texttt{dashboard/}): vista única de la fuente \texttt{fall}, con overlay de pose YOLO y cuatro eventos de caída detectados. Fuente: Elaboración propia.}
     \label{fig:demo_caida}
 \end{figure}
 \FloatBarrier
@@ -251,7 +271,7 @@ Por su parte, la Figura~\ref{fig:demo_actividad} muestra el mismo panel sobre la
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.90\textwidth]{Imagenes/Demo_Dashboard_Actividad.png}
-    \caption[Demo del panel local: clasificación de actividad.]{Panel de operación local (\texttt{dashboard/}): vista única de la fuente \texttt{video2}, con eventos de clasificación de actividad mediante CLIP. Captura propia.}
+    \caption[Demo del panel local: clasificación de actividad.]{Panel de operación local (\texttt{dashboard/}): vista única de la fuente \texttt{video2}, con eventos de clasificación de actividad mediante CLIP. Fuente: Elaboración propia.}
     \label{fig:demo_actividad}
 \end{figure}
 \FloatBarrier
@@ -261,7 +281,7 @@ Además, la Figura~\ref{fig:demo_todas} muestra la vista completa del panel, con
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.90\textwidth]{Imagenes/Demo_Dashboard_TodasFuentes.png}
-    \caption[Demo del panel local: monitoreo simultáneo de múltiples fuentes.]{Panel de operación local (\texttt{dashboard/}): vista de todas las fuentes en simultáneo, con el feed combinado de eventos detectados. Captura propia.}
+    \caption[Demo del panel local: monitoreo simultáneo de múltiples fuentes.]{Panel de operación local (\texttt{dashboard/}): vista de todas las fuentes en simultáneo, con el feed combinado de eventos detectados. Fuente: Elaboración propia.}
     \label{fig:demo_todas}
 \end{figure}
 \FloatBarrier
@@ -271,7 +291,7 @@ Por último, la Figura~\ref{fig:demo_alta} muestra el panel de fuentes de video,
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.21\textwidth]{Imagenes/Demo_Dashboard_AltaCamara.png}
-    \caption[Demo del panel local: gestión de fuentes de video.]{Panel de operación local (\texttt{dashboard/}): listado de fuentes de video, con la opción de reordenarlas y de sumar una cámara IP o un archivo. Captura propia.}
+    \caption[Demo del panel local: gestión de fuentes de video.]{Panel de operación local (\texttt{dashboard/}): listado de fuentes de video, con la opción de reordenarlas y de sumar una cámara IP o un archivo. Fuente: Elaboración propia.}
     \label{fig:demo_alta}
 \end{figure}
 \FloatBarrier
@@ -316,6 +336,6 @@ La Figura~\ref{fig:demo_app} muestra algunas de estas pantallas, con los datos d
         \includegraphics[width=\textwidth]{Imagenes/App_Familiares.png}\\[2pt]
         \footnotesize (f) Familiares
     \end{minipage}
-    \caption[Demo de la aplicación móvil.]{Aplicación móvil conectada al backend en AWS. Captura propia.}
+    \caption[Demo de la aplicación móvil.]{Aplicación móvil conectada al backend en AWS. Fuente: Elaboración propia.}
     \label{fig:demo_app}
 \end{figure}

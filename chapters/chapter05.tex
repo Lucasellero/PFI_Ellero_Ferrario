@@ -23,7 +23,7 @@ En caídas la separación es por video, en actividades por participante y en la 
 Esta decisión importa porque las primeras mediciones del proyecto, hechas sin esa separación, daban valores mucho más altos que no se sostenían con personas nuevas, como se detalla en la Sección~\ref{sec:pruebas_actividades}.
 
 La Tabla~\ref{tab:datasets_pruebas} resume qué datos se usaron en cada prueba.
-El origen y la licencia de cada dataset se describieron en la Sección~\ref{sec:datasets}.
+El origen, la licencia y el contenido de cada dataset se resumieron en la Tabla~\ref{tab:datasets}.
 Las pruebas de sedentarismo y de clasificación de actividades se apoyan en Toyota Smarthome, cuyos participantes son 18 adultos mayores de entre 60 y 80 años grabados en un departamento \parencite{Das2019}.
 La línea base se evaluó con CASAS, cuyos hogares son de adultos mayores que viven de forma independiente \parencite{Cook2013}.
 Salvo la de caídas, las pruebas se hicieron entonces sobre la misma población a la que apunta el sistema.
@@ -41,7 +41,7 @@ Las caídas son simuladas por voluntarios en todos los datasets disponibles.
 Detección de caídas & GMDCSA-24, CAUCAFall, URFD, Toyota Smarthome y \texttt{ToyotaSmarthome\_FP} & 292 clips con 158 caídas anotadas \\
 Sedentarismo e inmovilidad & Toyota Smarthome sin recortar & Ocho tramos de entre 64 y 484 segundos \\
 Clasificación de actividades & Toyota Smarthome completo & 14.561 muestras de 31 actividades \\
-Combinación con el esqueleto & Conjunto local categorizado por el equipo & 273 videos no usados en el entrenamiento \\
+Combinación con el esqueleto & Subconjunto de Toyota Smarthome organizado por actividad & 273 videos no usados en el entrenamiento \\
 Línea base & CASAS & 21 hogares con 4.362 días \\
 Recorrido completo & Hogar de prueba en el backend de AWS y un residente de CASAS & 151 eventos de prueba y 490 días de rutina real \\
 \bottomrule
@@ -102,12 +102,15 @@ Como se observa, las dos etapas de confirmación redujeron las falsas alertas de
 De las 132 caídas con evento, 120 generan la alerta de forma directa, el 75,9\,\% del total, y 12 quedan registradas como sospecha.
 Las sospechas son eventos en los que la persona aparece cortada contra el borde de la imagen, que el sistema guarda sin avisar y solo convierte en alerta si la persona queda inmóvil durante 45 segundos.
 Tratarlos de ese modo permite conservar las caídas en las que solo se ve el torso sin pagar por ellas en falsas alertas.
+Con el sistema desplegado, el evento se genera en promedio 1,9 segundos después del inicio de la caída.
 
 Además, el resultado más relevante para el uso real está en las cuatro grabaciones continuas, que suman 1,40 horas de una persona en su casa, donde el sistema no generó ninguna falsa alerta.
 Las nueve restantes provienen de las 0,68 horas de clips actuados, en los que una persona se sienta, se agacha, se arrodilla y se acuesta una vez tras otra, una densidad de movimientos muy superior a la de la vida cotidiana.
 
-En cuanto al aporte de cada etapa, en los eventos donde YOLO había seguido a la persona durante los segundos previos el clasificador temporal descartó las 94 falsas alertas y perdió una sola de 113 caídas reales.
+En cuanto al aporte de cada etapa, en los eventos donde YOLO había seguido a la persona durante los segundos previos, el clasificador temporal descartó las 94 falsas alertas sin descartar ninguno de los 113 eventos de caídas reales.
+Confirmó 112 y dejó a cargo de CLIP el único en el que no llegó a decidir.
 Los 91 eventos sin esqueleto en tramos sin caída, la mayoría en las grabaciones continuas, quedaron a cargo de CLIP, que descartó 82.
+La única caída que se pierde respecto de la heurística sola es una de las que llegaron a CLIP.
 Cabe señalar que el clasificador temporal y la confirmación con CLIP se ajustaron con eventos de estos mismos clips, por lo que la medición de la cadena completa es optimista.
 Evaluado de forma aislada, con los videos de prueba separados de los de entrenamiento, el clasificador temporal reconoce el 96\,\% de las caídas y marca como caída el 2,8\,\% de las 10.362 ventanas de movimiento normal, un resultado consistente con el anterior.
 
@@ -179,7 +182,7 @@ Por eso el sistema incorporó las zonas y descartó la detección de objetos.
 
 \subsection{Combinación con el clasificador temporal del esqueleto}
 
-La combinación de CLIP con el clasificador temporal se midió sobre 273 videos que ninguno de los dos modelos había visto, pertenecientes a las cuatro categorías que cubre el conjunto local.
+La combinación de CLIP con el clasificador temporal se midió sobre 273 videos que ninguno de los dos modelos había visto, pertenecientes a las cuatro categorías que cubre ese subconjunto.
 Una primera corrida sobre los mismos videos usados para entrenar había dado un 99,2\,\% y se descartó por no ser representativa.
 
 \begin{table}[H]
@@ -255,8 +258,8 @@ Se probó además calibrar el umbral por actividad, y al limitar los falsos posi
 Solo la medicación, que la cámara no distingue, mostró un horario lo bastante regular para este detector.
 Por ese motivo sus alertas quedaron desactivadas en el sistema, de modo que ni el horario de una comida ni el de una salida generan un aviso, y el horario habitual se conserva únicamente como dato informativo en la pantalla de reportes.
 
-A su vez, el detector de tendencia gradual se probó multiplicando por 0,4 o por 2 la frecuencia de una actividad durante tres semanas seguidas, y detectó 6 de 12 casos con un falso positivo sobre 12 negativos.
-Solo tres hogares tienen historial suficiente para esa prueba, por lo que el resultado es un primer indicio y no una calibración.
+A su vez, el detector de tendencia gradual, que compara las últimas tres semanas con las ocho anteriores, se probó multiplicando por 0,4 o por 2 la frecuencia de una actividad durante tres semanas seguidas, y detectó 6 de 12 casos con un falso positivo sobre 12 negativos.
+Solo tres hogares tienen las once semanas de historial que exige esa prueba, por lo que el resultado es un primer indicio y no una calibración.
 
 \subsection{Detección de entradas y salidas con video}
 \label{sec:pruebas_puerta}
@@ -441,7 +444,7 @@ La Tabla~\ref{tab:sintesis_pruebas} reúne el resultado de cada prueba frente al
 \toprule
 \textbf{Requerimiento} & \textbf{Prueba} & \textbf{Resultado} \\
 \midrule
-RF1, RNF2 & Caídas sobre 292 clips & 83,5\,\% de las caídas con evento y 75,9\,\% con alerta directa, 9 falsas alertas, ninguna de ellas en 1,40 horas de video doméstico continuo, y 2,3 segundos de demora promedio \\
+RF1, RNF2 & Caídas sobre 292 clips & 83,5\,\% de las caídas con evento y 75,9\,\% con alerta directa, 9 falsas alertas, ninguna de ellas en 1,40 horas de video doméstico continuo, y 1,9 segundos de demora promedio \\
 RF2 & Clasificación de actividades & 82,8\,\% de aciertos en cuatro categorías y 67,1\,\% en seis \\
 RF3, RNF3 & Sedentarismo en ocho tramos & Ocho de ocho correctos \\
 RF4 & Inmovilidad en el piso & Postura verificada en clips de caída, sin validar la duración completa \\

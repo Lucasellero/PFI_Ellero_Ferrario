@@ -1,16 +1,75 @@
 \chapter{Conclusiones}\label{conclusions}
 
-% Analizar los resultados obtenidos, indicando limitaciones y dificultades encontradas,
-% y detallando diferencias entre el alcance inicialmente definido y el real del producto desarrollado.
+El proyecto partió de un problema concreto, el de las familias que no pueden estar presentes junto a un adulto mayor que pasa buena parte del día solo y que no tienen forma de saber si está bien.
+Las soluciones disponibles dependen de que la persona use un dispositivo y lo use siempre, y la revisión del estado del arte no encontró ningún sistema que combinara la detección de eventos agudos, la comprensión de las actividades cotidianas y el seguimiento de la rutina a lo largo del tiempo con el video procesado dentro del hogar.
+
+El trabajo realizado demuestra que esa combinación es viable.
+El sistema funciona de punta a punta, desde la cámara hasta el celular del familiar, corre sobre una Raspberry Pi 5 sin GPU con modelos abiertos, y el video nunca sale de la controladora.
+Cada módulo se evaluó con datos que no intervinieron en su ajuste, y los resultados obtenidos respaldan las decisiones de diseño tomadas a lo largo del desarrollo.
 
 \section{Resumen de aportes}
 
-% Resumir los principales aportes del proyecto y los objetivos cumplidos.
+\subsection{Cumplimiento de los objetivos}
 
-Completar.
+El proyecto cumplió el objetivo general y los seis objetivos específicos planteados en la Introducción, como resume la Tabla~\ref{tab:objetivos_logrados}.
+El sistema detecta caídas, sedentarismo e inmovilidad a partir de la pose, clasifica las actividades de la vida diaria con un modelo de lenguaje visual, construye y actualiza cada día una línea base propia de cada residente, procesa todo el video dentro del hogar y lleva las alertas y los reportes a una aplicación móvil que la familia ya puede usar.
+La validación se hizo sobre escenarios simulados en ambientes domésticos de cinco datasets públicos y sobre la rutina real de 21 hogares de CASAS, una variedad de personas, cámaras y hogares que un montaje propio en una sola casa no habría alcanzado.
+
+Además, dos componentes fueron más allá de lo previsto.
+El backend quedó desplegado en AWS y la aplicación funciona contra él con cuentas reales, vinculación del kit por código QR y administración de familiares con roles.
+Y el clasificador temporal de caídas, que no figuraba en el planteo inicial, resultó la mejora individual más efectiva del sistema.
+
+\subsection{Aportes técnicos}
+
+El primer aporte es la detección de caídas en etapas.
+Una heurística geométrica de bajo costo dispara sobre cada frame, y un clasificador temporal del movimiento confirma o descarta el evento, con CLIP como respaldo cuando no hay esqueleto.
+Con esa cadena las falsas alertas bajaron de 185 a 9, sin ninguna en las 1,40 horas de video doméstico continuo, mientras el sistema conservó el 83,5\,\% de las caídas.
+
+El segundo es la clasificación de actividades a partir de tres señales que se complementan, la escena vista por CLIP, el movimiento del esqueleto y la zona del hogar donde está la persona.
+Ninguna supera el 78\,\% por sí sola, y combinadas llegan al 82,8\,\%.
+
+El tercero es una línea base que distingue dos tipos de cambio en la rutina.
+Las alertas avisan cuando una actividad deja de ocurrir, lo que el sistema detecta en el 80,1\,\% de los casos, y los reportes muestran cuando cambia su magnitud.
+La línea base se apoya además en las entradas y salidas de la casa, que se obtienen de la posición de la persona sin un modelo adicional, y gracias a esa señal resiste el error del clasificador de actividades y mantiene una detección del 71,3\,\%.
+
+Por último, la arquitectura refuerza la privacidad con medios físicos y no solo con software.
+Las cámaras se conectan a una red propia de la controladora que no tiene salida a internet, y los eventos se guardan en la controladora antes de enviarse, de modo que en las pruebas de corte de conexión llegaron los 855 eventos sin pérdidas ni duplicados.
+Una suite de 254 pruebas automatizadas protege las reglas del manejo de datos, y detectó los siete defectos que se introdujeron a propósito para ponerla a prueba.
+
+\subsection{Aportes metodológicos}
+
+El hallazgo más importante del proyecto fue metodológico.
+Las primeras mediciones daban valores altos que no se sostenían con personas nuevas, y separar los datos por participante, por video o por hogar puso esa diferencia en evidencia.
+A partir de ahí cada decisión de diseño se tomó con una medición de ese tipo, y los valores que se informan son los que el sistema sostiene con personas y hogares que no conoce.
+Así se descartaron la detección de objetos y un encoder más grande, se desactivaron las alertas de horario y se incorporaron el clasificador temporal de caídas y las entradas y salidas de la casa, cambios que resume la Tabla~\ref{tab:evolucion_diseno}.
+
+\subsection{Aportes desde el producto}
+
+La investigación con usuarios, con 121 respuestas a la encuesta y tres entrevistas, definió requerimientos que el sistema implementa, como el procesamiento local del video, que las tres personas entrevistadas plantearon por separado, o la sugerencia de apuntar la cámara del baño hacia la puerta.
+Dos de los cuidadores entrevistados vieron después la aplicación en funcionamiento y confirmaron que respondía a lo que esperaban.
+A eso se suma una identidad de marca, \marca, pensada para transmitir cuidado y no vigilancia.
+El análisis económico muestra que el esquema de kit y suscripción es rentable en el escenario esperado, con una TIR del 31,6\,\% y 102.000 personas alcanzadas, siempre que se sostengan el precio y la permanencia de los clientes.
 
 \section{Trabajo futuro}
 
-% Describir posibles mejoras y extensiones del sistema a futuro.
+El paso siguiente es completar la prueba en el hogar que ya está en marcha.
+Esa prueba va a unir todos los módulos sobre la rutina de una misma persona, a medir la tasa de falsas alertas en una casa real y a evaluar la línea base con los eventos que produce la cámara.
 
-Completar.
+Para llevar el prototipo al uso con familias, los próximos pasos son cifrar la comunicación entre la aplicación y el backend y medir el tiempo de procesamiento por frame sobre la Raspberry Pi.
+En la aplicación se prevé sumar una pantalla para que la familia marque las zonas de cada cámara, la baja del hogar, que hoy está disponible en la API, la verificación del correo y la invitación a familiares que todavía no tienen cuenta.
+
+En la detección, el margen de mejora está en el disparador de caídas, para cubrir las caídas hacia la cámara y las que terminan sobre la cama, y en un modelo de pose de mayor tamaño que reconozca mejor a una persona acostada en un sillón, cuyo costo de cómputo habría que medir sobre la Raspberry Pi.
+También conviene caracterizar la confirmación con CLIP ante cambios de ángulo de la cámara.
+Distinguir comer de tomar la medicación parece requerir una fuente de información distinta de una única cámara de ambiente, y la extensión a hogares con más de un residente queda como una evolución natural del sistema.
+
+En la línea base, el objetivo es reducir los avisos infundados, y las mediciones ya muestran dos formas de hacerlo, exigir dos días seguidos sin salir o extender el período de aprendizaje a 14 días.
+El detector de tendencia gradual puede calibrarse con más hogares, y siguiendo a \textcite{Snoun2024} podría incorporar el contexto, como los feriados o la época del año, para no confundir una variación esperable con un desvío.
+
+Por último, pasar del prototipo a un producto comercial requiere hacer reproducible el hardware, homologar el equipo, actualizar el software a distancia, inscribir la base de datos personales y redactar los términos y la política de privacidad.
+Un piloto con familias permitiría además validar el precio, la tasa de bajas y el costo de conseguir clientes que hoy supone el modelo económico.
+
+\section{Consideraciones finales}
+
+El envejecimiento de la población va a aumentar la cantidad de adultos mayores que viven solos o con una supervisión parcial, y con ella la demanda de cuidado en el hogar.
+Este proyecto muestra que la tecnología puede acompañar esa demanda sin pedirle nada a la persona cuidada y sin exponer su intimidad, y que la privacidad, lejos de ser una restricción, es la condición que hace posible su adopción.
+\marca{} no reemplaza la presencia de la familia ni la atención profesional, sino que busca que la familia sepa cuándo hace falta estar y que el adulto mayor pueda seguir viviendo en su casa durante más tiempo.

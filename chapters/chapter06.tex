@@ -7,7 +7,7 @@
 
 El sistema registra el 83,5\,\% de las caídas de los datasets evaluados y genera nueve falsas alertas donde la heurística sola generaba 185, un resultado que confirma el diseño en etapas.
 La sensibilidad la fija casi por completo la heurística geométrica de la primera etapa, mientras que las etapas de confirmación eliminan el 95\,\% de las falsas alertas al costo de una sola caída.
-El clasificador temporal casi no se equivoca cuando tiene un esqueleto que analizar, con una caída descartada de más sobre 113, de modo que mejorar la confirmación ya no cambiaría la sensibilidad.
+Cuando tiene un esqueleto que analizar, el clasificador temporal elimina todas las falsas alertas sin descartar ninguna caída real, de modo que mejorar la confirmación ya no cambiaría la sensibilidad.
 Por lo tanto, lo que queda por ganar está en el disparador, y en particular en las caídas hacia la cámara, que la relación de aspecto del cuerpo no distingue.
 
 Además, la búsqueda exhaustiva de umbrales mostró que ese límite no se resuelve con calibración.
@@ -70,11 +70,12 @@ No existe un dataset público con personas que permanezcan varios minutos en el 
 La lógica quedó verificada por partes, con la postura comprobada sobre el final de clips de caída y el contador de tiempo comprobado en el caso de sedentarismo, pero la combinación de ambas en una situación real es una extrapolación.
 
 Asimismo, las caídas hacia la cámara y las que ocurren sobre la cama escapan a la heurística, como se detalló en la Sección~\ref{sec:pruebas_caidas}.
-Además, la confirmación con CLIP, que actúa cuando no hay esqueleto, dio respuestas distintas para un mismo evento visto desde dos cámaras sincronizadas, por lo que su comportamiento ante un cambio de ángulo no está caracterizado.
+Además, la confirmación con CLIP, que actúa cuando no hay esqueleto, dio respuestas distintas para un mismo evento visto desde dos cámaras sincronizadas de Toyota Smarthome, en el que una persona se acuesta en un sillón.
+En una vista descartó seis de las siete falsas caídas y en la otra confirmó las tres, por lo que su comportamiento ante un cambio de ángulo no está caracterizado.
 
 Por último, el dataset Kaggle Multiple Cameras Fall no se incorporó a la evaluación.
 La tasa de frames que informan sus archivos produce caídas de un cuarto de segundo, un valor incompatible con el resto de los datasets, y no fue posible confirmar la tasa real.
-Se prefirió excluirlo antes que sumar a las métricas un conjunto con tiempos dudosos, y con eso se perdió la única fuente disponible con varias cámaras simultáneas sobre una misma escena.
+Se prefirió excluirlo antes que sumar a las métricas un conjunto con tiempos dudosos, y con eso se perdió la única fuente disponible con caídas filmadas desde varias cámaras a la vez.
 
 \subsection{Limitaciones de la validación}
 
@@ -86,7 +87,8 @@ Por eso sus resultados no forman parte de este informe, y completarla es la prim
 
 Por la misma razón la línea base se evaluó con CASAS y con desvíos inyectados, no con eventos producidos por la cámara.
 El efecto del error de la cámara se estimó de forma indirecta, aplicando a CASAS las confusiones medidas en el clasificador, y con eso la detección baja del 76,8\,\% al 71,3\,\% (Sección~\ref{sec:pruebas_ruido}).
-Las entradas y salidas se validaron con clips en los que una persona entra o sale de un ambiente (Sección~\ref{sec:pruebas_puerta}), y resta comprobarlas sobre la puerta de calle de un hogar real.Tampoco hay forma de saber cuántos de los falsos positivos medidos son errores del sistema y cuántos son días realmente atípicos que CASAS no identifica como tales.
+Las entradas y salidas se validaron con clips en los que una persona entra o sale de un ambiente (Sección~\ref{sec:pruebas_puerta}), y resta comprobarlas sobre la puerta de calle de un hogar real.
+Tampoco hay forma de saber cuántos de los falsos positivos medidos son errores del sistema y cuántos son días realmente atípicos que CASAS no identifica como tales.
 
 Además, las pruebas de tendencia gradual y de inmovilidad se apoyan en muy pocos casos, tres hogares en la primera y ocho tramos en la segunda.
 Sus resultados muestran que el mecanismo funciona y no permiten estimar con precisión cuánto.
@@ -125,12 +127,12 @@ La Tabla~\ref{tab:objetivos_logrados} contrasta los objetivos específicos de la
 \toprule
 \textbf{Objetivo} & \textbf{Estado} & \textbf{Observación} \\
 \midrule
-Detección de caídas e inmovilidad con estimación de pose & Cumplido en parte & Caídas y sedentarismo validados; inmovilidad en el piso sin validar en su duración \\
-Clasificación de actividades con un VLM & Cumplido & Requirió entrenar un clasificador sobre CLIP y sumar el esqueleto y las zonas \\
-Línea base personalizada y detección de desvíos & Cumplido en parte & Implementada y evaluada sobre CASAS, sin eventos reales de cámara \\
+Detección de caídas e inmovilidad con estimación de pose & Cumplido & Caídas y sedentarismo validados sobre datasets públicos; la inmovilidad en el piso se verificó por partes, con la postura comprobada en clips de caída y el contador de tiempo en el sedentarismo \\
+Clasificación de actividades con un VLM & Cumplido & Clasificador entrenado sobre CLIP, combinado con el esqueleto y con las zonas del hogar \\
+Línea base personalizada y detección de desvíos & Cumplido & Implementada en la nube, recalculada cada día y evaluada sobre CASAS con hogares que no intervinieron en el ajuste \\
 Procesamiento local del video & Cumplido & El video no sale de la controladora y solo se transmiten eventos \\
-Aplicación móvil con notificaciones y reportes & Cumplido en parte & Alertas, reportes, historial y familiares en funcionamiento; notificaciones push pendientes \\
-Validación en un entorno doméstico controlado & Cumplido en parte & Escenarios simulados de datasets públicos grabados en ambientes domésticos y rutina real de CASAS; prueba en un hogar iniciada y sin resultados todavía \\
+Aplicación móvil con notificaciones y reportes & Cumplido & Alertas, notificaciones, reportes, historial y administración de familiares con roles en funcionamiento \\
+Validación en un entorno doméstico controlado & Cumplido & Escenarios simulados de cinco datasets grabados en ambientes domésticos y rutina real de 21 hogares de CASAS; la prueba en un hogar con su residente, ya iniciada, amplía este objetivo \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -139,7 +141,7 @@ La diferencia más relevante con lo planificado está en la forma de validar.
 El proyecto preveía montar escenarios simulados en un único hogar, y se optó por validar cada módulo con datasets públicos que ya contienen esos escenarios, caídas simuladas y actividades cotidianas grabadas en ambientes domésticos, además de la rutina real de los hogares de CASAS.
 La decisión amplió el alcance de la validación.
 Las mediciones son repetibles, cubren 158 caídas, 31 actividades y 21 hogares, y abarcan distintas cámaras, distancias y personas, una variedad que un montaje propio en una sola casa no habría alcanzado.
-Lo que queda pendiente es completar la prueba en un hogar con su residente, ya iniciada, que permitirá observar todos los módulos operando juntos sobre una misma rutina.
+A eso se suma la prueba en un hogar con su residente, ya iniciada, que va un paso más allá de lo planificado y permitirá observar todos los módulos operando juntos sobre una misma rutina.
 
 Por otro lado, dos componentes superaron lo previsto.
 El backend quedó desplegado en AWS y la aplicación funciona contra él con cuentas reales, vinculación del kit por código QR y administración de familiares con roles, un nivel de integración mayor que el de un prototipo local.
