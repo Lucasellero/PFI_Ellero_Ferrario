@@ -136,7 +136,7 @@ A continuación se detallan los requerimientos no funcionales (RNF) del sistema.
 
 Cada requerimiento funcional se tradujo en una historia de usuario, escrita desde la perspectiva del responsable a cargo del adulto mayor, el actor principal identificado en el User Research. Dos requerimientos quedan afuera de esa regla, el registro de eventos (RF5) y la construcción de la línea base de comportamiento (RF6), porque son de naturaleza interna o habilitante y no representan una necesidad que el responsable a cargo exprese de forma directa, sino un mecanismo que sostiene el valor de otro requerimiento. Por eso, en la Tabla~\ref{tab:hu}, se agrupan junto al requerimiento al que dan soporte en lugar de forzar una historia propia para cada uno.
 
-\begin{longtable}{@{}p{0.20\textwidth}p{0.78\textwidth}@{}}
+\begin{longtable}{@{}p{0.20\textwidth}p{0.77\textwidth}@{}}
 \caption[Historias de Usuario y Requerimientos Funcionales.]{Historias de Usuario y su relación con los Requerimientos Funcionales. Fuente: Elaboración propia.}
 \label{tab:hu} \\
 \toprule
@@ -645,16 +645,6 @@ Está previsto que una luz de estado en la controladora indique si le falta inte
 Para ponerlo en marcha, el familiar escanea con la aplicación el código QR de la etiqueta de la controladora (RF14) y asigna una ubicación a cada cámara (RF10).
 El kit sale de fábrica con la cantidad de cámaras del plan comprado, entre una y tres, que coincide con el máximo por controladora que contempla RNF9, de modo que al vincularlo el familiar solo ubica esas cámaras.
 
-% Requiere graphicx y biblatex (citas con \parencite).
-\providecommand{\figuraexcel}[4]{%
-  % #1 archivo, #2 ancho relativo, #3 epígrafe, #4 etiqueta
-  \begin{figure}[!htbp]
-    \centering
-    \IfFileExists{#1}{\includegraphics[width=#2\textwidth]{#1}}{\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}Insertar imagen \texttt{\detokenize{#1}}\vspace{1.5cm}}}}
-    \caption{#3 Fuente: Elaboración propia.}
-    \label{#4}
-  \end{figure}
-}
 
 \section{Modelo de negocio y viabilidad económica}
 \label{sec:modelo-negocio}
@@ -673,7 +663,6 @@ El Business Model Canvas \parencite{Osterwalder2010} representa la forma en que 
 Es una herramienta cualitativa, ya que todavía no incorpora cifras y solo muestra la lógica del negocio.
 La Figura~\ref{fig:bmc} lo aplica al sistema propuesto y los apartados siguientes detallan cada bloque.
 
-% FIGURA 1: armar el lienzo con los 9 bloques y los textos cortos de los apartados de abajo.
 \figuraexcel{bmc.png}{1.0}{Business Model Canvas del sistema propuesto.}{fig:bmc}
 
 \subsubsection{Segmentos de clientes}
@@ -940,7 +929,6 @@ El VAN es de USD $-$274.538 y la TIR de 6,8\,\%, muy por debajo de la tasa de de
 Además llega a 40.800 personas, por debajo de la meta de 100.000.
 Con poca adopción, un hardware caro, clientes difíciles de conseguir y mucha rotación, el negocio sobrevive pero no compensa el riesgo asumido.
 
-% CAPTURA 3: hoja "Bear", filas 17 a 47 (flujo de caja, EBITDA, financiamiento y resultados).
 \figuraexcel{captura_bear_flujo.png}{0.78}{Flujo de caja y resultados del escenario Bear.}{fig:bear}
 
 \FloatBarrier
@@ -954,12 +942,10 @@ El flujo acumulado toca su punto más bajo en USD $-$1,92 millones y la inversi�
 El VAN es de USD 502.898 y la TIR de 31,6\,\%, por encima del 19,83\,\% exigido, y el escenario alcanza 102.000 personas, con lo que cumple la meta social.
 El proyecto es rentable en el escenario esperado, con la particularidad de que requiere un capital inicial importante, de USD 2,2 millones en dos rondas, porque tarda cuatro años en recuperarse.
 
-% CAPTURA 4: hoja "Base", filas 2 a 15 (kits, suscripciones, CAC e ingresos por año).
 \figuraexcel{captura_base_datos.png}{0.95}{Kits, suscripciones, costo de adquisición e ingresos del escenario Base.}{fig:base-datos}
 
 \figuraexcel{captura_base_indicadores.png}{0.95}{Indicadores por cliente y punto de equilibrio del escenario Base.}{fig:base-indicadores}
 
-% CAPTURA 5: hoja "Base", filas 17 a 47.
 \figuraexcel{captura_base_flujo.png}{0.78}{Flujo de caja y resultados del escenario Base.}{fig:base-flujo}
 
 \FloatBarrier
@@ -974,7 +960,6 @@ El VAN es de USD 2.127.081 y la TIR de 51,1\,\%, claramente por encima de la tas
 Si la adopción crece según lo previsto, el negocio no solo se paga sino que deja retorno de sobra.
 Por ser más grande, también necesita más capital, con un financiamiento máximo de USD 2,38 millones.
 
-% CAPTURA 6: hoja "Bull", filas 17 a 47.
 \figuraexcel{captura_bull_flujo.png}{0.78}{Flujo de caja y resultados del escenario Bull.}{fig:bull}
 
 \FloatBarrier
@@ -1041,7 +1026,6 @@ Cumple la meta de 100.000 personas & No & Sí & Sí \\
 \end{tabular}
 \end{table}
 
-% FIGURA: gráfico de cierre (archivo ya generado).
 \figuraexcel{flujo_acumulado_escenarios.png}{0.7}{Flujo de caja acumulado por escenario, en millones de USD.}{fig:flujo-acumulado}
 
 Estos resultados deben leerse con algunas precauciones.
@@ -1095,16 +1079,6 @@ Hay que hacer reproducible el hardware, homologar el equipo ante el ente regulad
 Hay que inscribir la base de datos personales y redactar la política de privacidad, y preparar la nube para escalar con la cantidad de hogares.
 Antes de vender, se necesita validar el sistema en hogares reales, medir la tasa de falsas alarmas y armar el esquema de soporte y reemplazo de equipos.
 
-% Requiere graphicx y biblatex (citas con \parencite). Claves nuevas en biblio.bib.
-\providecommand{\figuramarca}[4]{%
-  % #1 archivo, #2 ancho relativo, #3 epígrafe, #4 etiqueta
-  \begin{figure}[H]
-    \centering
-    \IfFileExists{#1}{\includegraphics[width=#2\textwidth]{#1}}{\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}Insertar imagen \texttt{\detokenize{#1}}\vspace{1.5cm}}}}
-    \caption{#3}
-    \label{#4}
-  \end{figure}
-}
 
 \newcommand{\marca}{Lares}
 \newcommand{\modcont}{Lar}   % nombre de la controladora
