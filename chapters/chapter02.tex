@@ -57,7 +57,10 @@ El concepto de privacy by design plantea que la privacidad debe incorporarse en 
 
 Los sistemas que dependen de que el adulto mayor porte un dispositivo enfrentan además una barrera concreta de adopción. En Argentina, una parte significativa de los adultos mayores presenta dificultades para incorporar nuevas tecnologías, no por limitaciones cognitivas sino por barreras culturales y de diseño \parencite{INDEC2020}. A esto se suman otras barreras documentadas a nivel internacional, como la incomodidad física, las preocupaciones por la privacidad de los datos y la sensación de ser constantemente vigilados \parencite{Lam2025}. Esta resistencia se traduce en tasas de abandono significativas incluso entre quienes inicialmente adoptan estos dispositivos \parencite{MunozEsquivel2023}.
 
-Frente a este panorama, el monitoreo pasivo aparece como la alternativa con mejores condiciones de adopción. Un sistema de este tipo no requiere ninguna acción por parte del adulto mayor ni utiliza dispositivos portátiles, y cuando el procesamiento de video se realiza de forma local en el hogar los registros visuales no salen del domicilio, lo que elimina el riesgo de exposición de los datos más sensibles. En ese esquema solo se transmiten a la nube los eventos detectados (una caída, una inmovilidad prolongada, un desvío significativo en la rutina) y las clasificaciones de actividad, sin imágenes ni video, como ilustra la Figura~\ref{fig:arquitectura_sistema}.
+Frente a este panorama, el monitoreo pasivo aparece como la alternativa con mejores condiciones de adopción.
+Un sistema de este tipo no requiere ninguna acción por parte del adulto mayor ni utiliza dispositivos portátiles, y cuando el procesamiento de video se realiza de forma local en el hogar los registros visuales no salen del domicilio, lo que elimina el riesgo de exposición de los datos más sensibles.
+En ese esquema solo se transmiten a la nube los metadatos de los eventos detectados, como una caída o una inmovilidad prolongada, y las clasificaciones de actividad, sin imágenes ni video.
+Los desvíos en la rutina no se transmiten desde el hogar, sino que se calculan en la nube a partir de esos eventos, como ilustra la Figura~\ref{fig:arquitectura_sistema}.
 
 \begin{figure}[H]
     \centering

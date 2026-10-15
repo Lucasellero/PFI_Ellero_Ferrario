@@ -34,8 +34,8 @@ El tercero es una línea base que distingue dos tipos de cambio en la rutina.
 Las alertas avisan cuando una actividad deja de ocurrir, lo que el sistema detecta en el 80,1\,\% de los casos, y los reportes muestran cuando cambia su magnitud.
 La línea base se apoya además en las entradas y salidas de la casa, que se obtienen de la posición de la persona sin un modelo adicional, y gracias a esa señal resiste el error del clasificador de actividades y mantiene una detección del 71,3\,\%.
 
-Por último, la arquitectura refuerza la privacidad con medios físicos y no solo con software.
-Las cámaras se conectan a una red propia de la controladora que no tiene salida a internet, y los eventos se guardan en la controladora antes de enviarse, de modo que en las pruebas de corte de conexión llegaron los 855 eventos sin pérdidas ni duplicados.
+Por último, la arquitectura conserva los eventos ante los cortes de conexión.
+Los eventos se guardan en la controladora antes de enviarse, y en las pruebas de corte de conexión llegaron los 855 eventos sin pérdidas ni duplicados.
 Una suite de 262 pruebas automatizadas protege las reglas del manejo de datos, y detectó los siete defectos que se introdujeron a propósito para ponerla a prueba.
 
 \subsection{Aportes metodológicos}
