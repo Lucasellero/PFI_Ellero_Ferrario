@@ -13,8 +13,30 @@ Los resultados obtenidos respaldan las decisiones de diseño tomadas a lo largo 
 \subsection{Cumplimiento de los objetivos}
 
 El proyecto cumplió el objetivo general y los seis objetivos específicos planteados en la Introducción, como resume la Tabla~\ref{tab:objetivos_logrados}.
-El sistema detecta caídas, sedentarismo e inmovilidad a partir de la pose, clasifica las actividades de la vida diaria con un modelo de lenguaje visual, construye y actualiza cada día una línea base propia de cada residente, procesa todo el video dentro del hogar y lleva las alertas y los reportes a una aplicación móvil que la familia ya puede usar.
-La validación se hizo sobre escenarios simulados en ambientes domésticos de cinco datasets públicos y sobre la rutina real de 21 hogares de CASAS, una variedad de personas, cámaras y hogares que un montaje propio en una sola casa no habría alcanzado.
+El sistema mantiene a la familia informada sobre el estado y la rutina del adulto mayor sin pedirle a este ninguna acción.
+
+El primer objetivo era detectar caídas e inmovilidad a partir de la pose.
+La cadena de detección conservó 132 de las 158 caídas anotadas, el 83,5\,\%, con 9 falsas alertas y ninguna en las 1,40 horas de video continuo.
+El evento se genera en promedio 1,9 segundos después del inicio de la caída.
+El detector de sedentarismo acertó en los ocho tramos de validación, y la inmovilidad en el piso se verificó por partes.
+
+El segundo objetivo era clasificar las actividades de la vida diaria con un modelo de lenguaje visual.
+El clasificador entrenado sobre CLIP, combinado con el movimiento del esqueleto, acierta el 82,8\,\% en las cuatro categorías en que se midieron juntos, y con la zona del hogar llega al 67,1\,\% sobre las seis categorías.
+
+El tercer objetivo era construir una línea base personalizada que detecte desvíos en la rutina.
+La línea base se recalcula cada día en la nube y señala el 76,8\,\% de los desvíos inyectados en hogares de CASAS, y el 71,3\,\% cuando se le aplica el error del clasificador de actividades.
+
+El cuarto objetivo era procesar el video dentro del hogar.
+El video nunca sale de la controladora, y hacia la nube solo viajan los metadatos de cada evento.
+
+El quinto objetivo era una aplicación móvil para la familia.
+La aplicación funciona contra el backend desplegado en AWS y muestra las alertas, los reportes de rutina y el historial de eventos, además de administrar a los familiares del hogar con sus roles.
+
+El sexto objetivo era validar el sistema con escenarios simulados en un entorno doméstico.
+La validación se hizo sobre cinco datasets públicos grabados en ambientes domésticos, con 158 caídas y 31 actividades, y sobre la rutina real de 21 hogares de CASAS.
+
+Todo lo anterior se mantuvo dentro del alcance planteado.
+El sistema monitorea a un único residente por instalación, está pensado solo para entornos domésticos y no se integra con sistemas médicos ni con servicios de emergencia.
 
 Además, dos componentes fueron más allá de lo previsto.
 El backend quedó desplegado en AWS y la aplicación funciona contra él con cuentas reales, vinculación del kit por código QR y administración de familiares con roles.
