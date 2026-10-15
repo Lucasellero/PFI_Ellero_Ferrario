@@ -84,13 +84,13 @@ Además, el segundo y la tercera entrevistada coincidieron en señalar el baño 
 
 \subsection{Identificación del User Persona}
 
-Del cruce entre encuesta y entrevistas surge un perfil consistente. Una persona de mediana edad, activa laboralmente, que ejerce el cuidado a distancia (ya sea por kilómetros o simplemente por falta de tiempo disponible) y con tiempo acotado. Convive con una preocupación que no es permanente sino episódica, anclada en momentos del día y en la ausencia de señales de que todo está bien. No dispone de herramientas adecuadas, y las que existen le generan más fricción que tranquilidad porque dependen de que el adulto mayor las use. Lo que este cuidador necesita es información, no interacción. Este perfil fue sintetizado en las User Personas que se presentan en el Anexo~\ref{anexo:user_persona}.
+Del cruce entre encuesta y entrevistas surge un perfil consistente. Una persona de mediana edad, activa laboralmente, que ejerce el cuidado a distancia (ya sea por kilómetros o simplemente por falta de tiempo disponible) y con tiempo acotado. Convive con una preocupación que no es permanente sino episódica, anclada en momentos del día y en la ausencia de señales de que todo está bien. No dispone de herramientas adecuadas, y las que existen le generan más fricción que tranquilidad porque dependen de que el adulto mayor las use. Lo que este cuidador necesita es información, no interacción. Este perfil fue sintetizado en las User Personas que se presentan en el Anexo~\ref{anexo:user_persona} (Figuras~\ref{fig:user_persona_1} y~\ref{fig:user_persona_2}).
 
 \section{Requerimientos}
 
 A partir de la investigación de usuario descripta en la sección anterior y del alcance definido en la Introducción, se derivan los requerimientos que especifican el comportamiento esperado del sistema. Se distingue entre requerimientos funcionales, que describen las capacidades concretas que el sistema debe ofrecer, y requerimientos no funcionales, que establecen los atributos de calidad y las restricciones de diseño bajo las cuales esas capacidades deben cumplirse.
 
-\subsection{Requerimientos Funcionales}
+\subsection{Requerimientos funcionales}
 
 A continuación se detallan los requerimientos funcionales (RF) del sistema.
 
@@ -113,7 +113,7 @@ A continuación se detallan los requerimientos funcionales (RF) del sistema.
 \end{itemize}
 \vspace*{2pt}
 
-\subsection{Requerimientos No Funcionales}
+\subsection{Requerimientos no funcionales}
 
 A continuación se detallan los requerimientos no funcionales (RNF) del sistema.
 
@@ -132,7 +132,7 @@ A continuación se detallan los requerimientos no funcionales (RNF) del sistema.
 \end{itemize}
 \vspace*{2pt}
 
-\subsection{Historias de Usuario}
+\subsection{Historias de usuario}
 
 Cada requerimiento funcional se tradujo en una historia de usuario, escrita desde la perspectiva del responsable a cargo del adulto mayor, el actor principal identificado en el User Research. Dos requerimientos quedan afuera de esa regla, el registro de eventos (RF5) y la construcción de la línea base de comportamiento (RF6), porque son de naturaleza interna o habilitante y no representan una necesidad que el responsable a cargo exprese de forma directa, sino un mecanismo que sostiene el valor de otro requerimiento. Por eso, en la Tabla~\ref{tab:hu}, se agrupan junto al requerimiento al que dan soporte en lugar de forzar una historia propia para cada uno.
 
@@ -235,7 +235,7 @@ La aplicación implementada sigue estos diseños, salvo el indicador de desperta
 
 \section{Diagramas}
 
-\subsection{Diagrama de Casos de Uso}
+\subsection{Diagrama de casos de uso}
 
 A partir de los requerimientos funcionales y las historias de usuario presentadas, se construyó el diagrama de casos de uso de la Figura~\ref{fig:casos_uso}, que organiza las capacidades del sistema en tres actores y tres bloques funcionales. Los actores \textit{Cámara IP} y \textit{Temporizador del Sistema} representan las dos formas en que se dispara el procesamiento sobre el video, ya sea frame a frame o de forma periódica, mientras que \textit{Responsable a Cargo} es el actor humano identificado en el User Research.
 
@@ -253,7 +253,7 @@ El panel de operación local, en cambio, no requiere autenticación, porque est�
 \end{figure}
 \FloatBarrier
 
-\subsection{Diagrama de Flujo de Información}
+\subsection{Diagrama de flujo de información}
 
 Mientras que el diagrama de casos de uso responde qué hace el sistema, el diagrama de flujo de información de la Figura~\ref{fig:flujo_informacion} responde cómo un frame de video se convierte en un evento, una alerta o un reporte, y en qué punto pasa de ejecutarse en el borde a ejecutarse en la nube. Las tres franjas del diagrama, correspondientes a la Raspberry Pi 5 en el borde, la nube alojada en AWS y la aplicación móvil, hacen explícita esa frontera, coherente con la arquitectura modular entre borde y nube descripta en la Sección~\ref{sec:edge_marco}. Esa misma frontera se retoma más adelante, tanto en el diagrama de arquitectura de la Sección~\ref{sec:diagrama_arquitectura} como en el análisis de posicionamiento de este capítulo.
 
@@ -273,7 +273,7 @@ Esta bifurcación es intencional, ya que el responsable a cargo debe poder consu
 \end{figure}
 \FloatBarrier
 
-\subsection{Diagrama de Componentes}
+\subsection{Diagrama de componentes}
 \label{sec:diagrama_componentes}
 
 La Figura~\ref{fig:diagrama_componentes} documenta cómo está organizado el código fuente del sistema, tanto los módulos que corren sobre la Raspberry Pi, el hardware de borde del despliegue objetivo (Sección~\ref{sec:diagrama_arquitectura}), como el backend en la nube y su relación con la aplicación móvil.
@@ -308,12 +308,12 @@ Ese modo batch no se representa como un componente aparte en la Figura~\ref{fig:
 \FloatBarrier
 
 \clearpage
-\section{Modelo de Datos}
+\section{Modelo de datos}
 \label{sec:modelo_datos}
 
 Los diagramas de la sección anterior describen el comportamiento del sistema desde el punto de vista funcional, es decir, qué hace y cómo fluye la información entre sus partes. Lo que sigue es la infraestructura concreta que soporta ese comportamiento, desde el despliegue físico del sistema hasta el modelo de datos que esa infraestructura persiste.
 
-\subsection{Diagrama de Arquitectura}
+\subsection{Diagrama de arquitectura}
 \label{sec:diagrama_arquitectura}
 
 A diferencia del diagrama de componentes de la Sección~\ref{sec:diagrama_componentes}, que documentó la organización del código, la Figura~\ref{fig:arquitectura} muestra el despliegue físico del sistema, desde la cámara IP hasta la aplicación móvil.
@@ -335,7 +335,7 @@ Del lado de la nube, AWS Elastic Beanstalk aloja la API que recibe los eventos s
 \end{figure}
 \FloatBarrier
 
-\subsection{Diagrama de Base de Datos}
+\subsection{Diagrama de base de datos}
 \label{sec:diagrama_base_datos}
 
 El Diagrama de Arquitectura mostró dónde vive cada nodo del sistema. Lo que falta es qué guarda cada uno. La Figura~\ref{fig:diagrama_bd_local} documenta el modelo de la controladora, sobre SQLite (Sección~\ref{sec:diagrama_componentes}), y la Figura~\ref{fig:diagrama_bd_cloud} documenta el modelo de la nube, implementado sobre PostgreSQL en Amazon RDS (Sección~\ref{sec:backend_nube}). El esquema de la nube se versiona con migraciones de Alembic, de modo que cada cambio en el modelo queda registrado y se aplica de la misma forma en desarrollo y en producción.
@@ -381,7 +381,7 @@ Por último, LINEA\_BASE\_COMPORTAMIENTO corresponde al módulo \texttt{baseline
 \end{figure}
 \FloatBarrier
 
-\section{Análisis de Competencia y Posicionamiento en el Mercado}
+\section{Análisis de competencia y posicionamiento en el mercado}
 \label{sec:competencia}
 
 \subsection{Panorama competitivo}
@@ -409,7 +409,7 @@ Una cuarta categoría, de aparición reciente y actualmente muy visible en Argen
 El caso más difundido es Ato, un dispositivo sin pantalla que inicia conversaciones de forma proactiva, envía recordatorios de medicación y genera reportes de actividad para la familia a través de una aplicación, con un costo de entre USD 179 y 200 más una suscripción de USD 29 mensuales tras el primer mes gratuito \parencite{Ato}.
 A diferencia de las categorías anteriores, no detecta caídas ni inmovilidad de forma automática, ni construye una línea base conductual a partir de video. De ese modo, resuelve una necesidad complementaria, la de compañía activa, y no compite de forma directa con el sistema propuesto en la dimensión de seguridad.
 
-\subsection{Tabla Comparativa de Alternativas}
+\subsection{Tabla comparativa de alternativas}
 \label{sec:tabla_comparativa_comercial}
 
 \begin{table}[H]
@@ -540,7 +540,7 @@ A partir del panorama competitivo, las cinco fuerzas de Porter y el posicionamie
     \item \textbf{Exigencias regulatorias sobre datos de salud.} Los eventos que produce el sistema son datos sensibles según la Ley 25.326, y un endurecimiento de las exigencias para tratarlos aumentaría el costo de cumplimiento (Sección~\ref{sec:viabilidad-legal}).
 \end{itemize}
 
-\section{Viabilidad Legal}
+\section{Viabilidad legal}
 \label{sec:viabilidad-legal}
 
 Dado que el sistema propuesto aborda un tema sensible vinculado a la salud y el bienestar de una población vulnerable, corresponde precisar el marco legal aplicable y las condiciones bajo las cuales el producto puede utilizarse de manera responsable.
@@ -592,7 +592,7 @@ Esta limitación se comunica de manera explícita al usuario y a su familia al m
 Finalmente, el presente trabajo constituye un prototipo académico y no un producto comercial.
 Un eventual lanzamiento comercial del sistema requeriría la redacción de Términos y Condiciones de uso y una Política de Privacidad formal, elaborados con asesoramiento legal profesional, que quedan fuera del alcance de este proyecto pero se dejan señalados como trabajo futuro.
 
-\section{Viabilidad Técnica}
+\section{Viabilidad técnica}
 \label{sec:viabilidad-tecnica}
 
 El sistema propuesto requiere hardware físico instalado en el domicilio del usuario, compuesto por una controladora que ejecuta el procesamiento local y una o más cámaras IP que capturan el video.
@@ -616,7 +616,7 @@ Este presupuesto cubre únicamente el hardware del prototipo y no constituye un 
 
 \begin{table}[h!]
 \centering
-\caption[Presupuesto estimado del hardware del prototipo]{Presupuesto estimado del hardware del prototipo. Fuente: Elaboración propia con precios relevados en Mercado Libre Argentina, septiembre de 2026.}
+\caption[Presupuesto estimado del hardware del prototipo.]{Presupuesto estimado del hardware del prototipo. Fuente: Elaboración propia con precios relevados en Mercado Libre Argentina, septiembre de 2026.}
 \label{tab:presupuesto-hardware}
 \begin{tabular}{lccc}
 \toprule

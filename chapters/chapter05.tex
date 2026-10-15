@@ -1,4 +1,4 @@
-\chapter{Pruebas Realizadas}\label{chapter05}
+\chapter{Pruebas realizadas}\label{chapter05}
 
 Cada módulo del sistema se evaluó por separado, en general sobre datos que no intervinieron en su calibración ni en su entrenamiento, y el recorrido completo, desde el evento hasta la aplicación móvil, se probó después de punta a punta.
 Todas las mediciones de detección se hicieron en la máquina de desarrollo, procesando videos ya grabados, porque es la única forma de repetir una misma prueba después de cada cambio y comparar los resultados entre sí.
@@ -188,7 +188,7 @@ Por eso el sistema incorporó las zonas y descartó la detección de objetos.
 
 \subsection{Combinación con el clasificador temporal del esqueleto}
 
-La combinación de CLIP con el clasificador temporal se midió sobre 273 videos que ninguno de los dos modelos había visto, pertenecientes a las cuatro categorías que cubre ese subconjunto.
+La combinación de CLIP con el clasificador temporal se midió sobre 273 videos que ninguno de los dos modelos había visto, pertenecientes a las cuatro categorías que cubre ese subconjunto (Tabla~\ref{tab:actividades_fusion}).
 Una primera corrida sobre los mismos videos usados para entrenar había dado un 99,2\,\% y se descartó por no ser representativa.
 
 \begin{table}[H]
@@ -284,7 +284,7 @@ De esas ausencias, solo una superó los 60 segundos que exige el detector, y esa
 
 Los resultados anteriores usan las etiquetas de CASAS, que no contienen errores, mientras que en el sistema real la línea base recibe las actividades que clasifica la cámara.
 Para medir ese efecto se obtuvo primero la matriz de confusión del clasificador con la misma lógica de decisión que usa la controladora, pero sin la señal de esqueleto, sobre 863 videos de Toyota Smarthome que no intervinieron en su ajuste, donde acierta el 75,9\,\% de las ventanas en las que emite un evento.
-Luego se alteraron las etiquetas de CASAS con esas mismas probabilidades de confusión y se repitió la medición del sistema completo, combinando tres semillas de inyección con tres de error.
+Luego se alteraron las etiquetas de CASAS con esas mismas probabilidades de confusión y se repitió la medición del sistema completo, combinando tres semillas de inyección con tres de error (Tabla~\ref{tab:baseline_ruido}).
 
 \begin{table}[H]
 \centering
@@ -316,7 +316,7 @@ Como la matriz no incluye la señal de esqueleto, que no estaba disponible en el
 
 El sistema no informa desvíos hasta reunir un mínimo de días de historial, y a partir de ahí recalcula la línea base cada día con los últimos 30 días, de modo que se adapta a los cambios lentos de la rutina.
 Además compara cada día con los del mismo tipo, de semana o de fin de semana, en cuanto reúne suficientes días de cada uno.
-Para saber cuántos días conviene exigir al inicio se repitió la medición de las alertas con períodos de 7, 14, 21 y 30 días.
+Para saber cuántos días conviene exigir al inicio se repitió la medición de las alertas con períodos de 7, 14, 21 y 30 días (Tabla~\ref{tab:baseline_dias}).
 
 \begin{table}[H]
 \centering
