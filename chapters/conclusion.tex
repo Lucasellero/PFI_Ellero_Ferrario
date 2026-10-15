@@ -3,7 +3,7 @@
 El proyecto partió de un problema concreto, el de las familias que no pueden estar presentes junto a un adulto mayor que pasa buena parte del día solo y que no tienen forma de saber si está bien.
 Las soluciones disponibles dependen de que la persona use un dispositivo y lo use siempre, y la revisión del estado del arte no encontró ningún sistema que combinara la detección de eventos agudos, la comprensión de las actividades cotidianas y el seguimiento de la rutina a lo largo del tiempo con el video procesado dentro del hogar.
 
-El trabajo realizado demuestra que esa combinación es viable.
+El trabajo realizado muestra que esa combinación es viable.
 El sistema funciona de punta a punta, desde la cámara hasta el celular del familiar, corre sobre una Raspberry Pi 5 sin GPU con modelos abiertos, y el video nunca sale de la controladora.
 Cada módulo se evaluó con datos que no intervinieron en su ajuste, salvo la cadena completa de caídas, cuya medición es optimista porque sus etapas de confirmación se ajustaron con los mismos clips.
 Los resultados obtenidos respaldan las decisiones de diseño tomadas a lo largo del desarrollo.
@@ -86,13 +86,13 @@ También conviene caracterizar la confirmación con CLIP ante cambios de ángulo
 Distinguir comer de tomar la medicación parece requerir una fuente de información distinta de una única cámara de ambiente, y la extensión a hogares con más de un residente queda como una evolución natural del sistema.
 
 En la línea base, el objetivo es reducir los avisos infundados, y las mediciones ya muestran dos formas de hacerlo, exigir dos días seguidos sin salir o extender el período de aprendizaje a 14 días.
-El detector de tendencia gradual puede calibrarse con más hogares, y siguiendo a \textcite{Snoun2024} podría incorporar el contexto, como los feriados o la época del año, para no confundir una variación esperable con un desvío.
+El detector de tendencia gradual podría calibrarse con más hogares, y siguiendo a \textcite{Snoun2024} podría incorporar el contexto, como los feriados o la época del año, para no confundir una variación esperable con un desvío.
 
-Por último, pasar del prototipo a un producto comercial requiere hacer reproducible el hardware, homologar el equipo, actualizar el software a distancia, inscribir la base de datos personales y redactar los términos y la política de privacidad.
+Por último, pasar del prototipo a un producto comercial requeriría hacer reproducible el hardware, homologar el equipo, actualizar el software a distancia, inscribir la base de datos personales y redactar los términos y la política de privacidad.
 Un piloto con familias permitiría además validar el precio, la tasa de bajas y el costo de conseguir clientes que hoy supone el modelo económico.
 
 \section{Consideraciones finales}
 
 El envejecimiento de la población va a aumentar la cantidad de adultos mayores que viven solos o con una supervisión parcial, y con ella la demanda de cuidado en el hogar.
-Este proyecto muestra que la tecnología puede acompañar esa demanda sin pedirle nada a la persona cuidada y sin exponer su intimidad, y que la privacidad, lejos de ser una restricción, es la condición que hace posible su adopción.
+Este proyecto muestra que la tecnología puede acompañar esa demanda sin pedirle nada a la persona cuidada y sin exponer su intimidad, y que la privacidad es una condición para su adopción.
 \marca{} no reemplaza la presencia de la familia ni la atención profesional, sino que busca que la familia sepa cuándo hace falta estar y que el adulto mayor pueda seguir viviendo en su casa durante más tiempo.

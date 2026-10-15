@@ -102,7 +102,7 @@ Sistema desplegado, con confirmación por CLIP & 132 de 158 (83,5\,\%) & 9 \\
 Como se observa, las dos etapas de confirmación redujeron las falsas alertas de 185 a 9 y en ese recorrido se perdió una sola de las caídas que la heurística había marcado.
 De las 132 caídas con evento, 120 generan la alerta de forma directa, el 75,9\,\% del total, y 12 quedan registradas como sospecha.
 Las sospechas son eventos en los que la persona aparece cortada contra el borde de la imagen, que el sistema guarda sin avisar y solo convierte en alerta si la persona queda inmóvil durante 45 segundos.
-Tratarlos de ese modo permite conservar las caídas en las que solo se ve el torso sin pagar por ellas en falsas alertas.
+Tratarlos de ese modo permite conservar las caídas en las que solo se ve el torso sin que generen falsas alertas.
 Las sospechas, en cambio, se acumulaban en la lista de eventos de la aplicación.
 En una prueba con un video continuo de Toyota Smarthome usado como cámara de un hogar, la aplicación recibió 16 sospechas en unos 12 minutos, 7 de ellas en 26 segundos.
 Por eso cada cámara pasó a publicar como máximo una posible caída por minuto, sin ocultar nunca una caída confirmada que llegue después, y en esa prueba las sospechas habrían quedado en 6.

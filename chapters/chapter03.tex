@@ -13,7 +13,6 @@ La encuesta fue distribuida de forma no probabilística en grupos de mensajería
 Se obtuvieron 121 respuestas válidas a lo largo de aproximadamente doce semanas (Figura~\ref{fig:encuesta_general}).
 Los resultados completos se presentan en el Anexo~\ref{anexo:encuesta}.
 
-El perfil que emerge es claro.
 El grupo más numeroso de cuidadores tiene entre 45 y 54~años (47\,\%), con un 19\,\% adicional de 55~años o más (Figura~\ref{fig:encuesta_q1}).
 Son personas en plena vida activa, con responsabilidades laborales y familiares propias, que dedican menos de 10~horas semanales de atención directa al adulto mayor (79\,\%) (Figura~\ref{fig:encuesta_q2}).
 No son cuidadores de tiempo completo; cuidan desde la distancia, en paralelo a todo lo demás.
@@ -168,18 +167,18 @@ RF15 & \textit{Como responsable a cargo, quiero marcar una alerta como resuelta 
 \section{Mockups}
 \label{sec:mockups}
 
-Para validar la interpretación del frontend antes de comenzar su implementación, se diseñaron las pantallas principales de la aplicación móvil descripta en el diagrama de arquitectura (Sección~\ref{sec:diagrama_arquitectura}), destinada al responsable a cargo del adulto mayor. Este usuario no siempre tiene conocimientos técnicos, y suele revisar la aplicación en momentos de preocupación o mientras hace otra cosa. Por eso el diseño prioriza tres criterios por sobre cualquier otro: que la información se lea de un solo vistazo, que la jerarquía visual separe lo urgente de lo rutinario, y que cada alerta permita responder sin pasos intermedios innecesarios. Son la traducción a nivel de interfaz de la simplicidad que exige RNF8, y recorren todo el flujo, desde el inicio de sesión (RNF10) hasta el consumo de alertas (RF8) y reportes (RF9).
+Para validar la interpretación del frontend antes de comenzar su implementación, se diseñaron las pantallas principales de la aplicación móvil descripta en el diagrama de arquitectura (Sección~\ref{sec:diagrama_arquitectura}), destinada al responsable a cargo del adulto mayor. Este usuario no siempre tiene conocimientos técnicos, y suele revisar la aplicación en momentos de preocupación o mientras hace otra cosa. Por eso el diseño prioriza tres criterios por sobre cualquier otro, que la información se lea de un solo vistazo, que la jerarquía visual separe lo urgente de lo rutinario, y que cada alerta permita responder sin pasos intermedios innecesarios. Son la traducción a nivel de interfaz de la simplicidad que exige RNF8, y recorren todo el flujo, desde el inicio de sesión (RNF10) hasta el consumo de alertas (RF8) y reportes (RF9).
 
 La Figura~\ref{fig:mockup_flujo1} muestra el primer tramo de ese recorrido. La pantalla de \textit{Login} (01) resuelve RNF10 con la menor fricción posible, ya que solo pide correo y contraseña y concentra la atención en un único botón. Aun así, ya aquí se adelanta la promesa central del producto, con el logo y la frase de posicionamiento de la marca definida en la Sección~\ref{sec:branding}. El pie de página aclara que el monitoreo es no invasivo y que el video nunca sale del hogar, tal como exige RNF1, y esa aclaración construye la confianza del familiar antes incluso de que inicie sesión. Es coherente, además, con el posicionamiento frente a la competencia que se desarrolla más adelante en este capítulo (Sección~\ref{sec:competencia}).
 
 Una vez dentro, la pantalla de \textit{Notificaciones} (02) funciona como home de la aplicación. Ahí aparece la decisión de diseño más importante de todo el recorrido, el uso del color como código de severidad. Cada tarjeta de evento sigue el mismo patrón, un borde de color a la izquierda, un ícono y un punto de no leído, para que la urgencia se reconozca sin leer el texto completo. El rojo es para las caídas (RF1), el amarillo para señales moderadas como la inactividad prolongada (RF3), y el verde para los eventos de rutina (RF2), la misma convención de semáforo que el usuario ya conoce de otros contextos cotidianos. Ese código se repite en los chips de filtro (``Todas'', ``Urgentes'', ``Moderadas'', ``Rutina'') y también en la Figura~\ref{fig:mockup_flujo2}, así el color significa siempre lo mismo en toda la aplicación. Además, las alertas urgentes y moderadas quedan fijadas arriba del feed hasta ser atendidas, para que no se pierdan entre los eventos de rutina si el familiar no revisa la aplicación enseguida.
 
-Al tocar una alerta se abre el detalle (03) como una hoja inferior (\textit{bottom sheet}) que oscurece, pero no reemplaza, la pantalla anterior. Así el usuario no pierde de vista de dónde viene ni cuántas alertas quedan pendientes. Ahí aparece la segunda decisión de diseño relevante, la jerarquía entre los dos botones de acción. ``Llamar a Rosa'' es el botón primario, sólido y en rojo, mientras que ``Marcar como resuelta'' queda como secundario, con un simple borde. Esa diferencia no es estética sino funcional. Ante una posible caída, lo que más importa es la llamada inmediata, y el botón primario es el que el ojo encuentra primero y el pulgar alcanza más cómodo en una pantalla de celular. Justo donde el familiar podría esperar ver una foto del evento, la tarjeta muestra en cambio la misma aclaración de privacidad del login, ``El video se procesa en tu hogar · nunca se envía a la nube''. Que ese mensaje aparezca ahí, y no escondido en una pantalla de configuración, busca sostener la confianza en el peor momento, cuando la alerta genera más ansiedad.
+Al tocar una alerta se abre el detalle (03) como una hoja inferior (\textit{bottom sheet}) que oscurece, pero no reemplaza, la pantalla anterior. Así el usuario no pierde de vista de dónde viene ni cuántas alertas quedan pendientes. Ahí aparece la segunda decisión de diseño relevante, la jerarquía entre los dos botones de acción. ``Llamar a Rosa'' es el botón primario, sólido y en rojo, mientras que ``Marcar como resuelta'' queda como secundario, con un simple borde. Ante una posible caída, lo que más importa es la llamada inmediata, y el botón primario es el que el ojo encuentra primero y el pulgar alcanza más cómodo en una pantalla de celular. Justo donde el familiar podría esperar ver una foto del evento, la tarjeta muestra en cambio la misma aclaración de privacidad del login, ``El video se procesa en tu hogar · nunca se envía a la nube''. Que ese mensaje aparezca ahí, y no escondido en una pantalla de configuración, busca sostener la confianza en el peor momento, cuando la alerta genera más ansiedad.
 
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.95\textwidth]{Imagenes/Mockup_Mobile_Flujo1.png}
-    \caption[Mockup de la aplicación móvil: inicio de sesión y alertas.]{Mockup de la aplicación móvil: inicio de sesión (01), notificaciones (02) y detalle de alerta (03). Fuente: Elaboración propia.}
+    \caption[Mockup de la aplicación móvil con inicio de sesión y alertas.]{Mockup de la aplicación móvil con inicio de sesión (01), notificaciones (02) y detalle de alerta (03). Fuente: Elaboración propia.}
     \label{fig:mockup_flujo1}
 \end{figure}
 \FloatBarrier
@@ -198,7 +197,7 @@ Por último, la pantalla \textit{Día en orden} (05) representa el estado sin al
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.647\textwidth]{Imagenes/Mockup_Mobile_Flujo2.png}
-    \caption[Mockup de la aplicación móvil: reportes y estado sin alertas.]{Mockup de la aplicación móvil: reportes de rutina y eventos (04) y estado sin alertas activas (05). Fuente: Elaboración propia.}
+    \caption[Mockup de la aplicación móvil con reportes y estado sin alertas.]{Mockup de la aplicación móvil con reportes de rutina y eventos (04) y estado sin alertas activas (05). Fuente: Elaboración propia.}
     \label{fig:mockup_flujo2}
 \end{figure}
 \FloatBarrier
@@ -208,7 +207,7 @@ La aplicación también cubre la puesta en marcha del kit, que el familiar hace 
 \begin{figure}[htb]
     \centering
     \includegraphics[width=\textwidth]{Imagenes/Mockup_Mobile_Flujo3.png}
-    \caption[Mockup de la aplicación móvil: alta de cuenta y vinculación del kit.]{Mockup de la aplicación móvil: creación de cuenta (06), instrucciones de vinculación (07) y escaneo del código QR (08). Fuente: Elaboración propia.}
+    \caption[Mockup de la aplicación móvil con alta de cuenta y vinculación del kit.]{Mockup de la aplicación móvil con creación de cuenta (06), instrucciones de vinculación (07) y escaneo del código QR (08). Fuente: Elaboración propia.}
     \label{fig:mockup_flujo3}
 \end{figure}
 \FloatBarrier
@@ -218,7 +217,7 @@ La Figura~\ref{fig:mockup_flujo4} completa la configuración. Si la cámara del 
 \begin{figure}[htb]
     \centering
     \includegraphics[width=\textwidth]{Imagenes/Mockup_Mobile_Flujo4.png}
-    \caption[Mockup de la aplicación móvil: configuración inicial y perfil.]{Mockup de la aplicación móvil: ingreso manual del código (09), datos del residente (10), ubicación de la cámara según el plan del kit (11) y perfil (12). Fuente: Elaboración propia.}
+    \caption[Mockup de la aplicación móvil con configuración inicial y perfil.]{Mockup de la aplicación móvil con ingreso manual del código (09), datos del residente (10), ubicación de la cámara según el plan del kit (11) y perfil (12). Fuente: Elaboración propia.}
     \label{fig:mockup_flujo4}
 \end{figure}
 \FloatBarrier
@@ -229,7 +228,7 @@ La aplicación implementada sigue estos diseños, salvo el indicador de desperta
 \begin{figure}[htb]
     \centering
     \includegraphics[width=\textwidth]{Imagenes/Mockup_Mobile_Oscuro1.png}
-    \caption[Mockup de la aplicación móvil en modo oscuro.]{Mockup de la aplicación móvil en modo oscuro: inicio de sesión (01), notificaciones (02), detalle de alerta (03), reportes (04) y estado sin alertas activas (05). Fuente: Elaboración propia.}
+    \caption[Mockup de la aplicación móvil en modo oscuro.]{Mockup de la aplicación móvil en modo oscuro, con inicio de sesión (01), notificaciones (02), detalle de alerta (03), reportes (04) y estado sin alertas activas (05). Fuente: Elaboración propia.}
     \label{fig:mockup_oscuro}
 \end{figure}
 \FloatBarrier
@@ -341,7 +340,7 @@ Del lado de la nube, AWS Elastic Beanstalk aloja la API que recibe los eventos s
 
 El Diagrama de Arquitectura mostró dónde vive cada nodo del sistema. Lo que falta es qué guarda cada uno. La Figura~\ref{fig:diagrama_bd_local} documenta el modelo de la controladora, sobre SQLite (Sección~\ref{sec:diagrama_componentes}), y la Figura~\ref{fig:diagrama_bd_cloud} documenta el modelo de la nube, implementado sobre PostgreSQL en Amazon RDS (Sección~\ref{sec:backend_nube}). El esquema de la nube se versiona con migraciones de Alembic, de modo que cada cambio en el modelo queda registrado y se aplica de la misma forma en desarrollo y en producción.
 
-El modelo local es una única entidad, EVENTO, sin relaciones ni claves foráneas, lo que no constituye una limitación, sino un reflejo del código real de \texttt{events/schema.py} y \texttt{events/store.py}.
+El modelo local es una única entidad, EVENTO, sin relaciones ni claves foráneas, lo que refleja el código de \texttt{events/schema.py} y \texttt{events/store.py}.
 El diagrama muestra los campos centrales, y la implementación suma tres auxiliares, \texttt{wall\_clock\_ts}, con la hora real del evento cuando proviene de una cámara en vivo, \texttt{cloud\_synced\_at}, que registra cuándo se confirmó su envío a la nube, y \texttt{event\_id}, un identificador único que la controladora genera al guardar el evento y repite en cada reenvío.
 El campo \texttt{video\_id} guarda, en modo en vivo, el identificador local de la cámara que generó el evento, pero no tiene una clave foránea declarada dado que el sistema asume hoy un único residente por instalación (RNF11), la misma restricción que más adelante justifica la relación uno a uno entre HOGAR y RESIDENTE en el modelo de nube.
 El campo \texttt{metadata} es un JSON de forma variable según el \texttt{event\_type} (\texttt{fall}, \texttt{immobility}, \texttt{activity}), cada uno con sus propios campos internos, en lugar de columnas fijas para cada tipo de evento, ya que forzar un esquema rígido hubiera significado agregar columnas vacías para la mayoría de los eventos cada vez que se sume un tipo nuevo.
@@ -355,7 +354,7 @@ Las cámaras dependen del kit y no directamente del hogar. Se crean en fábrica 
 La mayoría de los eventos se origina en una cámara puntual, de ahí la clave foránea \texttt{camara\_id} en EVENTO, que sin embargo admite nulos porque los desvíos de rutina (RF7) surgen del análisis de la línea base y no de una cámara en particular. Además, cada evento referencia directamente al residente mediante \texttt{residente\_id}, una desnormalización deliberada que evita recorrer la cadena \texttt{camara} hacia \texttt{hogar} hacia \texttt{residente} cada vez que el módulo de línea base necesita traer todos los eventos de una persona, algo que va a hacer con frecuencia ya que la relación hogar-residente es uno a uno.
 
 Frente al EVENTO local, el EVENTO de la nube conserva el \texttt{event\_id} de la controladora, con una restricción que impide repetirlo dentro de una misma cámara, de modo que un lote reenviado no se guarda dos veces.
-Además difiere en dos campos.
+También difiere en dos campos.
 El \texttt{video\_\allowbreak timestamp\_\allowbreak s}, relativo al archivo de video que se está procesando, se traduce a \texttt{occurred\_at}, un timestamp real, porque en la nube hay que poder ordenar eventos entre distintos hogares y videos, algo que un tiempo relativo al archivo no permite.
 Y se agrega \texttt{es\_alerta}, un booleano derivado de la severidad del evento, en lugar de modelar una entidad Notificación aparte, porque RF7 y RF8 solo necesitan distinguir si un evento dispara una alerta al responsable a cargo, no llevar un historial propio de notificaciones enviadas.
 El campo \texttt{synced\_at} registra cuándo llegó el evento a la nube, distinto de \texttt{occurred\_at}, que registra cuándo ocurrió, la misma separación que sostiene la continuidad ante cortes de conexión que exigen RNF6 y RNF7.
@@ -454,28 +453,28 @@ La Figura~\ref{fig:porter} resume la intensidad estimada de cada fuerza, que se 
 \label{fig:porter}
 \end{figure}
 
-\paragraph{Amenaza de nuevos entrantes:}
+\paragraph{Amenaza de nuevos entrantes}
 La barrera técnica de entrada es baja, ya que los modelos de estimación de pose y detección de eventos como YOLO son abiertos y accesibles, y el hardware de referencia, entre Raspberry Pi y cámaras IP, es de bajo costo.
 La barrera real está en la confianza, porque un producto que monitorea a un familiar mayor necesita validación de precisión y garantías de privacidad que toman tiempo en construirse.
 Esto retrasa la entrada de nuevos competidores, aunque no la impide, y deja abierta la puerta a que un jugador global como AltumView decida expandirse a Latinoamérica.
 Por eso la amenaza de nuevos entrantes se considera media a alta.
 
-\paragraph{Poder de negociación de los proveedores:}
+\paragraph{Poder de negociación de los proveedores}
 Los componentes críticos, como la Raspberry Pi y las cámaras IP, tienen múltiples fabricantes alternativos, por lo que ningún proveedor de hardware puede fijar precios de forma unilateral.
 Los modelos de inferencia utilizados, YOLO para estimación de pose y CLIP para clasificación de actividades, son además de código abierto y se ejecutan localmente, lo que evita cualquier dependencia de una API propietaria de terceros para el procesamiento de video.
 AWS aloja la infraestructura de nube que soporta el registro de eventos, la línea base de comportamiento y la generación de reportes.
 Al tratarse de servicios de cómputo y almacenamiento estándar, y no de un modelo propietario específico, el poder de negociación del proveedor de nube es bajo, ya que migrar de proveedor es un problema de ingeniería resoluble y no una dependencia estructural del producto.
 El de los proveedores de hardware es algo mayor, porque la placa se consigue en el país a un precio superior al internacional (Sección~\ref{sec:supuestos}), de modo que en conjunto el poder de los proveedores se considera entre bajo y medio.
 
-\paragraph{Poder de negociación de los compradores:}
+\paragraph{Poder de negociación de los compradores}
 La familia responsable del adulto mayor cuenta con alternativas de bajo costo de cambio, como un botón de pánico con teleasistencia tipo SPS o Atempo, un asistente de compañía como Ato, o directamente la opción de no adoptar ningún sistema.
 Esto presiona el precio y obliga a comunicar con claridad la propuesta de valor, centrada en la no invasividad y en que el adulto mayor no tiene que hacer nada, un diferenciador que ninguna de esas alternativas ofrece de forma completa.
 
-\paragraph{Amenaza de productos sustitutos:}
+\paragraph{Amenaza de productos sustitutos}
 Existen sustitutos maduros e instalados en el mercado argentino, como la teleasistencia telefónica de SPS y Atempo, los relojes con botón SOS y GPS tipo GCare, los asistentes conversacionales de IA como Ato, y el sustituto más común de todos, que no es tecnológico sino humano, un familiar, vecino o cuidador que llama o visita con frecuencia.
 Ninguno de ellos resuelve el problema de fondo, que es la dependencia de una acción consciente del adulto mayor, o, en el caso de Ato, la ausencia total de detección de emergencias, pero todos compiten por el mismo presupuesto familiar y la misma decisión de compra.
 
-\paragraph{Rivalidad entre competidores existentes:}
+\paragraph{Rivalidad entre competidores existentes}
 No se observa rivalidad directa dentro de la categoría de cámara con aprendizaje de rutina, porque no se identificó ningún competidor que la ofrezca, según se ve en la Tabla~\ref{tab:comparativa_comercial}.
 La rivalidad real ocurre entre categorías, entre la teleasistencia tradicional, fuerte en Argentina y con canal de distribución y confianza ya instalados, los sensores pasivos importados, como AltumView y Vayyar, sin presencia local pero con ventaja técnica, y los asistentes conversacionales de IA como Ato, presentes en el país pero enfocados en compañía y no en seguridad.
 En los hechos, el proyecto compite contra estas tres categorías al mismo tiempo, más que contra un rival puntual.
@@ -494,13 +493,13 @@ Ese desafío, no obstante, es exactamente el que la propuesta de valor del proye
 
 A partir del panorama competitivo y de las cinco fuerzas que estructuran ese mercado, se construye la estrategia de posicionamiento aplicando el modelo de Producto, Precio y Plaza.
 
-\paragraph{Producto:}
+\paragraph{Producto}
 La oferta combina hardware y software en un mismo paquete, compuesto por la cámara IP, la Raspberry Pi 5 que procesa localmente, y una aplicación móvil para el responsable a cargo. A diferencia de la teleasistencia por botón, no requiere ninguna acción del adulto mayor; a diferencia de las cámaras con IA como AltumView Sentinare, no se limita a detectar eventos discretos, sino que incorpora un segundo módulo que construye una línea base de comportamiento y detecta desvíos de rutina a lo largo del tiempo; y a diferencia de los asistentes conversacionales como Ato, no depende de que el adulto mayor hable o interactúe para generar valor, sino que monitorea de forma completamente pasiva. El producto es, entonces, la combinación de ambas capas, no cada una por separado.
 
-\paragraph{Precio:}
+\paragraph{Precio}
 AltumView Sentinare fija la referencia de mercado más cercana en la categoría de cámaras, entre USD 200 y 230 sin cuota mensual \parencite{AltumView}, pero cubre solo detección de eventos sobre una habitación. La arquitectura del sistema propuesto, dividida entre procesamiento local (RNF1) y un componente en la nube que sostiene la línea base y los reportes (RNF6, RNF7), sugiere naturalmente un esquema mixto, con un costo inicial por el hardware, similar en orden de magnitud al de AltumView, más una suscripción mensual que cubra el cómputo y almacenamiento en la nube del segundo módulo. Este esquema ya tiene precedente en el mismo segmento de cliente, dado que Ato cobra un dispositivo de entre USD 179 y 200 más una suscripción de USD 29 mensuales \parencite{Ato}, lo que sugiere que las familias de este segmento están dispuestas a aceptar un costo recurrente cuando el valor entregado es continuo. El esquema propio todavía no está validado con costos de producción reales, pero es coherente con la arquitectura y cuenta con un antecedente de mercado que respalda su viabilidad.
 
-\paragraph{Plaza:}
+\paragraph{Plaza}
 El proyecto no cuenta hoy con canal de distribución propio. Dos vías parecen más viables que una tienda física, dado el perfil de comprador relevado en el User Research, cuidadores que ya buscan de forma activa una solución y se informan por redes o grupos de mensajería. La primera es la venta directa por canal digital, y la segunda son las alianzas institucionales con geriátricos, obras sociales o municipios interesados en programas de cuidado domiciliario, una oportunidad que se apoya en el crecimiento poblacional proyectado por INDEC \parencite{INDEC2024}. Esta segunda vía tiene además la ventaja de acortar el problema de confianza señalado en el análisis de Porter, porque la institución actúa como validador ante la familia.
 
 \subsection{Análisis FODA}
@@ -508,7 +507,7 @@ El proyecto no cuenta hoy con canal de distribución propio. Dos vías parecen m
 
 A partir del panorama competitivo, las cinco fuerzas de Porter y el posicionamiento de producto, precio y plaza relevados en las secciones anteriores, se construye un FODA.
 
-\paragraph{Fortalezas:}
+\paragraph{Fortalezas}
 \begin{itemize}
     \item \textbf{Privacidad por procesamiento local del video.} El video nunca sale del hogar, ya que la estimación de pose y la detección de eventos ocurren en el propio dispositivo, sin exponer imágenes a servidores externos.
     \item \textbf{Integración de dos capacidades en un mismo sistema.} Combina detección de eventos agudos con modelado longitudinal de rutina dentro de una misma arquitectura.
@@ -516,7 +515,7 @@ A partir del panorama competitivo, las cinco fuerzas de Porter y el posicionamie
     \item \textbf{Arquitectura modular entre borde y nube.} El procesamiento de video corre en el dispositivo local, mientras que la línea base, la detección de desvíos y los reportes corren en la nube, lo que permite escalar o migrar cada capa de forma independiente sin rediseñar el sistema completo.
 \end{itemize}
 
-\paragraph{Oportunidades:}
+\paragraph{Oportunidades}
 \begin{itemize}
     \item \textbf{Mercado latinoamericano prácticamente vacío en esta categoría.} Los actores relevados en la región, como SPS y Atempo en Argentina o GCare en Chile, operan sobre el modelo de botón y teleasistencia, sin competidor directo identificado en cámara o radar en ningún país de la región.
     \item \textbf{Resistencia documentada a wearables.} La evidencia del INDEC sobre la dificultad de adopción de nuevas tecnologías entre adultos mayores empuja la demanda hacia soluciones pasivas como esta \parencite{INDEC2020}.
@@ -525,7 +524,7 @@ A partir del panorama competitivo, las cinco fuerzas de Porter y el posicionamie
     \item \textbf{Llegada de asistentes de IA al hogar.} La oferta en Argentina de asistentes como Ato \parencite{Ato} indica que ya existe un mercado para dispositivos de inteligencia artificial en el cuidado del adulto mayor.
 \end{itemize}
 
-\paragraph{Debilidades:}
+\paragraph{Debilidades}
 \begin{itemize}
     \item \textbf{Validación limitada.} El prototipo se validó con datasets públicos y todavía no fue probado en hogares de usuarios ni a escala (Capítulo~\ref{chapter05}).
     \item \textbf{Sin canal de distribución propio.} Todavía no existe una estructura comercial ni soporte disponible las 24 horas.
@@ -533,7 +532,7 @@ A partir del panorama competitivo, las cinco fuerzas de Porter y el posicionamie
     \item \textbf{Modelo de costos sin validar.} A diferencia de AltumView Sentinare, que ya tiene un precio de referencia de mercado (USD 200-230 sin cuota mensual), el costo de producción y el precio de venta del sistema propuesto, proyectados en la Sección~\ref{sec:modelo-negocio}, todavía no están validados con ventas ni con costos reales de producción a escala.
 \end{itemize}
 
-\paragraph{Amenazas:}
+\paragraph{Amenazas}
 \begin{itemize}
     \item \textbf{Reacción de competidores locales o globales.} Tanto actores ya instalados en Argentina, como SPS o Atempo, como jugadores globales con cámara en el borde, como AltumView, podrían anticiparse incorporando estas capacidades antes de que el proyecto logre escalar a producto.
     \item \textbf{Percepción de intrusión.} Aun con procesamiento local, la sola presencia de una cámara puede generar rechazo inicial en algunas familias, tal como surgió en el User Research.
@@ -551,7 +550,7 @@ Su autoridad de aplicación es la Agencia de Acceso a la Información Pública (
 Esta ley define como dato personal a toda información referida a personas físicas determinadas o determinables, sin exigir que dicha información incluya un nombre, una imagen u otro identificador directo.
 Como se desarrolló en la Sección~\ref{sec:privacidad_marco} y la Sección~\ref{sec:edge_marco}, el sistema no transmite ni almacena video fuera del hogar, y los eventos que sí se envían a la nube (por ejemplo, ``caída detectada, usuario 4821, 14:32~h'') se identifican mediante un identificador de usuario interno, que es el que vincula las cámaras, el sistema, la nube y la aplicación entre sí, sin exponer nombre ni imagen en ningún punto del flujo.
 Sin embargo, esa condición no elimina el carácter de dato personal de la información transmitida, porque dicho identificador sigue permitiendo asociar cada evento con una persona física determinada para quien tenga acceso al sistema, como el equipo de desarrollo o la familia del usuario.
-Este tipo de dato se conoce como dato seudonimizado, y se distingue del dato verdaderamente anonimizado, en el que ya no existe ninguna forma de reconstruir la identidad de la persona, ni siquiera para quien lo procesa.
+Este tipo de dato se conoce como dato seudonimizado, y se distingue del dato anonimizado, en el que ya no existe ninguna forma de reconstruir la identidad de la persona, ni siquiera para quien lo procesa.
 Por lo tanto, aunque el sistema minimiza la exposición de información sensible, los eventos y las clasificaciones de actividad que produce siguen quedando alcanzados por la Ley 25.326.
 Las caídas, la inmovilidad y los cambios en la rutina son, además, información referente a la salud, que el artículo 2 de la ley define como dato sensible.
 Por eso nadie puede ser obligado a proporcionarlos (artículo 7), y su tratamiento depende del consentimiento del titular.
@@ -590,7 +589,7 @@ El sistema propuesto es una herramienta de apoyo al cuidado y no constituye un d
 La detección de caídas y de desvíos de rutina depende del correcto funcionamiento del hardware, de la disponibilidad de conectividad para el envío de alertas y de que un familiar o cuidador esté en condiciones de responder a la notificación recibida, por lo que el sistema no garantiza una respuesta inmediata ante una emergencia ni sustituye los mecanismos de asistencia médica de urgencia.
 Esta limitación se comunica de manera explícita al usuario y a su familia al momento de la instalación, como parte del proceso de consentimiento informado.
 
-Finalmente, cabe aclarar que el presente trabajo constituye un prototipo académico y no un producto comercial.
+Finalmente, el presente trabajo constituye un prototipo académico y no un producto comercial.
 Un eventual lanzamiento comercial del sistema requeriría la redacción de Términos y Condiciones de uso y una Política de Privacidad formal, elaborados con asesoramiento legal profesional, que quedan fuera del alcance de este proyecto pero se dejan señalados como trabajo futuro.
 
 \section{Viabilidad Técnica}
@@ -749,7 +748,7 @@ Como simplificación, tampoco se incluye el impuesto sobre los ingresos brutos.
 Como referencia, AltumView Sentinare cuesta entre USD 200 y 230 sin cuota mensual \parencite{AltumView}, mientras que Ato cobra un dispositivo de entre USD 179 y 200 más USD 29 por mes \parencite{Ato}.
 El kit queda por encima de ese rango y la suscripción un 20\,\% por encima de la de Ato, mientras que AltumView no cobra cuota mensual.
 La encuesta no preguntó cuánto estarían dispuestos a pagar los cuidadores, por lo que el precio se compara con lo que hoy cuesta cubrir esa necesidad de otra manera.
-En Argentina un cuidador domiciliario cobra entre ARS 2.500 y 5.500 por hora \parencite{CuantoMeCuesta2026}, de modo que media jornada durante un mes cuesta entre ARS 280.000 y 620.000, es decir, entre USD 180 y 400 al dólar oficial de \$1.545 \parencite{DolarAPI2026}.
+En Argentina un cuidador domiciliario cobra entre ARS 2.500 y 5.500 por hora \parencite{CuantoMeCuesta2026}, de modo que media jornada durante un mes cuesta entre ARS 280.000 y 620.000, esto es, entre USD 180 y 400 al dólar oficial de \$1.545 \parencite{DolarAPI2026}.
 La suscripción de USD 35 equivale a entre el 9\,\% y el 19\,\% de ese gasto, aunque no reemplaza la presencia de una persona sino que avisa cuando hace falta.
 En el mercado local también hay un servicio de asistencia para adultos mayores con botón de emergencia y detección de caídas que en julio de 2024 cobraba entre ARS 16.000 y 21.000 por mes, más el abono de la empresa de emergencias, de unos ARS 25.000 \parencite{Infonegocios2024}.
 Esto muestra que ya hay familias que pagan una cuota mensual por este tipo de cuidado.
@@ -1048,7 +1047,7 @@ Cumple la meta de 100.000 personas & No & Sí & Sí \\
 Estos resultados deben leerse con algunas precauciones.
 En primer lugar, todo depende de la penetración y del canal de venta.
 En el escenario Base se venden 1.700 kits en el primer año y casi 11.000 en el cuarto, y sostener ese ritmo requiere que la adopción efectivamente acelere año a año como prevé el modelo, algo que todavía debe validarse.
-En segundo lugar, el precio de la suscripción es la variable que más mueve el resultado, ya que con USD 30 en lugar de USD 35 el VAN del escenario Base pasa a ser de USD $-$217.534, y con un costo de kit de USD 250 en lugar de USD 230 el VAN baja a USD 197.666.
+En segundo lugar, el precio de la suscripción es la variable que más mueve el resultado, ya que con USD 30 en lugar de USD 35 el VAN del escenario Base pasa a ser de USD $-$217.534, y con un costo de kit de USD 250 frente a USD 230 el VAN baja a USD 197.666.
 Por eso resulta importante validar la disposición a pagar y asegurar precios de volumen con los proveedores.
 En tercer lugar, la tasa de bajas es un supuesto y no un dato medido.
 Para ver cuánto pesa se repitió el cálculo del escenario Base con otras tasas anuales (Tabla~\ref{tab:bajas}).
@@ -1115,7 +1114,7 @@ Antes de vender, se necesita validar el sistema en hogares reales, medir la tasa
 \label{sec:branding}
 
 Esta sección define la identidad de marca del sistema, es decir, el nombre con el que se presentaría al mercado, su logo y los criterios visuales que lo acompañan, y los vincula con el análisis de marketing de las secciones anteriores.
-En particular, responde a la amenaza que el análisis FODA identificó en la percepción de intrusión, es decir, el rechazo que la sola presencia de una cámara puede generar en algunas familias, y vuelve visible la propuesta de valor del modelo de negocio, que es cuidar sin invadir.
+En particular, responde a la amenaza que el análisis FODA identificó en la percepción de intrusión, esto es, el rechazo que la sola presencia de una cámara puede generar en algunas familias, y vuelve visible la propuesta de valor del modelo de negocio, que es cuidar sin invadir.
 La identidad se apoya en tres datos del análisis.
 El comprador es el familiar responsable y no el adulto mayor, por lo que la marca debe tranquilizar a quien paga.
 La promesa central del producto es acompañar de manera inmediata y constante sin invadir la intimidad de la persona monitoreada.
@@ -1206,7 +1205,7 @@ La Figura~\ref{fig:ia-kit} muestra la controladora sin su carcasa, con el disipa
 La intención es hacer visible tanto lo que hay dentro del equipo como el aspecto que tendría ante el usuario.
 Un producto con partes nombradas, reconocibles y con una apariencia coherente se percibe como un sistema integral y no como una suma de dispositivos sueltos \parencite{Keller2013}.
 
-\figuramarca{ia_kit_interior_exterior.png}{0.95}{Representación conceptual del kit de \marca{}: interior de la controladora (izquierda) y kit terminado (derecha). Imágenes generadas con inteligencia artificial. Fuente: Elaboración propia.}{fig:ia-kit}
+\figuramarca{ia_kit_interior_exterior.png}{0.95}{Representación conceptual del kit de \marca{}, con el interior de la controladora (izquierda) y el kit terminado (derecha). Imágenes generadas con inteligencia artificial. Fuente: Elaboración propia.}{fig:ia-kit}
 
 \subsection{Comunicación visual del producto}
 \label{sec:branding-comunicacion}
