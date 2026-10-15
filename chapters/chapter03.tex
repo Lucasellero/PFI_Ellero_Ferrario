@@ -105,7 +105,7 @@ A continuación se detallan los requerimientos funcionales (RF) del sistema.
     \item \textbf{RF8:} El sistema debe notificar a los familiares responsables cuando se detecte un evento crítico (caída, inmovilidad prolongada o desvío conductual).
     \item \textbf{RF9:} El sistema debe permitir a los familiares consultar reportes periódicos del estado y la rutina del adulto mayor a través de una aplicación móvil.
     \item \textbf{RF10:} El sistema debe permitir que el familiar asigne desde la aplicación móvil la ubicación de cada cámara del kit dentro del hogar.
-    \item \textbf{RF11:} El sistema debe permitir visualizar en vivo el video de cada cámara con la detección de pose superpuesta, para verificar el funcionamiento del pipeline.
+    \item \textbf{RF11:} El sistema debe permitir visualizar en vivo el video de cada cámara con la detección de pose superpuesta, para verificar el funcionamiento del \textit{pipeline}.
     \item \textbf{RF12:} El sistema debe gestionar el acceso mediante autenticación, de forma que solo los familiares autorizados de un hogar puedan ver sus alertas y reportes.
     \item \textbf{RF13:} El sistema debe permitir consultar el historial de eventos registrados, filtrando por tipo de evento y rango de fechas.
     \item \textbf{RF14:} El sistema debe permitir vincular un kit con la cuenta de un familiar mediante un código QR, dejándolo como responsable principal del hogar.
@@ -121,7 +121,7 @@ A continuación se detallan los requerimientos no funcionales (RNF) del sistema.
     \item \textbf{RNF1:} El video debe procesarse dentro del hogar, sin enviarse a servidores externos para preservar la privacidad del residente.
     \item \textbf{RNF2:} La detección de una caída debe generar el evento en menos de 5 segundos desde que ocurre.
     \item \textbf{RNF3:} La detección de inmovilidad prolongada debe evaluarse en una ventana de tiempo configurable, de 3 minutos por defecto.
-    \item \textbf{RNF4:} El módulo de estimación de pose debe procesar cada frame en menos de 200 milisegundos, permitiendo una operación cercana al tiempo real sin depender de GPU.
+    \item \textbf{RNF4:} El módulo de estimación de pose debe procesar cada \textit{frame} en menos de 200 milisegundos, permitiendo una operación cercana al tiempo real sin depender de GPU.
     \item \textbf{RNF5:} Los módulos de estimación de pose y de clasificación de actividades deben ejecutarse sobre el mismo hardware embebido, sin GPU.
     \item \textbf{RNF6:} El sistema debe seguir registrando eventos localmente ante cortes de conexión a internet.
     \item \textbf{RNF7:} El sistema debe sincronizar con la nube los eventos locales al restablecerse la conexión.
@@ -239,11 +239,11 @@ La aplicación implementada sigue estos diseños, salvo el indicador de desperta
 
 A partir de los requerimientos funcionales y las historias de usuario presentadas, se construyó el diagrama de casos de uso de la Figura~\ref{fig:casos_uso}, que organiza las capacidades del sistema en tres actores y tres bloques funcionales. Los actores \textit{Cámara IP} y \textit{Temporizador del Sistema} representan las dos formas en que se dispara el procesamiento sobre el video, ya sea frame a frame o de forma periódica, mientras que \textit{Responsable a Cargo} es el actor humano identificado en el User Research.
 
-En cuanto a la organización interna del Sistema, el Bloque 1 agrupa el procesamiento sobre el video que ocurre dentro del hogar (estimación de pose, detección de caídas, de inmovilidad prolongada y clasificación de actividades), coherente con el procesamiento local exigido por RNF1. El caso de uso \textit{Detectar Inmovilidad Prolongada} engloba tanto RF3 (sedentarismo, postura sentada) como RF4 (piso, postura acostada), ya que ambos comparten el mismo mecanismo de detección basado en pose y se distinguen internamente mediante un atributo de postura. El registro de eventos y todo lo que depende de él, la construcción y actualización de la línea base de comportamiento, la detección de desvíos y la generación de reportes, se ejecutan del lado de la nube. RNF6 solo exige que el dispositivo conserve los eventos de forma transitoria ante cortes de conexión, hasta poder sincronizarlos (RNF7). El Bloque 2 agrupa las funcionalidades expuestas al responsable a cargo desde la aplicación móvil, incluida la puesta en marcha del hogar, que consiste en vincular el kit escaneando su código QR (RF14) y asignar la ubicación de cada cámara (RF10). El Bloque 3 agrupa la administración y validación local de las cámaras desde el panel de control, de uso opcional para la familia.
+En cuanto a la organización interna del Sistema, el Bloque 1 agrupa el procesamiento sobre el video que ocurre dentro del hogar (estimación de pose, detección de caídas, de inmovilidad prolongada y clasificación de actividades), coherente con el procesamiento local exigido por RNF1. El caso de uso \textit{Detectar Inmovilidad Prolongada} engloba tanto RF3 (sedentarismo, postura sentada) como RF4 (piso, postura acostada), ya que ambos comparten el mismo mecanismo de detección basado en pose y se distinguen internamente mediante un atributo de postura. El registro de eventos y todo lo que depende de él, la construcción y actualización de la línea base de comportamiento, la detección de desvíos y la generación de reportes, se ejecutan del lado de la nube. RNF6 solo exige que el dispositivo conserve los eventos de forma transitoria ante cortes de conexión, hasta poder sincronizarlos (RNF7). El Bloque 2 agrupa las funcionalidades expuestas al responsable a cargo desde la aplicación móvil, incluida la puesta en marcha del hogar, que consiste en vincular el kit escaneando su código QR (RF14) y asignar la ubicación de cada cámara (RF10). El Bloque 3 agrupa la administración y validación local de las cámaras desde el panel de operación local, de uso opcional para la familia.
 
 Además de la agrupación en bloques, las relaciones punteadas entre casos de uso representan dependencias \textit{include}, ya que todo evento detectado (caída, inmovilidad prolongada o desvío de rutina) incluye siempre su registro (RF5) y su notificación al responsable a cargo (RF8).
 La autenticación del usuario (RF12) se incluye en toda funcionalidad de la aplicación móvil.
-El panel de control local, en cambio, no requiere autenticación, porque está pensado para usarse solo desde la red del hogar.
+El panel de operación local, en cambio, no requiere autenticación, porque está pensado para usarse solo desde la red del hogar.
 
 \begin{figure}[htbp]
     \centering
@@ -282,7 +282,7 @@ Las tecnologías de cada parte se describen en el Capítulo~\ref{chapter04}.
 El módulo \texttt{runner/} es el orquestador central del sistema y el único que importa directamente el código de \texttt{vision/}, \texttt{vlm/} y \texttt{fusion/}, a los que invoca por cada cámara activa y de los que recibe el resultado de la detección correspondiente.
 Por su parte, \texttt{vision/} implementa una heurística de dos fases sobre descriptores de pose, sin una red neuronal propia más allá de la estimación de pose de base, para detectar caídas e inmovilidad prolongada, en línea con RF1, RF3 y RF4.
 De manera similar, \texttt{vlm/} clasifica la actividad de la persona monitoreada mediante CLIP exportado a formato ONNX, de modo que esa parte del sistema se ejecuta sin PyTorch, a diferencia de la estimación de pose, que lo usa a través de Ultralytics.
-\texttt{fusion/} reúne los clasificadores temporales sobre la secuencia de keypoints.
+\texttt{fusion/} reúne los clasificadores temporales sobre la secuencia de \textit{keypoints}.
 Uno confirma o descarta cada caída que marca la heurística de \texttt{vision/} (RF1), y el otro se combina con la clasificación de CLIP para cumplir con RF2 (Sección~\ref{sec:evolucion_diseno}).
 Sin embargo, y a diferencia de lo que podría suponerse a partir de sus nombres, ninguno de estos módulos escribe eventos por sí mismo, ya que es \texttt{runner/} quien, luego de recibir el resultado de cada uno, registra el evento correspondiente en \texttt{events/}, respetando el formato exigido por RF5.
 En ese esquema, \texttt{events/} funciona como el único punto de acuerdo formal entre los módulos del sistema, mediante el esquema compartido \texttt{MonitoringEvent} y \texttt{EventType}, que identifica el tipo de cada evento, como una caída, un período de inmovilidad, una actividad o un desvío de la rutina, junto con un almacenamiento local en SQLite, importado como una librería de Python dentro del mismo proceso, desde donde los eventos se envían luego a la nube (Sección~\ref{sec:backend_nube}).
@@ -292,7 +292,7 @@ Esta decisión mantiene a cada módulo desacoplado de la implementación interna
 Este panel es una herramienta de desarrollo y operación que corre directamente sobre la Raspberry Pi, distinta de la API del backend en la nube que consume la aplicación móvil (Sección~\ref{sec:backend_nube}).
 
 \texttt{cloud/} es el backend en la nube, que recibe los eventos que envía la controladora y atiende a la aplicación móvil a través de su API REST (Sección~\ref{sec:api_backend}).
-Una vez por día, \texttt{cloud/} ejecuta \texttt{baseline/}, que construye a partir del historial de eventos de cada hogar la línea base de comportamiento mediante clustering dinámico, correspondiente a RF6.
+Una vez por día, \texttt{cloud/} ejecuta \texttt{baseline/}, que construye a partir del historial de eventos de cada hogar la línea base de comportamiento mediante \textit{clustering} dinámico, correspondiente a RF6.
 \texttt{evaluation/}, en cambio, no consume eventos de la misma manera, sino que toma el video original de la carpeta \texttt{videos/} junto con los eventos detectados sobre ese video para generar un video anotado que permite la inspección visual de las detecciones.
 
 El diagrama incluye además las dos fuentes de datos externas del sistema, \texttt{cameras.yaml}, que configura qué cámaras o streams procesa \texttt{runner/}, y la carpeta \texttt{videos/}, que contiene el dataset utilizado en modo offline.
@@ -518,7 +518,7 @@ A partir del panorama competitivo, las cinco fuerzas de Porter y el posicionamie
 \paragraph{Oportunidades}
 \begin{itemize}
     \item \textbf{Mercado latinoamericano prácticamente vacío en esta categoría.} Los actores relevados en la región, como SPS y Atempo en Argentina o GCare en Chile, operan sobre el modelo de botón y teleasistencia, sin competidor directo identificado en cámara o radar en ningún país de la región.
-    \item \textbf{Resistencia documentada a wearables.} La evidencia del INDEC sobre la dificultad de adopción de nuevas tecnologías entre adultos mayores empuja la demanda hacia soluciones pasivas como esta \parencite{INDEC2020}.
+    \item \textbf{Resistencia documentada a \textit{wearables}.} La evidencia del INDEC sobre la dificultad de adopción de nuevas tecnologías entre adultos mayores empuja la demanda hacia soluciones pasivas como esta \parencite{INDEC2020}.
     \item \textbf{Posible interés institucional.} Existe espacio para alianzas con obras sociales, geriátricos o municipios interesados en programas de cuidado domiciliario.
     \item \textbf{Crecimiento sostenido de la población objetivo.} Las proyecciones del INDEC indican que la población de 60 años o más va a superar el 20\,\% hacia 2040, lo que amplía el mercado potencial de forma sostenida en el tiempo \parencite{INDEC2024}.
     \item \textbf{Llegada de asistentes de IA al hogar.} La oferta en Argentina de asistentes como Ato \parencite{Ato} indica que ya existe un mercado para dispositivos de inteligencia artificial en el cuidado del adulto mayor.
@@ -598,7 +598,7 @@ Un eventual lanzamiento comercial del sistema requeriría la redacción de Térm
 El sistema propuesto requiere hardware físico instalado en el domicilio del usuario, compuesto por una controladora que ejecuta el procesamiento local y una o más cámaras IP que capturan el video.
 A diferencia de un software que se instala sobre equipamiento que el usuario ya posee, el producto se entrega como un kit cerrado, por lo que esta sección demuestra la viabilidad de producir y adquirir ese hardware.
 
-El componente central del kit es la controladora, una Raspberry Pi 5 de 8GB que llega con el software del equipo preinstalado y configurado, incluyendo los módulos de detección de eventos, clasificación semántica de actividades y el resto del pipeline descripto en la Sección~\ref{sec:tecnologias} (Tecnologías).
+El componente central del kit es la controladora, una Raspberry Pi 5 de 8 GB que llega con el software del equipo preinstalado y configurado, incluyendo los módulos de detección de eventos, clasificación semántica de actividades y el resto del pipeline descripto en la Sección~\ref{sec:tecnologias} (Tecnologías).
 En consecuencia, este componente no es intercambiable por hardware genérico del usuario, ya que es precisamente el que ejecuta el software desarrollado por el equipo, y sin él no existe forma de correr el sistema propuesto.
 
 Las cámaras, en cambio, sí podrían en principio reemplazarse por otro modelo compatible.
@@ -622,7 +622,7 @@ Este presupuesto cubre únicamente el hardware del prototipo y no constituye un 
 \toprule
 \textbf{Insumo} & \textbf{Cantidad} & \textbf{Costo unitario} & \textbf{Costo total} \\
 \midrule
-Raspberry Pi 5, 8GB & 1 & USD 230 & USD 230 \\
+Raspberry Pi 5, 8~GB & 1 & USD 230 & USD 230 \\
 Cámara IP & 3 & USD 15 & USD 45 \\
 \midrule
 \textbf{Total} & & & \textbf{USD 275} \\

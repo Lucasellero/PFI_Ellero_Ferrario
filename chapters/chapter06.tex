@@ -64,7 +64,7 @@ Un día sin medicación solo se detecta entonces cuando falta toda la actividad 
 \subsection{Limitaciones de la detección}
 
 El modelo de pose elegido por su bajo costo no reconoce de forma confiable a una persona acostada en un sillón cuando la cámara está alta y lejos.
-En la grabación analizada no la encontró en el 94,5\,\% de los frames, pese a que el cuerpo estaba a la vista.
+En la grabación analizada no la encontró en el 94,5\,\% de los \textit{frames}, pese a que el cuerpo estaba a la vista.
 Esa falla condiciona dos funciones a la vez, porque sin esqueleto el clasificador temporal no puede descartar una falsa caída y el contador de inmovilidad se reinicia.
 Un modelo de pose de mayor tamaño probablemente la reduciría, con un costo de cómputo que habría que medir sobre la Raspberry Pi.
 

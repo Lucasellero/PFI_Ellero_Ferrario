@@ -43,7 +43,7 @@ Dos componentes superaron lo previsto, el backend desplegado en AWS y el clasifi
 \subsection{Aportes técnicos}
 
 El primer aporte es la detección de caídas en etapas.
-Una heurística geométrica de bajo costo dispara sobre cada frame, y un clasificador temporal del movimiento confirma o descarta el evento, con CLIP como respaldo cuando no hay esqueleto.
+Una heurística geométrica de bajo costo dispara sobre cada \textit{frame}, y un clasificador temporal del movimiento confirma o descarta el evento, con CLIP como respaldo cuando no hay esqueleto.
 Con esa cadena las falsas alertas bajaron de 185 a 9, sin ninguna en las 1,40 horas de video doméstico continuo, mientras el sistema conservó el 83,5\,\% de las caídas.
 
 El segundo es la clasificación de actividades a partir de dos señales que se complementan, la escena vista por CLIP y el movimiento del esqueleto.
