@@ -95,7 +95,8 @@ Multiple Cameras Fall \parencite{Auvinet2011} & Université de Montréal, public
 
 El rol de cada dataset de video en la calibración y validación del sistema se presentó en la Sección~\ref{sec:brecha}.
 Toyota Smarthome se usa en sus dos versiones.
-De la versión recortada, en la que cada clip contiene una sola actividad, el equipo organizó por actividad unos 2.200 clips que cubren 18 de las 31 actividades, y con ellos entrenó los clasificadores de actividades.
+De la versión recortada, en la que cada clip contiene una sola actividad, el equipo organizó por actividad unos 2.200 clips que cubren 18 de las 31 actividades, y con ellos entrenó el clasificador temporal del esqueleto.
+El clasificador sobre las representaciones de CLIP se entrenó, en cambio, con 14.561 muestras de las 31 actividades de la versión recortada completa, tomando hasta 120 videos por actividad.
 De la versión sin recortar se tomaron cuatro grabaciones continuas de entre 18 y 27 minutos, de una persona sentada mirando televisión o leyendo, que forman el conjunto \texttt{ToyotaSmarthome\_FP}.
 Este conjunto funciona como negativo difícil adicional para la detección de caídas, porque cubre falsos positivos que las secuencias de casi caídas de URFD no representan, como las posturas bajas en un sillón.
 

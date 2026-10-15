@@ -1,6 +1,6 @@
 \chapter{Pruebas Realizadas}\label{chapter05}
 
-Cada módulo del sistema se evaluó por separado sobre datos que no intervinieron en su calibración ni en su entrenamiento, y el recorrido completo, desde el evento hasta la aplicación móvil, se probó después de punta a punta.
+Cada módulo del sistema se evaluó por separado, en general sobre datos que no intervinieron en su calibración ni en su entrenamiento, y el recorrido completo, desde el evento hasta la aplicación móvil, se probó después de punta a punta.
 Todas las mediciones de detección se hicieron en la máquina de desarrollo, procesando videos ya grabados, porque es la única forma de repetir una misma prueba después de cada cambio y comparar los resultados entre sí.
 
 \section{Criterios de evaluación}
@@ -18,8 +18,9 @@ Por un lado, la sensibilidad es la proporción de casos reales que el sistema de
 Por otro, los falsos positivos son los eventos que el sistema emite sin que haya ocurrido lo que informa.
 Entre las dos se priorizó reducir los falsos positivos, porque un sistema doméstico que avisa en falso de forma repetida pierde la confianza de la familia y termina ignorado, un riesgo de adopción tan concreto como el de no detectar un evento puntual.
 
-En todas las pruebas los datos de evaluación se separaron de los de ajuste por unidad completa y no por muestra.
+En las pruebas de cada módulo los datos de evaluación se separaron de los de ajuste por unidad completa y no por muestra.
 En caídas la separación es por video, en actividades por participante y en la línea base por hogar, de modo que ninguna persona ni ningún hogar aparece a la vez en el ajuste y en la medición.
+La excepción es la cadena completa de detección de caídas, cuyas etapas de confirmación se ajustaron con los mismos clips en los que se mide, por lo que ese resultado es optimista (Sección~\ref{sec:pruebas_caidas}).
 Esta decisión importa porque las primeras mediciones del proyecto, hechas sin esa separación, daban valores mucho más altos que no se sostenían con personas nuevas, como se detalla en la Sección~\ref{sec:pruebas_actividades}.
 
 La Tabla~\ref{tab:datasets_pruebas} resume qué datos se usaron en cada prueba.
@@ -111,7 +112,7 @@ En cuanto al aporte de cada etapa, en los eventos donde YOLO había seguido a la
 Confirmó 112 y dejó a cargo de CLIP el único en el que no llegó a decidir.
 Los 91 eventos sin esqueleto en tramos sin caída, la mayoría en las grabaciones continuas, quedaron a cargo de CLIP, que descartó 82.
 La única caída que se pierde respecto de la heurística sola es una de las que llegaron a CLIP.
-Cabe señalar que el clasificador temporal y la confirmación con CLIP se ajustaron con eventos de estos mismos clips, por lo que la medición de la cadena completa es optimista.
+El clasificador temporal y la confirmación con CLIP se ajustaron con eventos de estos mismos clips, por lo que la medición de la cadena completa es optimista.
 Evaluado de forma aislada, con los videos de prueba separados de los de entrenamiento, el clasificador temporal reconoce el 96\,\% de las caídas y marca como caída el 2,8\,\% de las 10.362 ventanas de movimiento normal, un resultado consistente con el anterior.
 
 Por su parte, la sensibilidad total queda limitada por la primera etapa, ya que las etapas de confirmación solo pueden descartar eventos y no recuperar una caída que la heurística no marcó.
@@ -249,7 +250,9 @@ De este modo las alertas avisan cuando una actividad desaparece y los reportes m
 
 La validación cruzada eligió además avisar desde el primer día sin salir.
 Exigir dos días seguidos baja los falsos positivos al 14,0\,\%, pero reduce la detección al 64,0\,\%, de modo que se mantuvo el valor elegido por el procedimiento.
-Asimismo, se evaluó una variante sin las entradas y salidas, que detectó el 58,6\,\% de sus desvíos con un 10,6\,\% de falsos positivos, pero bajó al 33,5\,\% al aplicarle el error del clasificador de actividades.
+Asimismo, se evaluó una variante sin las entradas y salidas, que detectó el 58,6\,\% de sus desvíos con un 10,6\,\% de falsos positivos.
+Al aplicarle el error del clasificador con una matriz de confusión anterior, medida por muestra y sin la zona del hogar, esa variante bajó al 33,5\,\%.
+Con esa misma matriz, el sistema adoptado pasa del 76,8\,\% al 66,8\,\%.
 La comparación muestra que las entradas y salidas son la señal que le da estabilidad a la línea base, y por eso quedaron incorporadas.
 
 En cuanto al detector de horario habitual, se probó corriendo tres horas el horario de actividades reales, con la misma validación cruzada por hogar y tres semillas.
@@ -273,7 +276,7 @@ Además, en las cuatro grabaciones continuas sin entradas ni salidas, que suman 
 \label{sec:pruebas_ruido}
 
 Los resultados anteriores usan las etiquetas de CASAS, que no contienen errores, mientras que en el sistema real la línea base recibe las actividades que clasifica la cámara.
-Para medir ese efecto se obtuvo primero la matriz de confusión del clasificador tal como corre en la controladora, sobre 863 videos de Toyota Smarthome que no intervinieron en su ajuste, donde acierta el 75,9\,\% de las ventanas en las que emite un evento.
+Para medir ese efecto se obtuvo primero la matriz de confusión del clasificador con la misma lógica de decisión que usa la controladora, pero sin la señal de esqueleto, sobre 863 videos de Toyota Smarthome que no intervinieron en su ajuste, donde acierta el 75,9\,\% de las ventanas en las que emite un evento.
 Luego se alteraron las etiquetas de CASAS con esas mismas probabilidades de confusión y se repitió la medición del sistema completo, combinando tres semillas de inyección con tres de error.
 
 \begin{table}[H]
@@ -299,7 +302,7 @@ Exceso de ocio sentado & 54,9\,\% & 54,9\,\% \\
 La detección global se mantiene por encima del 70\,\% aun con el error del clasificador, con una baja de cinco puntos y medio.
 La pérdida se concentra en el día sin comida y en el día sin cocinar, porque basta que otra actividad se confunda con comer o con cocinar para que ese día deje de verse vacío.
 En cambio, la semana sin salir y los excesos no se modifican, la primera porque las entradas y salidas no pasan por el clasificador y los segundos porque el indicador de sedentarismo suma los minutos del día y un error aislado pesa poco en ese total.
-La matriz se midió sin la señal de esqueleto, que no estaba disponible en el equipo de medición, por lo que el error aplicado es algo mayor que el del clasificador completo.
+Como la matriz no incluye la señal de esqueleto, que no estaba disponible en el equipo de medición, el error aplicado es algo mayor que el del clasificador completo.
 
 \subsection{Período de aprendizaje}
 \label{sec:pruebas_aprendizaje}
@@ -391,7 +394,7 @@ Finalmente, la Raspberry Pi 5 ejecuta el sistema completo leyendo una cámara en
 \section{Pruebas unitarias automatizadas}
 \label{sec:pruebas_unitarias}
 
-El manejo de los datos en la controladora y en la nube se verifica con una suite de 254 pruebas escritas con pytest, que se ejecutan de forma automática y sin intervención de una persona, y que pasan en su totalidad.
+El manejo de los datos en la controladora y en la nube se verifica con una suite de 262 pruebas escritas con pytest, que se ejecutan de forma automática y sin intervención de una persona, y que pasan en su totalidad.
 La mayoría son pruebas unitarias, y el resto son pruebas de integración que recorren el camino de la controladora a la nube, las de corte y reconexión y las de línea base por el camino de producción descriptas en la Sección~\ref{sec:pruebas_integracion}.
 Las pruebas de la nube corren contra una base de datos temporal, de modo que no pueden alterar los datos reales aunque el entorno esté configurado para producción.
 La Tabla~\ref{tab:pruebas_unitarias} resume qué cubre cada grupo.
@@ -452,7 +455,7 @@ RF6, RF7 & Desvíos inyectados en CASAS & 76,8\,\% de los desvíos señalados po
 RNF6, RNF7 & Corte y reconexión & 855 eventos en cinco escenarios, todos entregados y sin duplicados \\
 RF8 & Notificaciones & Envío implementado en el backend, recepción en la aplicación sin implementar \\
 RF9, RF10, RF12, RF13, RF14 & Recorrido completo en un celular & Verificados contra el backend en AWS, con eventos de prueba y con la rutina real de un residente de CASAS \\
-RF12, RNF6 & Pruebas automatizadas & 254 pruebas que pasan en su totalidad, con siete defectos introducidos a propósito y todos detectados \\
+RF12, RNF6 & Pruebas automatizadas & 262 pruebas que pasan en su totalidad, con siete defectos introducidos a propósito y todos detectados \\
 RNF8 & Aceptación con dos cuidadores & Interfaz clara y vinculación sencilla, sin medición de usabilidad \\
 RNF4 & Tiempo por frame & Sin medir sobre la Raspberry Pi \\
 \bottomrule

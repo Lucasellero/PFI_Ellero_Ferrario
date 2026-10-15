@@ -49,7 +49,8 @@ Lo mismo ocurre con los corrimientos de horario, ya que el detector correspondie
 El resultado más importante es que la línea base resiste el error del clasificador de actividades.
 Al aplicarle las confusiones medidas sobre el clasificador real, la detección global pasa del 76,8\,\% al 71,3\,\%, una baja de cinco puntos y medio.
 Esto se debe a que dos de sus señales no dependen de reconocer la actividad, las entradas y salidas, que se obtienen de la posición de la persona, y el indicador de sedentarismo, que suma los minutos del día.
-La variante sin entradas y salidas, en cambio, caía del 58,6\,\% al 33,5\,\%, lo que confirma que incorporarlas fue la decisión que le dio estabilidad al módulo.
+La variante sin entradas y salidas, en cambio, caía del 58,6\,\% al 33,5\,\% con una matriz de confusión anterior, más severa, con la que el sistema adoptado quedaba en el 66,8\,\%.
+Esa diferencia confirma que incorporar las entradas y salidas fue la decisión que le dio estabilidad al módulo.
 El costo del error se concentra en el día sin comida, que baja del 85,7\,\% al 46,6\,\%, porque una sola confusión con comer alcanza para ocultar esa ausencia, de modo que mejorar el clasificador de actividades es la vía más directa para seguir mejorando la línea base.
 
 Por último, la medicación, que con sensores es un evento propio, con una cámara queda unida a comer y beber.
