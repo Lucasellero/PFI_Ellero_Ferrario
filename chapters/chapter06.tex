@@ -45,7 +45,7 @@ Además, el tipo de desvío importa más que la calibración.
 El sistema detecta bien que algo dejó de ocurrir, como un día sin comer, sin cocinar o sin salir, y los cambios de grado, como pasar más tiempo de lo habitual en descanso, los capta mejor el indicador de sedentarismo que una alerta.
 Por eso estos últimos se resolvieron con indicadores en la pantalla de reportes, que muestran el cambio sin convertirlo en un aviso, y con ellos el sistema cubre el 60,4\,\% de los excesos.
 Esa división es coherente con el uso que el Marco Teórico le asigna a la línea base, la detección de un deterioro sostenido y no de una variación puntual (Sección~\ref{sec:aprendizaje_adaptativo_marco}).
-Lo mismo ocurre con los corrimientos de horario, ya que el detector correspondiente señaló dos de cada tres días normales y por eso sus alertas se desactivaron, lo que indica que la rutina de un adulto mayor en su casa es menos puntual de lo que el diseño suponía.
+Lo mismo ocurre con los corrimientos de horario, ya que el detector correspondiente señaló dos de cada tres días normales y por eso sus alertas se desactivaron. Eso indica que la rutina de un adulto mayor en su casa es menos puntual de lo que el diseño suponía.
 
 El resultado más importante es que la línea base resiste el error del clasificador de actividades.
 Al aplicarle las confusiones medidas sobre el clasificador real, la detección global pasa del 76,8\,\% al 71,3\,\%, una baja de cinco puntos y medio.
@@ -53,7 +53,7 @@ Esto se debe a que las entradas y salidas no dependen de reconocer la actividad,
 El indicador de sedentarismo sí usa la salida del clasificador, pero suma los minutos del día, de modo que un error aislado pesa poco en ese total.
 La variante sin entradas y salidas, en cambio, caía del 58,6\,\% al 33,5\,\% con una matriz de confusión anterior, más severa, con la que el sistema adoptado quedaba en el 66,8\,\%.
 Esa diferencia confirma que incorporar las entradas y salidas fue la decisión que le dio estabilidad al módulo.
-El costo del error se concentra en el día sin comida, que baja del 85,7\,\% al 46,6\,\%, porque una sola confusión con comer alcanza para ocultar esa ausencia, de modo que mejorar el clasificador de actividades es la vía más directa para seguir mejorando la línea base.
+El costo del error se concentra en el día sin comida, que baja del 85,7\,\% al 46,6\,\%, porque una sola confusión con comer alcanza para ocultar esa ausencia. De ese modo, mejorar el clasificador de actividades es la vía más directa para seguir mejorando la línea base.
 
 Por último, la medicación, que con sensores es un evento propio, con una cámara queda unida a comer y beber.
 Un día sin medicación solo se detecta entonces cuando falta toda la actividad de comida, y no cuando la persona comió con normalidad pero no tomó la pastilla.
@@ -83,7 +83,7 @@ Se prefirió excluirlo antes que sumar a las métricas un conjunto con tiempos d
 \subsection{Limitaciones de la validación}
 
 Cada módulo se validó con datos independientes, la detección sobre video de datasets públicos y la línea base sobre el comportamiento real registrado en CASAS.
-Las actividades y el sedentarismo se midieron con adultos mayores de entre 60 y 80 años, y la línea base con la rutina de adultos mayores que viven de forma independiente, mientras que las caídas fueron simuladas por voluntarios, de modo que la dinámica de una caída real en una persona mayor no está representada en la evaluación.
+Las actividades y el sedentarismo se midieron con adultos mayores de entre 60 y 80 años, y la línea base con la rutina de adultos mayores que viven de forma independiente. En cambio, las caídas fueron simuladas por voluntarios, de modo que la dinámica de una caída real en una persona mayor no está representada en la evaluación.
 Falta la prueba que los une sobre una misma persona, porque requiere una grabación continua de alrededor de un mes, necesaria para que la línea base tenga un historial contra el cual comparar.
 Esa prueba ya está en marcha, con el kit instalado en el hogar de una adulta mayor que dio su consentimiento informado, pero a la fecha de esta entrega el registro no reúne todavía las semanas de historial necesarias.
 Por eso sus resultados no forman parte de este informe, y completarla es la primera tarea pendiente para evaluar el sistema en condiciones reales de uso.

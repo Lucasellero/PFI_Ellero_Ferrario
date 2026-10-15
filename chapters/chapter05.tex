@@ -248,7 +248,7 @@ Falsos positivos & 1.260 & 15,2\,\% & 16,2\,\% & 16,9\,\% \\
 \end{table}
 
 El sistema señala tres de cada cuatro desvíos inyectados.
-La cifra fuera de muestra es la de la validación cruzada, un 68,7\,\% con un 15,2\,\% de falsos positivos, porque el juego adoptado se eligió con los mismos 21 hogares sobre los que se mide, y cada uno de ellos intervino en el ajuste de cuatro de las cinco particiones.
+La cifra fuera de muestra es la de la validación cruzada, un 68,7\,\% con un 15,2\,\% de falsos positivos, porque el juego adoptado se eligió con los mismos 21 hogares sobre los que se mide. Cada uno de ellos intervino en el ajuste de cuatro de las cinco particiones.
 Los desvíos que consisten en que algo deje de ocurrir, como no comer, no cocinar o no salir, se detectan en el 80,1\,\% de los casos, 454 de 567.
 Los excesos se detectan menos mediante alertas, lo que responde al diseño, ya que el detector por actividad cuenta cuántas veces ocurre cada actividad y no cuánto dura.
 Ese cambio de duración lo cubre el indicador de sedentarismo de la pantalla de reportes, y con él el sistema llega al 60,4\,\% de los excesos, 67 de 111.
@@ -359,7 +359,7 @@ Las mediciones de la Sección~\ref{sec:pruebas_baseline} se hicieron con program
 Se cargaron 60 días del hogar \texttt{hh113}, 14.529 eventos, por el mismo endpoint que usa la controladora, dejando el último día sin ninguna comida.
 El proceso diario generó el desvío de rutina por ausencia de comida, frente a una mediana histórica de siete registros por día, lo marcó como alerta y lo dejó disponible en el listado de alertas de la aplicación.
 Ejecutarlo dos veces sobre el mismo día no duplicó el desvío, y sobre ese mismo día con sus comidas reales no se generó ninguno.
-Del mismo modo se probó el recorrido de las entradas y salidas, desde los eventos de puerta que guarda la controladora hasta la alerta en la nube cuando el residente deja de salir, y se verificó que una salida a una hora inusual no genera ningún aviso.
+Del mismo modo se probó el recorrido de las entradas y salidas, desde los eventos de puerta que guarda la controladora hasta la alerta en la nube cuando el residente deja de salir. Se verificó que una salida a una hora inusual no genera ningún aviso.
 \subsection{Corte y reconexión}
 \label{sec:pruebas_corte}
 
