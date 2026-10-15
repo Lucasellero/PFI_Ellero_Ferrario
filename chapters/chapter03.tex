@@ -363,7 +363,7 @@ Una variante de este enfoque son los relojes con GPS y botón SOS, como GCare, q
 
 Una segunda categoría, todavía sin presencia local, son los sensores ambientales sin cámara.
 El caso de referencia es Vayyar Care, un radar de pared que detecta caídas sin contacto, sin botones, sin cables y sin cámara, y que durante los primeros siete días de instalación entra en un modo de aprendizaje para reconocer el comportamiento normal de la habitación \parencite{Vayyar}.
-Sin embargo, hoy opera exclusivamente en Estados Unidos y depende de un dispositivo Alexa con suscripción a Alexa Together, por lo que queda fuera del alcance del mercado argentino y además atado a un proveedor externo para el enrutamiento de las alertas.
+Sin embargo, hoy se comercializa a operadores de residencias para adultos mayores, mediante una venta con demostración previa, y no tiene distribución en Argentina \parencite{Vayyar}.
 
 La tercera categoría, y la más cercana técnicamente a la propuesta de este trabajo, son las cámaras con inteligencia artificial que procesan localmente en el propio dispositivo.
 Acá el competidor directo más maduro es AltumView Sentinare, que en lugar de transmitir video procesa la detección en el propio equipo y envía únicamente una representación esquemática de la persona, una figura de palo, con un costo de entre USD 200 y 230 y sin cuota mensual para las funciones principales \parencite{AltumView}.
@@ -395,14 +395,14 @@ GCare (reloj SOS con GPS)             & --         & N/A        & Parcial    & -
 Vayyar Care (radar)                   & \checkmark & \checkmark & \checkmark & --         & --         \\
 AltumView Sentinare (cámara con IA)   & \checkmark & \checkmark & \checkmark & --         & --         \\
 Ato (asistente de voz con IA)         & \checkmark & N/A        & --         & Parcial    & \checkmark \\
-Sistema propuesto                     & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+Sistema propuesto                     & \checkmark & \checkmark & \checkmark & \checkmark & Prototipo \\
 \bottomrule
 \end{tabular}
 }
 \endgroup
 \end{table}
 
-{\footnotesize\textit{Nota. La tabla indica presencia o ausencia de cada capacidad en la solución comercial, siguiendo el mismo criterio metodológico utilizado en la Tabla~\ref{tab:comparacion} del Capítulo~\ref{chapter02}. No refleja diferencias de precisión o de calidad de implementación entre las distintas propuestas.}}
+{\footnotesize\textit{Nota. La tabla indica presencia o ausencia de cada capacidad en la solución comercial, siguiendo el mismo criterio metodológico utilizado en la Tabla~\ref{tab:comparacion} del Capítulo~\ref{chapter02}. No refleja diferencias de precisión o de calidad de implementación entre las distintas propuestas. El sistema propuesto figura como prototipo porque todavía no se comercializa.}}
 
 \subsection{Cinco fuerzas de Porter}
 \label{sec:porter}
@@ -443,7 +443,12 @@ En los hechos, el proyecto compite contra estas tres categorías al mismo tiempo
 
 \medskip
 
-En conjunto, las cinco fuerzas dibujan un mercado accesible en lo técnico pero exigente en lo comercial. Por un lado, la amenaza de nuevos entrantes es media a alta, porque la barrera técnica es baja y lo único que demora el ingreso de un jugador global como AltumView es la confianza, que no se construye rápido. Por otro, tanto los proveedores de hardware como los de infraestructura de nube tienen un poder de negociación entre bajo y medio, dado que ambos son reemplazables sin comprometer el producto. Sin embargo, esa ventaja del lado de los proveedores se compensa con una fuerza mucho más determinante del lado de la demanda, el poder de negociación de los compradores, que cuentan con alternativas de bajo costo de cambio, y la amenaza de sustitutos ya instalados y de confianza, como la teleasistencia tradicional, un asistente de compañía como Ato o directamente un familiar que llama con frecuencia. En consecuencia, el desafío central no es tecnológico sino de adopción, algo consistente con lo que surgió en el User Research sobre la resistencia cultural a nuevas tecnologías entre adultos mayores y sus familias. Ese desafío, no obstante, es exactamente el que la propuesta de valor del proyecto está diseñada para resolver, dado que ninguna de las alternativas relevadas, ni siquiera la de mayor tracción reciente como Ato, ofrece monitoreo de seguridad sin requerir ninguna acción del adulto mayor.
+En conjunto, las cinco fuerzas dibujan un mercado accesible en lo técnico pero exigente en lo comercial.
+Por un lado, la amenaza de nuevos entrantes es media a alta, porque la barrera técnica es baja y lo único que demora el ingreso de un jugador global como AltumView es la confianza, que no se construye rápido.
+Por otro, tanto los proveedores de hardware como los de infraestructura de nube tienen un poder de negociación entre bajo y medio, dado que ambos son reemplazables sin comprometer el producto.
+Sin embargo, esa ventaja del lado de los proveedores se compensa con una fuerza mucho más determinante del lado de la demanda, el poder de negociación de los compradores, que cuentan con alternativas de bajo costo de cambio, y la amenaza de sustitutos ya instalados y de confianza, como la teleasistencia tradicional, un asistente de compañía como Ato o directamente un familiar que llama con frecuencia.
+En consecuencia, el desafío central no es tecnológico sino de adopción, algo consistente con lo que surgió en el User Research sobre la resistencia cultural a nuevas tecnologías entre adultos mayores y sus familias.
+Ese desafío, no obstante, es exactamente el que la propuesta de valor del proyecto está diseñada para resolver, dado que ninguna de las alternativas disponibles en Argentina, ni siquiera la de mayor tracción reciente como Ato, ofrece monitoreo de seguridad sin requerir ninguna acción del adulto mayor.
 
 \subsection{Triple P}
 \label{sec:triple_p}
@@ -500,14 +505,19 @@ A partir del panorama competitivo, las cinco fuerzas de Porter y el posicionamie
 
 Dado que el sistema propuesto aborda un tema sensible vinculado a la salud y el bienestar de una población vulnerable, corresponde precisar el marco legal aplicable y las condiciones bajo las cuales el producto puede utilizarse de manera responsable.
 
-En Argentina, el tratamiento de información personal está regulado por la Ley N.º 25.326 de Protección de Datos Personales, reglamentada y supervisada por la Agencia de Acceso a la Información Pública (AAIP) \parencite{Argentina2000}.
+En Argentina, el tratamiento de información personal está regulado por la Ley N.º 25.326 de Protección de Datos Personales \parencite{Argentina2000}, reglamentada por el Decreto 1558/2001 \parencite{Argentina2001}.
+Su autoridad de aplicación es la Agencia de Acceso a la Información Pública (AAIP), según el Decreto 746/2017 \parencite{Argentina2017}.
 Esta ley define como dato personal a toda información referida a personas físicas determinadas o determinables, sin exigir que dicha información incluya un nombre, una imagen u otro identificador directo.
 Como se desarrolló en la Sección~\ref{sec:privacidad_marco} y la Sección~\ref{sec:edge_marco}, el sistema no transmite ni almacena video fuera del hogar, y los eventos que sí se envían a la nube (por ejemplo, ``caída detectada, usuario 4821, 14:32~h'') se identifican mediante un identificador de usuario interno, que es el que vincula las cámaras, el sistema, la nube y la aplicación entre sí, sin exponer nombre ni imagen en ningún punto del flujo.
 Sin embargo, esa condición no elimina el carácter de dato personal de la información transmitida, porque dicho identificador sigue permitiendo asociar cada evento con una persona física determinada para quien tenga acceso al sistema, como el equipo de desarrollo o la familia del usuario.
 Este tipo de dato se conoce como dato seudonimizado, y se distingue del dato verdaderamente anonimizado, en el que ya no existe ninguna forma de reconstruir la identidad de la persona, ni siquiera para quien lo procesa.
 Por lo tanto, aunque el sistema minimiza la exposición de información sensible, los eventos y las clasificaciones de actividad que produce siguen quedando alcanzados por la Ley 25.326.
+Las caídas, la inmovilidad y los cambios en la rutina son, además, información referente a la salud, que el artículo 2 de la ley define como dato sensible.
+Por eso nadie puede ser obligado a proporcionarlos (artículo 7), y su tratamiento depende del consentimiento del titular.
 
-Esto implica, entre otras cosas, que el usuario o su familia deben prestar un consentimiento informado y expreso antes de que el sistema comience a operar, y que ese consentimiento debe poder revocarse en cualquier momento, dando de baja la recolección y solicitando la eliminación de los datos almacenados.
+Esto implica, entre otras cosas, que el adulto mayor monitoreado, como titular de los datos, debe prestar un consentimiento libre, expreso e informado, por escrito (artículo 5), antes de que el sistema comience a operar.
+La familia puede acompañar esa decisión, pero no reemplazarla.
+Ese consentimiento debe poder revocarse en cualquier momento, dando de baja la recolección y solicitando la eliminación de los datos almacenados.
 
 La prestación de ese consentimiento presenta una particularidad en el caso de adultos mayores con una incapacidad legal declarada, dado que en esos casos la ley exige que el consentimiento sea otorgado por su representante legal.
 Fuera de ese supuesto, el consentimiento debe provenir siempre del propio titular de los datos, sin que la opinión de terceros, familiares incluidos, pueda sustituirlo.
@@ -566,6 +576,7 @@ Este presupuesto cubre únicamente el hardware del prototipo y no constituye un 
 \textbf{Insumo} & \textbf{Cantidad} & \textbf{Costo unitario} & \textbf{Costo total} \\
 \midrule
 Raspberry Pi 5, 8GB & 1 & USD 230 & USD 230 \\
+% PENDIENTE GOVI: modelo exacto de la cámara IP (marca y modelo, compatibilidad RTSP/ONVIF) y proveedor donde se compró, para reemplazar "Cámara IP" en esta fila.
 Cámara IP & 3 & USD 15 & USD 45 \\
 \midrule
 \textbf{Total} & & & \textbf{USD 275} \\
@@ -576,6 +587,7 @@ Cámara IP & 3 & USD 15 & USD 45 \\
 Este presupuesto corresponde a la etapa de prototipo, y el diseño contempla varias cámaras simultáneas sobre una misma controladora (RNF9), con un máximo previsto de tres, ya que el módulo orquestador invoca los módulos de detección por cada cámara activa sin necesidad de una controladora adicional por cámara.
 Por lo tanto, un kit doméstico típico, con una controladora y entre una y tres cámaras según la cantidad de ambientes a cubrir, se mantiene dentro de ese mismo orden de magnitud.
 
+% PENDIENTE GOVI: nombrar acá el modelo de cámara IP usado y su proveedor (no figura en el backend ni en el frontend).
 Asimismo, tanto la Raspberry Pi 5 como las cámaras IP utilizadas son componentes disponibles comercialmente en Argentina a través de múltiples proveedores, sin depender de un fabricante único ni de importación directa por parte del equipo, lo que reduce el riesgo de desabastecimiento como barrera para producir el kit a pequeña escala.
 
 Finalmente, el kit se entrega armado y preconfigurado, sin requerir conocimientos técnicos ni intervención de personal especializado en el domicilio.
