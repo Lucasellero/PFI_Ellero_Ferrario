@@ -1,15 +1,24 @@
 \chapter{Metodología de desarrollo}\label{chapter04}
 
-Este capítulo detalla el proceso de construcción del sistema descripto en el Capítulo~\ref{chapter03}, las tecnologías utilizadas y las decisiones de diseño detrás de ellas. La Sección~\ref{sec:herramientas_metodologia} describe la organización del equipo, la metodología de trabajo y las herramientas utilizadas; la Sección~\ref{sec:tecnologias} justifica, módulo por módulo, el stack tecnológico elegido frente a sus alternativas; la Sección~\ref{sec:evolucion_diseno} explica cómo cambió el diseño al implementarlo. Las Secciones~\ref{sec:api_backend} y~\ref{sec:despliegue} describen la API del backend y su despliegue en la nube; y la Sección~\ref{sec:demo} muestra el sistema en funcionamiento, tanto el panel de operación local como la aplicación móvil.
+Este capítulo detalla el proceso de construcción del sistema descripto en el Capítulo~\ref{chapter03}, las tecnologías utilizadas y las decisiones de diseño detrás de ellas.
+La Sección~\ref{sec:herramientas_metodologia} describe la organización del equipo, la metodología de trabajo y las herramientas utilizadas; la Sección~\ref{sec:tecnologias} justifica, módulo por módulo, el stack tecnológico elegido frente a sus alternativas; la Sección~\ref{sec:evolucion_diseno} explica cómo cambió el diseño al implementarlo.
+Las Secciones~\ref{sec:api_backend} y~\ref{sec:despliegue} describen la API del backend y su despliegue en la nube; y la Sección~\ref{sec:demo} muestra el sistema en funcionamiento, tanto el panel de operación local como la aplicación móvil.
 
 \section{Organización, metodología y herramientas de trabajo}
 \label{sec:herramientas_metodologia}
 
-El control de versiones del proyecto corre sobre GitHub, tanto para el código del sistema (Sección~\ref{sec:diagrama_componentes}) como para este mismo informe, escrito en LaTeX y versionado en un repositorio separado, \texttt{PFI\_Ellero\_Ferrario}. El código del sistema está dividido en dos repositorios privados. El primero, \texttt{PFI\_Ellero\_Ferrario\_Backend}, reúne todo lo que está escrito en Python, tanto lo que corre en la Raspberry Pi como el backend en la nube, ya que ambos comparten código, como el esquema de eventos, y mantenerlos juntos evita que un lado quede desfasado respecto del otro. El segundo, \texttt{PFI\_Ellero\_Ferrario\_Frontend}, contiene la aplicación móvil, escrita en TypeScript sobre Expo, que tiene sus propias dependencias, herramientas y forma de publicarse. Mantener el informe bajo control de versiones, en lugar de un editor de texto colaborativo convencional, permite llevar un historial de cambios explícito por sección y trabajar en paralelo sobre distintos capítulos sin sobrescribirse entre los dos integrantes.
+El control de versiones del proyecto corre sobre GitHub, tanto para el código del sistema (Sección~\ref{sec:diagrama_componentes}) como para este mismo informe, escrito en LaTeX y versionado en un repositorio separado, \texttt{PFI\_Ellero\_Ferrario}.
+El código del sistema está dividido en dos repositorios privados.
+El primero, \texttt{PFI\_Ellero\_Ferrario\_Backend}, reúne todo lo que está escrito en Python, tanto lo que corre en la Raspberry Pi como el backend en la nube, ya que ambos comparten código, como el esquema de eventos, y mantenerlos juntos evita que un lado quede desfasado respecto del otro.
+El segundo, \texttt{PFI\_Ellero\_Ferrario\_Frontend}, contiene la aplicación móvil, escrita en TypeScript sobre Expo, que tiene sus propias dependencias, herramientas y forma de publicarse.
+Mantener el informe bajo control de versiones, en lugar de un editor de texto colaborativo convencional, permite llevar un historial de cambios explícito por sección y trabajar en paralelo sobre distintos capítulos sin sobrescribirse entre los dos integrantes.
 
 \subsection*{Metodología de desarrollo}
 
-El desarrollo del proyecto se organiza bajo un enfoque Kanban, en lugar de un marco con iteraciones de duración fija como Scrum. Kanban, en la formulación de \textcite{Anderson2010}, es un método de gestión del trabajo que se basa en visualizar el flujo de tareas, limitar la cantidad de trabajo en curso y gestionar ese flujo de forma continua. En el proyecto, el trabajo se gestiona como un flujo continuo de tareas visualizadas en un tablero por columnas de estado, sin comprometerse de antemano a un lote fijo de tareas por \textit{sprint}. Este enfoque resulta adecuado para un equipo de dos integrantes con una carga de tareas heterogénea entre secciones del informe, módulos de código y preparación de entregas, donde la prioridad cambia con frecuencia según el estado de cada frente y no se justifica la sobrecarga de coordinación de ceremonias como planning o daily stand-up.
+El desarrollo del proyecto se organiza bajo un enfoque Kanban, en lugar de un marco con iteraciones de duración fija como Scrum.
+Kanban, en la formulación de \textcite{Anderson2010}, es un método de gestión del trabajo que se basa en visualizar el flujo de tareas, limitar la cantidad de trabajo en curso y gestionar ese flujo de forma continua.
+En el proyecto, el trabajo se gestiona como un flujo continuo de tareas visualizadas en un tablero por columnas de estado, sin comprometerse de antemano a un lote fijo de tareas por \textit{sprint}.
+Este enfoque resulta adecuado para un equipo de dos integrantes con una carga de tareas heterogénea entre secciones del informe, módulos de código y preparación de entregas, donde la prioridad cambia con frecuencia según el estado de cada frente y no se justifica la sobrecarga de coordinación de ceremonias como planning o daily stand-up.
 
 La planificación y el seguimiento de tareas del equipo se gestionan en un tablero Kanban en Trello, organizado en tres columnas (Pendiente, En curso y Hecho), donde se desglosan los hitos del cronograma del proyecto, presentado como diagrama de Gantt en el Anexo~\ref{anexo:cronograma} (Figuras~\ref{fig:gantt1} a~\ref{fig:gantt5}), en tareas concretas asignadas a cada integrante.
 El seguimiento con el tutor se realiza mediante reuniones periódicas por Microsoft Teams, donde se revisa el avance del tablero y se ajustan prioridades para el próximo período.
@@ -17,16 +26,20 @@ Las dos herramientas cumplen funciones distintas, ya que el diagrama de Gantt fi
 El tablero no fija un límite formal de tareas en curso ni reglas escritas para pasar una tarjeta de columna, de modo que el equipo aplica una versión simplificada del método, acorde a un equipo de dos personas.
 Las prioridades se revisan en las reuniones periódicas con el tutor.
 
-Los diagramas presentados en el Capítulo~\ref{chapter03} (Diagrama de Casos de Uso, de Flujo de Información, de Componentes y de Arquitectura) se elaboraron en Lucidchart, en lugar de una herramienta de dibujo genérica, porque ofrece plantillas y notación estándar para diagramas UML y de arquitectura. Eso agiliza mantener una consistencia visual entre los distintos diagramas del informe.
+Los diagramas presentados en el Capítulo~\ref{chapter03} (Diagrama de Casos de Uso, de Flujo de Información, de Componentes y de Arquitectura) se elaboraron en Lucidchart, en lugar de una herramienta de dibujo genérica, porque ofrece plantillas y notación estándar para diagramas UML y de arquitectura.
+Eso agiliza mantener una consistencia visual entre los distintos diagramas del informe.
 
 Para el material que no se versiona bien como archivo de texto plano (las grabaciones y transcripciones de las entrevistas semiestructuradas y los datos de la encuesta del User Research, Capítulo~\ref{chapter03}) y los datasets de video utilizados para calibrar y validar el sistema (Sección~\ref{sec:datasets}), cuyo peso tampoco es compatible con el control de versiones de Git, se utiliza Google Drive como repositorio compartido.
 
-Notion se utiliza además como fuente centralizada de seguimiento general del proyecto, donde se registran las notas de las reuniones con el tutor, el feedback recibido en cada entrega y las sugerencias o decisiones que van surgiendo a lo largo del desarrollo. Ahí también se releva de forma continua, a medida que se van detectando, tanto los trabajos académicos como las soluciones comerciales similares al sistema propuesto, un registro que alimenta la Tabla~\ref{tab:comparacion} del Capítulo~\ref{chapter02} y la Tabla~\ref{tab:comparativa_comercial} de la Sección~\ref{sec:tabla_comparativa_comercial}.
+Notion se utiliza además como fuente centralizada de seguimiento general del proyecto, donde se registran las notas de las reuniones con el tutor, el feedback recibido en cada entrega y las sugerencias o decisiones que van surgiendo a lo largo del desarrollo.
+Ahí también se releva de forma continua, a medida que se van detectando, tanto los trabajos académicos como las soluciones comerciales similares al sistema propuesto, un registro que alimenta la Tabla~\ref{tab:comparacion} del Capítulo~\ref{chapter02} y la Tabla~\ref{tab:comparativa_comercial} de la Sección~\ref{sec:tabla_comparativa_comercial}.
 
 \section{Tecnologías}
 \label{sec:tecnologias}
 
-El Marco Teórico (Sección~\ref{sec:vlm_marco}, Sección~\ref{sec:edge_marco}) y el Estado del Arte (Sección~\ref{sec:brecha}) presentaron, desde una perspectiva académica y clínica, las técnicas sobre las que se apoya este proyecto, YOLO, CLIP, el \textit{clustering} dinámico y el paradigma de \textit{edge computing}. El Diagrama de Componentes (Sección~\ref{sec:diagrama_componentes}) y el Diagrama de Arquitectura (Sección~\ref{sec:diagrama_arquitectura}) ya mostraron cómo está organizado el código y cómo se despliega el sistema completo, desde la cámara IP hasta la aplicación móvil. Sobre esa base conceptual y de despliegue, lo que sigue es la decisión de ingeniería inmediatamente debajo de esas dos capas, es decir, qué lenguaje usa cada componente, qué frameworks y librerías concretas lo implementan, y qué protocolo de comunicación lo conecta con el resto del sistema, además de por qué se eligió cada uno frente a sus alternativas.
+El Marco Teórico (Sección~\ref{sec:vlm_marco}, Sección~\ref{sec:edge_marco}) y el Estado del Arte (Sección~\ref{sec:brecha}) presentaron, desde una perspectiva académica y clínica, las técnicas sobre las que se apoya este proyecto, YOLO, CLIP, el \textit{clustering} dinámico y el paradigma de \textit{edge computing}.
+El Diagrama de Componentes (Sección~\ref{sec:diagrama_componentes}) y el Diagrama de Arquitectura (Sección~\ref{sec:diagrama_arquitectura}) ya mostraron cómo está organizado el código y cómo se despliega el sistema completo, desde la cámara IP hasta la aplicación móvil.
+Sobre esa base conceptual y de despliegue, lo que sigue es la decisión de ingeniería inmediatamente debajo de esas dos capas, es decir, qué lenguaje usa cada componente, qué frameworks y librerías concretas lo implementan, y qué protocolo de comunicación lo conecta con el resto del sistema, además de por qué se eligió cada uno frente a sus alternativas.
 
 \subsection{Lenguaje y stack de desarrollo}
 
@@ -56,10 +69,12 @@ Exportar a ONNX tiene además la ventaja de desacoplar el modelo del framework e
 \subsubsection*{Pydantic y SQLite en el contrato de eventos}
 El esquema \texttt{MonitoringEvent} que actúa de contrato entre \texttt{vision/}, \texttt{vlm/} y \texttt{baseline/} (Sección~\ref{sec:diagrama_componentes}) está definido con Pydantic, que valida en tiempo de ejecución que cada evento tenga el tipo y la estructura esperada antes de persistirlo, algo que una clase de Python sin validación no garantizaría.
 La persistencia local usa SQLite a través del módulo estándar \texttt{sqlite3}, sin una capa de ORM intermedia.
-Se descartó un ORM como SQLAlchemy ya que el volumen y la variedad de consultas sobre \texttt{events/} son bajos (insertar un evento, leerlos todos o filtrados por identificador de video o de cámara). Esas consultas ya están expresadas con claridad en SQL directo, de modo que la capa de abstracción adicional de un ORM no aportaría legibilidad ni velocidad de desarrollo, solo una dependencia más.
+Se descartó un ORM como SQLAlchemy ya que el volumen y la variedad de consultas sobre \texttt{events/} son bajos (insertar un evento, leerlos todos o filtrados por identificador de video o de cámara).
+Esas consultas ya están expresadas con claridad en SQL directo, de modo que la capa de abstracción adicional de un ORM no aportaría legibilidad ni velocidad de desarrollo, solo una dependencia más.
 En la nube, en cambio, el backend sí usa SQLAlchemy como ORM y Alembic para versionar el esquema, porque el modelo relacional de hogares, familiares, kits, cámaras y eventos y sus migraciones justifican esa capa.
 SQLite en sí, frente a un motor cliente-servidor como PostgreSQL, es la elección natural para este punto del sistema porque el requisito no es concurrencia entre múltiples clientes sino persistencia liviana de un único proceso local (RNF6), sin necesidad de levantar ni administrar un servidor de base de datos en un dispositivo embebido.
-El mismo esquema es el que usa el backend en la nube para recibir los eventos de la controladora, y la aplicación móvil replica en sus tipos de TypeScript la forma en que la API devuelve esos eventos. Por lo tanto, un cambio en el esquema obliga a actualizar los dos repositorios en conjunto.
+El mismo esquema es el que usa el backend en la nube para recibir los eventos de la controladora, y la aplicación móvil replica en sus tipos de TypeScript la forma en que la API devuelve esos eventos.
+Por lo tanto, un cambio en el esquema obliga a actualizar los dos repositorios en conjunto.
 
 \subsubsection*{scikit-learn para el aprendizaje adaptativo}
 El módulo \texttt{baseline/} implementa sobre scikit-learn el clustering dinámico con ventana móvil descripto en el Marco Teórico (\textcite{Snoun2024}), y corre en la nube, en AWS, sobre el historial de eventos de cada hogar (Sección~\ref{sec:backend_nube}).
@@ -72,14 +87,17 @@ El panel necesita atender al mismo tiempo peticiones REST convencionales (alta d
 Flask, basado en WSGI, no soporta WebSockets de forma nativa y exige una extensión externa para mantener esa conexión, mientras que FastAPI, sobre ASGI, atiende las peticiones REST y los WebSockets en el mismo proceso.
 
 \subsubsection*{Threading y configuración declarativa en la orquestación}
-El módulo \texttt{runner/} corre un \textit{thread} por cámara para poder procesar varias fuentes de video en paralelo (RNF9), cada uno con su propia instancia del detector de caídas e inmovilidad, pero compartiendo una única instancia del clasificador CLIP, dado que ONNX Runtime admite inferencia concurrente de forma segura y cargar el modelo una vez por cámara sería redundante. La configuración de cámaras (identificador, fuente, modo de reproducción) se declara en \texttt{cameras.yaml} mediante PyYAML, en lugar de codificarse directamente en el programa. De ese modo, agregar, quitar o modificar una cámara no requiere cambiar ni redesplegar el código del runner, algo relevante para el panel de operación local, desde el cual la propia familia, o el soporte técnico en una visita presencial, pueden dar de alta o modificar las cámaras de un kit.
+El módulo \texttt{runner/} corre un \textit{thread} por cámara para poder procesar varias fuentes de video en paralelo (RNF9), cada uno con su propia instancia del detector de caídas e inmovilidad, pero compartiendo una única instancia del clasificador CLIP, dado que ONNX Runtime admite inferencia concurrente de forma segura y cargar el modelo una vez por cámara sería redundante.
+La configuración de cámaras (identificador, fuente, modo de reproducción) se declara en \texttt{cameras.yaml} mediante PyYAML, en lugar de codificarse directamente en el programa.
+De ese modo, agregar, quitar o modificar una cámara no requiere cambiar ni redesplegar el código del runner, algo relevante para el panel de operación local, desde el cual la propia familia, o el soporte técnico en una visita presencial, pueden dar de alta o modificar las cámaras de un kit.
 
 \subsection{Backend en la nube y arquitectura de red}
 \label{sec:backend_nube}
 
 Del lado de la nube, el backend que recibe los eventos de la Raspberry Pi, calcula la línea base y los expone a la aplicación móvil (Sección~\ref{sec:diagrama_arquitectura}) está construido sobre FastAPI, el mismo framework que ya corre en \texttt{dashboard/} para el panel de operación local.
 Reutilizar el mismo framework en ambas puntas tiene dos razones concretas.
-Permite que la nube valide los eventos con el mismo esquema Pydantic \texttt{MonitoringEvent} con el que los guarda la controladora, sin duplicar la validación, y aprovecha que el equipo ya resolvió la curva de aprendizaje de FastAPI con \texttt{dashboard/}. Eso evita sumar un framework nuevo, por ejemplo Flask o Django, exclusivamente para el backend en la nube.
+Permite que la nube valide los eventos con el mismo esquema Pydantic \texttt{MonitoringEvent} con el que los guarda la controladora, sin duplicar la validación, y aprovecha que el equipo ya resolvió la curva de aprendizaje de FastAPI con \texttt{dashboard/}.
+Eso evita sumar un framework nuevo, por ejemplo Flask o Django, exclusivamente para el backend en la nube.
 
 La comunicación entre la Raspberry Pi y el backend en AWS se resolvió sobre REST por HTTP, y no sobre un protocolo de mensajería como MQTT.
 La razón es el patrón de tráfico, ya que el sistema no transmite un flujo continuo de datos (el video nunca sale del dispositivo, según RNF1) sino eventos discretos y de baja frecuencia, como una caída, un cambio de actividad o el envío periódico de los eventos acumulados, que la controladora hace cada 30 segundos por defecto, un volumen para el que un modelo publish/subscribe agrega complejidad operativa, al requerir un broker adicional para administrar, sin un beneficio claro frente a llamadas HTTP directas.
@@ -89,20 +107,31 @@ En el diseño previsto para el kit, las cámaras se conectan a una red wifi priv
 Para hacerlo se autentica con una credencial propia del kit, que se guarda en la controladora desde fábrica y en el backend solo como hash, y que identifica al aparato y no al familiar.
 Esa misma conexión saliente es la que se reintenta cuando se restablece la conectividad tras un corte (RNF7), sincronizando los eventos acumulados en SQLite durante ese lapso (RNF6).
 
-La vinculación del kit con la cuenta del familiar (RF14) también pasa por el backend. Cuando el familiar escanea el código QR, la aplicación envía ese código a un endpoint de vinculación, que lo busca por su hash y, si el kit está libre, en una misma transacción crea el hogar, se lo asigna al kit y a sus cámaras y registra al familiar como responsable principal. El código es de un solo uso, de modo que un segundo intento desde otra cuenta se rechaza y los demás familiares se suman por invitación del responsable principal. Si el pedido se repite desde la misma cuenta, por ejemplo tras un corte de conexión a mitad de la vinculación, el backend devuelve el mismo resultado en lugar de un error. Además, el endpoint limita a cinco los intentos fallidos de cada familiar en un lapso de quince minutos, ya que, aunque con ocho caracteres adivinar un código es improbable, ese límite impide probar códigos de forma masiva. Mientras el kit no está vinculado, el backend rechaza sus eventos y la controladora los conserva localmente, igual que ante un corte de conexión (RNF6).
+La vinculación del kit con la cuenta del familiar (RF14) también pasa por el backend.
+Cuando el familiar escanea el código QR, la aplicación envía ese código a un endpoint de vinculación, que lo busca por su hash y, si el kit está libre, en una misma transacción crea el hogar, se lo asigna al kit y a sus cámaras y registra al familiar como responsable principal.
+El código es de un solo uso, de modo que un segundo intento desde otra cuenta se rechaza y los demás familiares se suman por invitación del responsable principal.
+Si el pedido se repite desde la misma cuenta, por ejemplo tras un corte de conexión a mitad de la vinculación, el backend devuelve el mismo resultado en lugar de un error.
+Además, el endpoint limita a cinco los intentos fallidos de cada familiar en un lapso de quince minutos, ya que, aunque con ocho caracteres adivinar un código es improbable, ese límite impide probar códigos de forma masiva.
+Mientras el kit no está vinculado, el backend rechaza sus eventos y la controladora los conserva localmente, igual que ante un corte de conexión (RNF6).
 
 A futuro, para hogares donde el router no queda cerca de la controladora, se prevé conectarla por wifi en lugar de cable, con la aplicación pasándole el nombre y la contraseña de la red por Bluetooth, de la misma forma en que se configuran dispositivos como Google Home o Chromecast.
 
-Del lado de la persistencia en la nube, el backend usa Amazon RDS sobre PostgreSQL y no replica el SQLite local. La diferencia de requisitos lo justifica, porque en la nube la base de datos tiene que atender accesos concurrentes de la aplicación móvil de distintos hogares al mismo tiempo, algo para lo que SQLite no está pensado, dado que su modelo de concurrencia asume esencialmente un único proceso escritor. En cambio, PostgreSQL sí soporta múltiples conexiones concurrentes y permite modelar relaciones entre hogares, usuarios y eventos que en el prototipo local, restringido a un único residente por instalación, todavía no hacen falta.
+Del lado de la persistencia en la nube, el backend usa Amazon RDS sobre PostgreSQL y no replica el SQLite local.
+La diferencia de requisitos lo justifica, porque en la nube la base de datos tiene que atender accesos concurrentes de la aplicación móvil de distintos hogares al mismo tiempo, algo para lo que SQLite no está pensado, dado que su modelo de concurrencia asume esencialmente un único proceso escritor.
+En cambio, PostgreSQL sí soporta múltiples conexiones concurrentes y permite modelar relaciones entre hogares, usuarios y eventos que en el prototipo local, restringido a un único residente por instalación, todavía no hacen falta.
 
-La autenticación de la aplicación móvil se apoya en Firebase Authentication y no en un esquema de tokens propio administrado por el backend, principalmente porque el sistema ya depende de Firebase Cloud Messaging para las notificaciones push (RF8). Sumar también Firebase Authentication evita administrar un segundo proveedor de identidad y aprovecha que el SDK de Firebase en el cliente móvil (React Native) ya integra ambos servicios de forma nativa. El costo es una dependencia mayor de un proveedor externo, pero se trata de un servicio de autenticación estándar, con inicio de sesión por correo y contraseña o proveedores federados, y no de un componente que procese datos sensibles del video ni de la línea base de comportamiento, por lo que no compromete el requisito de privacidad desarrollado en el Marco Teórico (Sección~\ref{sec:edge_marco}). En el prototipo no se exige verificar el correo electrónico al crear la cuenta, y sumar esa verificación antes de vincular el kit queda como mejora futura para reforzar el control de acceso que exigen RNF10 y RF12.
+La autenticación de la aplicación móvil se apoya en Firebase Authentication y no en un esquema de tokens propio administrado por el backend, principalmente porque el sistema ya depende de Firebase Cloud Messaging para las notificaciones push (RF8).
+Sumar también Firebase Authentication evita administrar un segundo proveedor de identidad y aprovecha que el SDK de Firebase en el cliente móvil (React Native) ya integra ambos servicios de forma nativa.
+El costo es una dependencia mayor de un proveedor externo, pero se trata de un servicio de autenticación estándar, con inicio de sesión por correo y contraseña o proveedores federados, y no de un componente que procese datos sensibles del video ni de la línea base de comportamiento, por lo que no compromete el requisito de privacidad desarrollado en el Marco Teórico (Sección~\ref{sec:edge_marco}).
+En el prototipo no se exige verificar el correo electrónico al crear la cuenta, y sumar esa verificación antes de vincular el kit queda como mejora futura para reforzar el control de acceso que exigen RNF10 y RF12.
 
 Por último, la aplicación móvil está desarrollada en React Native.
 Desarrollar de forma nativa en Swift y en Kotlin por separado no se justifica en este caso, porque la aplicación no requiere acceso a funcionalidades de bajo nivel del dispositivo más allá de recibir notificaciones push, usar la cámara del celular para escanear el código QR del kit y consumir una API REST, necesidades que React Native cubre con las librerías del ecosistema Expo, y duplicar ese desarrollo tiene poco sentido para un equipo de dos personas con un cronograma acotado.
 Frente a Flutter, la otra alternativa multiplataforma, React Native permite escribir la aplicación en TypeScript y no en Dart y usar las librerías de Expo para el escaneo del código QR.
 La aplicación está construida con Expo y escrita en TypeScript, lo que permite probarla directamente en el celular durante el desarrollo.
 Frente a JavaScript, TypeScript detecta al compilar cualquier diferencia entre los tipos de la aplicación y los datos que devuelve la API.
-El código se organiza en una carpeta por funcionalidad, y todas las pantallas acceden al backend a través de una única capa de acceso a datos, que además puede trabajar con datos de prueba. Eso permitió diseñar y probar las pantallas antes de que el backend estuviera disponible.
+El código se organiza en una carpeta por funcionalidad, y todas las pantallas acceden al backend a través de una única capa de acceso a datos, que además puede trabajar con datos de prueba.
+Eso permitió diseñar y probar las pantallas antes de que el backend estuviera disponible.
 
 \subsection{Datasets y pipeline de datos}
 \label{sec:datasets}
@@ -212,7 +241,8 @@ Cuando YOLO no logra ver el esqueleto, por ejemplo con la persona en un sillón 
 El Marco Teórico planteaba que la pose distingue estados corporales pero no actividades sedentarias parecidas, y que por eso hacía falta un VLM que aportara el contexto de la escena (Sección~\ref{sec:vlm_marco}).
 La primera implementación siguió ese planteo con CLIP sin entrenamiento previo, comparando cada imagen contra descripciones de texto de las actividades.
 Funcionaba sobre los videos usados para ajustarlo, pero con personas que no aparecían en esos videos el desempeño cayó de forma marcada, la misma degradación fuera de distribución que reportan \textcite{Schonfeldt2025}.
-Siguiendo la advertencia de \textcite{Reilly2025b} sobre la necesidad de especializar los VLM generalistas, se entrenó un clasificador liviano sobre las representaciones que CLIP ya calcula, sin reentrenar el modelo. Se sumó un recorte de las manos, porque actividades como comer o tomar una medicación dependen de lo que la persona tiene en la mano.
+Siguiendo la advertencia de \textcite{Reilly2025b} sobre la necesidad de especializar los VLM generalistas, se entrenó un clasificador liviano sobre las representaciones que CLIP ya calcula, sin reentrenar el modelo.
+Se sumó un recorte de las manos, porque actividades como comer o tomar una medicación dependen de lo que la persona tiene en la mano.
 Aun así, CLIP mira un único instante y no ve el movimiento.
 Por eso se recuperó la línea de \textcite{Ramirez2022} y \textcite{Elnady2025}, que el Capítulo~\ref{chapter02} había descartado como solución única, con un clasificador temporal sobre la secuencia de keypoints que YOLO ya calcula, y la clasificación final combina las dos señales.
 El resultado confirma lo que planteaba el Marco Teórico, que la postura es necesaria pero no suficiente, con el agregado de que el contexto visual tampoco alcanza solo.
@@ -305,7 +335,8 @@ El video que muestra el panel se sirve desde la controladora y solo es accesible
 El panel todavía no pide contraseña, y protegerlo con una queda pendiente.
 
 En primer lugar, la Figura~\ref{fig:demo_caida} muestra la vista de una única fuente sobre el video \texttt{fall}, con el esqueleto de keypoints de YOLO superpuesto sobre la persona detectada en el piso.
-A la derecha, la pestaña Postura · YOLO lista cuatro eventos de caída detectada, no porque haya cuatro caídas distintas, sino porque \texttt{fall} es un clip corto de prueba configurado en bucle. El sistema vuelve a detectar la caída correctamente en cada repetición, con el aspect ratio del cuadro delimitador y el ángulo del cuerpo que \texttt{vision/} usa para esa detección (RF1).
+A la derecha, la pestaña Postura · YOLO lista cuatro eventos de caída detectada, no porque haya cuatro caídas distintas, sino porque \texttt{fall} es un clip corto de prueba configurado en bucle.
+El sistema vuelve a detectar la caída correctamente en cada repetición, con el aspect ratio del cuadro delimitador y el ángulo del cuerpo que \texttt{vision/} usa para esa detección (RF1).
 La pestaña Actividad · CLIP de esa misma fuente no registra eventos en ese momento.
 
 \begin{figure}[H]
@@ -318,7 +349,8 @@ La pestaña Actividad · CLIP de esa misma fuente no registra eventos en ese mom
 
 Por su parte, la Figura~\ref{fig:demo_actividad} muestra el mismo panel sobre la fuente \texttt{video2}, donde el patrón se invierte.
 La pestaña Postura · YOLO no registra eventos porque no hubo caídas ni inmovilidad, mientras que Actividad · CLIP acumula siete eventos de clasificación semántica (RF2), también repetidos por el mismo motivo, un clip corto en bucle.
-Esos eventos alternan entre ``posiblemente comiendo, bebiendo o con medicación'' con hasta 73\,\% de confianza y ``leyendo o usando una pantalla'' con hasta 72\,\%, porque el clip corresponde a la actividad de beber de una taza de Toyota Smarthome y la persona tiene papeles sobre la mesa. De ese modo, el clasificador alterna entre dos categorías de gestos sedentarios parecidos.
+Esos eventos alternan entre ``posiblemente comiendo, bebiendo o con medicación'' con hasta 73\,\% de confianza y ``leyendo o usando una pantalla'' con hasta 72\,\%, porque el clip corresponde a la actividad de beber de una taza de Toyota Smarthome y la persona tiene papeles sobre la mesa.
+De ese modo, el clasificador alterna entre dos categorías de gestos sedentarios parecidos.
 Esa ambigüedad es la misma que se mide en la Sección~\ref{sec:pruebas_actividades}.
 La etiqueta ``sin confirmar'' corresponde a una versión anterior del panel, que marcaba así la categoría de comer, beber o medicación cuando no alcanzaba el umbral de confianza propio de esa clase, y la versión actual informa en ese caso la segunda categoría más probable.
 
@@ -330,7 +362,9 @@ La etiqueta ``sin confirmar'' corresponde a una versión anterior del panel, que
 \end{figure}
 \FloatBarrier
 
-Además, la Figura~\ref{fig:demo_todas} muestra la vista completa del panel, con cinco fuentes de video de prueba corriendo en simultáneo, más de las tres cámaras que admite un kit, cada una con su propio overlay de pose y un indicador de estado (RNF9). Debajo, el feed de eventos detectados reúne en un único listado cronológico los eventos de las cinco fuentes a la vez, caídas, actividades e inmovilidad mezcladas, pero cada tarjeta indica de qué cámara proviene ese evento en particular, por ejemplo \texttt{fall} o \texttt{video2}. De ese modo, verlas todas juntas no significa perder de dónde viene cada una, la misma lógica de registro centralizado que exige RF5.
+Además, la Figura~\ref{fig:demo_todas} muestra la vista completa del panel, con cinco fuentes de video de prueba corriendo en simultáneo, más de las tres cámaras que admite un kit, cada una con su propio overlay de pose y un indicador de estado (RNF9).
+Debajo, el feed de eventos detectados reúne en un único listado cronológico los eventos de las cinco fuentes a la vez, caídas, actividades e inmovilidad mezcladas, pero cada tarjeta indica de qué cámara proviene ese evento en particular, por ejemplo \texttt{fall} o \texttt{video2}.
+De ese modo, verlas todas juntas no significa perder de dónde viene cada una, la misma lógica de registro centralizado que exige RF5.
 
 \begin{figure}[H]
     \centering
@@ -340,7 +374,9 @@ Además, la Figura~\ref{fig:demo_todas} muestra la vista completa del panel, con
 \end{figure}
 \FloatBarrier
 
-Por último, la Figura~\ref{fig:demo_alta} muestra el panel de fuentes de video, donde las cámaras y archivos ya cargados se pueden reordenar en la lista, y donde se puede sumar una fuente nueva, ya sea una cámara IP o un archivo de video local, con un identificador propio y la opción de repetirlo en bucle. El soporte técnico usa esta pantalla de forma presencial, en el domicilio, cuando hace falta resolver algo puntual, como dar de alta una cámara de reemplazo. Para la familia su uso es opcional, porque la ubicación de cada cámara se asigna desde la aplicación móvil (RF10), aunque puede entrar al panel desde un navegador conectado a la red de la casa si quiere ver o controlar el monitoreo.
+Por último, la Figura~\ref{fig:demo_alta} muestra el panel de fuentes de video, donde las cámaras y archivos ya cargados se pueden reordenar en la lista, y donde se puede sumar una fuente nueva, ya sea una cámara IP o un archivo de video local, con un identificador propio y la opción de repetirlo en bucle.
+El soporte técnico usa esta pantalla de forma presencial, en el domicilio, cuando hace falta resolver algo puntual, como dar de alta una cámara de reemplazo.
+Para la familia su uso es opcional, porque la ubicación de cada cámara se asigna desde la aplicación móvil (RF10), aunque puede entrar al panel desde un navegador conectado a la red de la casa si quiere ver o controlar el monitoreo.
 
 \begin{figure}[H]
     \centering

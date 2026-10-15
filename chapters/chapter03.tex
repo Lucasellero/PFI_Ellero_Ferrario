@@ -1,6 +1,10 @@
 \chapter{Descripción}\label{chapter03}
 
-El estado del arte revisado en el capítulo anterior identificó una brecha, la ausencia de un sistema que integre detección de eventos agudos, comprensión semántica de actividades y modelado longitudinal de rutinas con procesamiento local. Antes de traducir esa brecha en un diseño concreto, este capítulo la contrasta con las necesidades reales de cuidadores y adultos mayores mediante un proceso de investigación de usuarios. Primero se presenta el User Research, del cual se derivan los requerimientos funcionales y no funcionales, las historias de usuario y los mockups de la aplicación móvil. Luego se documentan los diagramas de diseño del sistema y el modelo de datos, y se analiza el panorama competitivo y el posicionamiento del proyecto en el mercado. Por último se evalúa su viabilidad legal, técnica y económica, y se define la identidad de marca con la que el sistema se presentaría al público.
+El estado del arte revisado en el capítulo anterior identificó una brecha, la ausencia de un sistema que integre detección de eventos agudos, comprensión semántica de actividades y modelado longitudinal de rutinas con procesamiento local.
+Antes de traducir esa brecha en un diseño concreto, este capítulo la contrasta con las necesidades reales de cuidadores y adultos mayores mediante un proceso de investigación de usuarios.
+Primero se presenta el User Research, del cual se derivan los requerimientos funcionales y no funcionales, las historias de usuario y los mockups de la aplicación móvil.
+Luego se documentan los diagramas de diseño del sistema y el modelo de datos, y se analiza el panorama competitivo y el posicionamiento del proyecto en el mercado.
+Por último se evalúa su viabilidad legal, técnica y económica, y se define la identidad de marca con la que el sistema se presentaría al público.
 
 \section{User Research}
 
@@ -17,18 +21,26 @@ El grupo más numeroso de cuidadores tiene entre 45 y 54~años (47\,\%), con un 
 Son personas en plena vida activa, con responsabilidades laborales y familiares propias, que dedican menos de 10~horas semanales de atención directa al adulto mayor (79\,\%) (Figura~\ref{fig:encuesta_q2}).
 No son cuidadores de tiempo completo; cuidan desde la distancia, en paralelo a todo lo demás.
 
-La situación del adulto mayor que cuidan refuerza esta tensión. El 48\,\% vive solo de forma permanente y un 18\,\% adicional queda solo con cierta frecuencia (Figura~\ref{fig:encuesta_q3}). En el 66\,\% de los casos hay, al menos ocasionalmente, períodos en los que el adulto mayor está sin nadie presente.
+La situación del adulto mayor que cuidan refuerza esta tensión.
+El 48\,\% vive solo de forma permanente y un 18\,\% adicional queda solo con cierta frecuencia (Figura~\ref{fig:encuesta_q3}).
+En el 66\,\% de los casos hay, al menos ocasionalmente, períodos en los que el adulto mayor está sin nadie presente.
 
-El nivel de preocupación que expresan es alto. El 69\,\% indicó los valores más elevados de la escala al ser consultados sobre su tranquilidad cuando no están presentes (Figura~\ref{fig:encuesta_q4}). La situación que más los inquieta es una caída sin posibilidad de pedir ayuda, mencionada en el 70\,\% de las respuestas (Figura~\ref{fig:encuesta_q5}), seguida por la ocurrencia de un problema de salud repentino. Ambos escenarios comparten un rasgo en común, ya que se trata de eventos que pueden pasar inadvertidos durante horas si nadie está mirando.
+El nivel de preocupación que expresan es alto.
+El 69\,\% indicó los valores más elevados de la escala al ser consultados sobre su tranquilidad cuando no están presentes (Figura~\ref{fig:encuesta_q4}).
+La situación que más los inquieta es una caída sin posibilidad de pedir ayuda, mencionada en el 70\,\% de las respuestas (Figura~\ref{fig:encuesta_q5}), seguida por la ocurrencia de un problema de salud repentino.
+Ambos escenarios comparten un rasgo en común, ya que se trata de eventos que pueden pasar inadvertidos durante horas si nadie está mirando.
 
-El contacto que ya mantienen tampoco alcanza para disipar esa preocupación. Solo el 19\,\% considera que el nivel de contacto actual es suficiente para estar tranquilo, mientras que el 50\,\% todavía tiene dudas pese a ese contacto y el 31\,\% necesitaría más información o más contacto (Figura~\ref{fig:encuesta_q6}).
+El contacto que ya mantienen tampoco alcanza para disipar esa preocupación.
+Solo el 19\,\% considera que el nivel de contacto actual es suficiente para estar tranquilo, mientras que el 50\,\% todavía tiene dudas pese a ese contacto y el 31\,\% necesitaría más información o más contacto (Figura~\ref{fig:encuesta_q6}).
 
 Frente a eso, las soluciones que usan hoy son limitadas.
 El 76\,\% usa el teléfono celular como mecanismo de contacto y seguimiento, y solo el 7\,\% utiliza algún sistema de videovigilancia o botón de pánico (Figura~\ref{fig:encuesta_q7}).
 El problema no es únicamente la falta de herramientas; el 41\,\% reporta que el adulto mayor olvida o rechaza el dispositivo disponible, y un 37\,\% no usa ninguna solución específica de monitoreo (Figura~\ref{fig:encuesta_q8}).
 Hay una brecha concreta entre lo que los cuidadores necesitan y lo que tienen disponible hoy.
 
-Al presentarles la propuesta, el 89\,\% la calificó con 4 o 5 sobre 5 en términos de utilidad percibida (Figura~\ref{fig:encuesta_q9}). Los aspectos más valorados fueron las alertas en tiempo real (45\,\%) y que el adulto mayor no deba operar ningún dispositivo (40\,\%) (Figura~\ref{fig:encuesta_q10}). Este segundo punto refleja algo que los encuestados comprenden bien, y es que el obstáculo no está en ellos sino en lograr que quien debe ser cuidado adopte y mantenga el uso de una herramienta.
+Al presentarles la propuesta, el 89\,\% la calificó con 4 o 5 sobre 5 en términos de utilidad percibida (Figura~\ref{fig:encuesta_q9}).
+Los aspectos más valorados fueron las alertas en tiempo real (45\,\%) y que el adulto mayor no deba operar ningún dispositivo (40\,\%) (Figura~\ref{fig:encuesta_q10}).
+Este segundo punto refleja algo que los encuestados comprenden bien, y es que el obstáculo no está en ellos sino en lograr que quien debe ser cuidado adopte y mantenga el uso de una herramienta.
 
 \subsection{Entrevistas}
 
@@ -37,23 +49,34 @@ Las tres personas se contactaron a través del entorno cercano del equipo, entre
 Este tamaño muestral responde al carácter cualitativo de la herramienta, que busca profundidad interpretativa antes que representatividad estadística, un rol que ya cumple la encuesta con sus 121 respuestas.
 Los tres perfiles se seleccionaron para cubrir ambos extremos de la relación de cuidado, dos cuidadores con patrones de contacto opuestos y la persona efectivamente monitoreada por el sistema, de modo que las entrevistas aporten ángulos complementarios y no una simple repetición del mismo punto de vista.
 De los cuidadores, uno sostiene una rutina diaria de contacto con la persona que cuida y el otro tiene visitas irregulares, aun viviendo a pocos minutos de distancia.
-Los tres perfiles son relevantes para el proyecto, ya que los dos primeros concentran la mayor parte de los encuestados y permiten contrastar dos formas distintas en que se manifiesta la misma brecha de supervisión. En cambio, el tercero representa al usuario directamente monitoreado por el sistema.
+Los tres perfiles son relevantes para el proyecto, ya que los dos primeros concentran la mayor parte de los encuestados y permiten contrastar dos formas distintas en que se manifiesta la misma brecha de supervisión.
+En cambio, el tercero representa al usuario directamente monitoreado por el sistema.
 Las transcripciones completas se presentan en el Anexo~\ref{anexo:entrevistas}.
 
 \subsubsection{Entrevista a hija cuidadora, rutina diaria de contacto}
 
-La entrevistada cuida a su madre, de avanzada edad, que vive sola y presenta deterioro cognitivo leve. De la entrevista surge con claridad que la preocupación del cuidador no es constante sino que se estructura en torno a franjas horarias específicas del día, como el momento de levantarse, el almuerzo y el regreso del trabajo. Esta dimensión temporal del cuidado es difícil de capturar mediante encuestas y refuerza la necesidad de un sistema que brinde visibilidad sobre la rutina diaria, no únicamente ante emergencias puntuales.
+La entrevistada cuida a su madre, de avanzada edad, que vive sola y presenta deterioro cognitivo leve.
+De la entrevista surge con claridad que la preocupación del cuidador no es constante sino que se estructura en torno a franjas horarias específicas del día, como el momento de levantarse, el almuerzo y el regreso del trabajo.
+Esta dimensión temporal del cuidado es difícil de capturar mediante encuestas y refuerza la necesidad de un sistema que brinde visibilidad sobre la rutina diaria, no únicamente ante emergencias puntuales.
 
-La entrevista también permitió documentar un incidente real que ilustra el problema central del proyecto. La entrevistada relató que su madre consumió en dos días una cantidad excesiva de alimentos, lo que derivó en un episodio de salud que requirió atención hospitalaria. El evento pasó inadvertido durante horas porque el adulto mayor no lo comunicó, lo que deja en evidencia que ciertas situaciones de riesgo no se detectan a tiempo con los canales de comunicación disponibles hoy.
+La entrevista también permitió documentar un incidente real que ilustra el problema central del proyecto.
+La entrevistada relató que su madre consumió en dos días una cantidad excesiva de alimentos, lo que derivó en un episodio de salud que requirió atención hospitalaria.
+El evento pasó inadvertido durante horas porque el adulto mayor no lo comunicó, lo que deja en evidencia que ciertas situaciones de riesgo no se detectan a tiempo con los canales de comunicación disponibles hoy.
 
 En cuanto a la privacidad, ante la aclaración de que el video se procesa dentro de la casa, la entrevistada manifestó que aceptaría el sistema siempre que las cámaras no cubran zonas íntimas del hogar, como el baño.
 Esa condición el diseño la contempla al dejar la ubicación de las cámaras a criterio de cada familia.
 
 \subsubsection{Entrevista a hijo cuidador, visitas irregulares}
 
-El segundo entrevistado cuida a su padre, viudo, que vive solo a diez minutos de su casa. A diferencia del primer caso, aquí el contacto no responde a una rutina sostenida sino que varía semana a semana, porque la cercanía física generó una falsa sensación de seguridad que, en la práctica, redujo la frecuencia real de supervisión. El entrevistado reconoció que, precisamente por vivir cerca, las visitas y los llamados se volvieron irregulares, bajo la lógica de que ante cualquier eventualidad podría llegar en minutos.
+El segundo entrevistado cuida a su padre, viudo, que vive solo a diez minutos de su casa.
+A diferencia del primer caso, aquí el contacto no responde a una rutina sostenida sino que varía semana a semana, porque la cercanía física generó una falsa sensación de seguridad que, en la práctica, redujo la frecuencia real de supervisión.
+El entrevistado reconoció que, precisamente por vivir cerca, las visitas y los llamados se volvieron irregulares, bajo la lógica de que ante cualquier eventualidad podría llegar en minutos.
 
-Esa falsa seguridad quedó expuesta en un incidente concreto. Su padre pasa varias horas por día sentado frente al televisor, cada vez con menos actividad física. En una de esas tardes, al levantarse después de un rato prolongado en la misma posición, sintió las piernas dormidas, perdió el equilibrio y cayó golpeándose contra una mesa. Permaneció varias horas en el piso sin poder levantarse por el dolor, hasta que el entrevistado lo llamó esa noche, como hace todos los días antes de cenar, y notó algo extraño en su voz. El episodio ilustra que la proximidad geográfica, sin un mecanismo de supervisión activo, no garantiza una detección oportuna, y refuerza la necesidad de detección automática de caídas e inmovilidad prolongada independientemente de cuán cerca viva el familiar responsable.
+Esa falsa seguridad quedó expuesta en un incidente concreto.
+Su padre pasa varias horas por día sentado frente al televisor, cada vez con menos actividad física.
+En una de esas tardes, al levantarse después de un rato prolongado en la misma posición, sintió las piernas dormidas, perdió el equilibrio y cayó golpeándose contra una mesa.
+Permaneció varias horas en el piso sin poder levantarse por el dolor, hasta que el entrevistado lo llamó esa noche, como hace todos los días antes de cenar, y notó algo extraño en su voz.
+El episodio ilustra que la proximidad geográfica, sin un mecanismo de supervisión activo, no garantiza una detección oportuna, y refuerza la necesidad de detección automática de caídas e inmovilidad prolongada independientemente de cuán cerca viva el familiar responsable.
 
 Al relatar el episodio, el entrevistado lo vinculó con una tendencia que ya había descrito al ser consultado por la actividad física de su padre, la de que su padre se mueve cada vez menos y pasa cada vez más horas sentado, un cambio gradual al que no le había dado importancia por no tratarse de una emergencia.
 Esta observación es un respaldo directo al módulo de aprendizaje adaptativo del sistema, que busca detectar precisamente ese tipo de desvíos en la rutina diaria antes de que deriven en un evento agudo.
@@ -62,15 +85,22 @@ Si bien el incidente ocurrió en el living, también planteó una solución conc
 
 \subsubsection{Entrevista a adulto mayor}
 
-La tercera entrevistada es una mujer de más de 70 años que vive con su marido pero con escasa supervisión de sus hijos, quienes residen fuera del hogar. Su rutina no tiene horarios fijos, ya que se levanta temprano, realiza actividades según el ánimo del momento y come cuando tiene hambre. Esta irregularidad en los patrones cotidianos es precisamente el tipo de comportamiento que el módulo de modelado de rutinas del sistema busca capturar de forma personalizada, sin imponer estructuras externas.
+La tercera entrevistada es una mujer de más de 70 años que vive con su marido pero con escasa supervisión de sus hijos, quienes residen fuera del hogar.
+Su rutina no tiene horarios fijos, ya que se levanta temprano, realiza actividades según el ánimo del momento y come cuando tiene hambre.
+Esta irregularidad en los patrones cotidianos es precisamente el tipo de comportamiento que el módulo de modelado de rutinas del sistema busca capturar de forma personalizada, sin imponer estructuras externas.
 
-Al indagar sobre situaciones de riesgo, la entrevistada no reportó incidentes graves, pero identificó con claridad los escenarios que le generan mayor preocupación, como atragantarse y no poder pedir ayuda, desmayarse en la bañera o quedar encerrada en algún ambiente. Son situaciones donde la persona no puede accionar ningún mecanismo de alerta por sus propios medios, lo que valida la necesidad de detección automática de eventos.
+Al indagar sobre situaciones de riesgo, la entrevistada no reportó incidentes graves, pero identificó con claridad los escenarios que le generan mayor preocupación, como atragantarse y no poder pedir ayuda, desmayarse en la bañera o quedar encerrada en algún ambiente.
+Son situaciones donde la persona no puede accionar ningún mecanismo de alerta por sus propios medios, lo que valida la necesidad de detección automática de eventos.
 
-Respecto a la tecnología, la entrevistada ya utiliza un sistema de alarma del hogar con botón de pánico, que le genera sensación de seguridad porque la conecta con servicios de emergencia sin necesidad de hacer nada especial. Esto indica una predisposición favorable hacia dispositivos de monitoreo pasivo, siempre que no requieran interacción activa de su parte.
+Respecto a la tecnología, la entrevistada ya utiliza un sistema de alarma del hogar con botón de pánico, que le genera sensación de seguridad porque la conecta con servicios de emergencia sin necesidad de hacer nada especial.
+Esto indica una predisposición favorable hacia dispositivos de monitoreo pasivo, siempre que no requieran interacción activa de su parte.
 
 Ante la propuesta de un sistema de cámaras que alerte a sus hijos solo ante eventos graves, la entrevistada respondió de forma positiva y sostuvo que \textit{``lo tomaría bien, no para preocuparlos, sino para que vengan si me pasó algo grave y no hay nadie a quien yo pueda llamar''} (Anexo~\ref{anexo:entrevistas}).
 
-La entrevistada también aportó un caso de referencia de su entorno, el de una conocida con Alzheimer incipiente a quien sus hijos instalaron cámaras en el hogar. En un incidente, una persona desconocida ingresó al domicilio y comenzó a agredirla. Los hijos, que se encontraban a distancia, detectaron la situación a través de la cámara e intervinieron a tiempo. Sin embargo, la entrevistada señaló una limitación importante de ese esquema, ya que consideró que \textit{``lo ideal sería algo que avise solo cuando pasa algo urgente, no que los hijos tengan que estar mirando todo el tiempo''} (Anexo~\ref{anexo:entrevistas}).
+La entrevistada también aportó un caso de referencia de su entorno, el de una conocida con Alzheimer incipiente a quien sus hijos instalaron cámaras en el hogar.
+En un incidente, una persona desconocida ingresó al domicilio y comenzó a agredirla.
+Los hijos, que se encontraban a distancia, detectaron la situación a través de la cámara e intervinieron a tiempo.
+Sin embargo, la entrevistada señaló una limitación importante de ese esquema, ya que consideró que \textit{``lo ideal sería algo que avise solo cuando pasa algo urgente, no que los hijos tengan que estar mirando todo el tiempo''} (Anexo~\ref{anexo:entrevistas}).
 
 \subsubsection{Síntesis}
 
@@ -80,15 +110,22 @@ Los dos casos de cuidadores muestran, de hecho, que la brecha de supervisión no
 La primera entrevistada la resuelve con llamados diarios que igual no alcanzan a detectar un incidente agudo, y el segundo entrevistado descubrió que la cercanía física generaba una falsa sensación de seguridad que en la práctica espació las visitas.
 Desde el lado del adulto mayor, la disposición a ser monitoreada existe, pero está condicionada a que el sistema sea discreto, no invasivo, y actúe exclusivamente ante emergencias reales.
 Las tres personas entrevistadas aceptaron que el video permanezca dentro del hogar cuando se les planteó esa condición, y la tercera la retomó como requisito para estar tranquila, lo que refuerza la relevancia de la arquitectura de procesamiento local adoptada en este proyecto.
-Además, el segundo y la tercera entrevistada coincidieron en señalar el baño como un ambiente donde la cobertura es especialmente necesaria pese a ser el de mayor sensibilidad. El segundo entrevistado incluso propuso un compromiso concreto, apuntar la cámara hacia la puerta en lugar de hacia el interior, lo que valida la decisión de diseño de dejar esa evaluación de balance entre cobertura y privacidad en manos de cada familia.
+Además, el segundo y la tercera entrevistada coincidieron en señalar el baño como un ambiente donde la cobertura es especialmente necesaria pese a ser el de mayor sensibilidad.
+El segundo entrevistado incluso propuso un compromiso concreto, apuntar la cámara hacia la puerta en lugar de hacia el interior, lo que valida la decisión de diseño de dejar esa evaluación de balance entre cobertura y privacidad en manos de cada familia.
 
 \subsection{Identificación del User Persona}
 
-Del cruce entre encuesta y entrevistas surge un perfil consistente. Una persona de mediana edad, activa laboralmente, que ejerce el cuidado a distancia (ya sea por kilómetros o simplemente por falta de tiempo disponible) y con tiempo acotado. Convive con una preocupación que no es permanente sino episódica, anclada en momentos del día y en la ausencia de señales de que todo está bien. No dispone de herramientas adecuadas, y las que existen le generan más fricción que tranquilidad porque dependen de que el adulto mayor las use. Lo que este cuidador necesita es información, no interacción. Este perfil fue sintetizado en las User Personas que se presentan en el Anexo~\ref{anexo:user_persona} (Figuras~\ref{fig:user_persona_1} y~\ref{fig:user_persona_2}).
+Del cruce entre encuesta y entrevistas surge un perfil consistente.
+Una persona de mediana edad, activa laboralmente, que ejerce el cuidado a distancia (ya sea por kilómetros o simplemente por falta de tiempo disponible) y con tiempo acotado.
+Convive con una preocupación que no es permanente sino episódica, anclada en momentos del día y en la ausencia de señales de que todo está bien.
+No dispone de herramientas adecuadas, y las que existen le generan más fricción que tranquilidad porque dependen de que el adulto mayor las use.
+Lo que este cuidador necesita es información, no interacción.
+Este perfil fue sintetizado en las User Personas que se presentan en el Anexo~\ref{anexo:user_persona} (Figuras~\ref{fig:user_persona_1} y~\ref{fig:user_persona_2}).
 
 \section{Requerimientos}
 
-A partir de la investigación de usuario descripta en la sección anterior y del alcance definido en la Introducción, se derivan los requerimientos que especifican el comportamiento esperado del sistema. Se distingue entre requerimientos funcionales, que describen las capacidades concretas que el sistema debe ofrecer, y requerimientos no funcionales, que establecen los atributos de calidad y las restricciones de diseño bajo las cuales esas capacidades deben cumplirse.
+A partir de la investigación de usuario descripta en la sección anterior y del alcance definido en la Introducción, se derivan los requerimientos que especifican el comportamiento esperado del sistema.
+Se distingue entre requerimientos funcionales, que describen las capacidades concretas que el sistema debe ofrecer, y requerimientos no funcionales, que establecen los atributos de calidad y las restricciones de diseño bajo las cuales esas capacidades deben cumplirse.
 
 \subsection{Requerimientos funcionales}
 
@@ -134,7 +171,9 @@ A continuación se detallan los requerimientos no funcionales (RNF) del sistema.
 
 \subsection{Historias de usuario}
 
-Cada requerimiento funcional se tradujo en una historia de usuario, escrita desde la perspectiva del responsable a cargo del adulto mayor, el actor principal identificado en el User Research. Dos requerimientos quedan afuera de esa regla, el registro de eventos (RF5) y la construcción de la línea base de comportamiento (RF6), porque son de naturaleza interna o habilitante y no representan una necesidad que el responsable a cargo exprese de forma directa, sino un mecanismo que sostiene el valor de otro requerimiento. Por eso, en la Tabla~\ref{tab:hu}, se agrupan junto al requerimiento al que dan soporte en lugar de forzar una historia propia para cada uno.
+Cada requerimiento funcional se tradujo en una historia de usuario, escrita desde la perspectiva del responsable a cargo del adulto mayor, el actor principal identificado en el User Research.
+Dos requerimientos quedan afuera de esa regla, el registro de eventos (RF5) y la construcción de la línea base de comportamiento (RF6), porque son de naturaleza interna o habilitante y no representan una necesidad que el responsable a cargo exprese de forma directa, sino un mecanismo que sostiene el valor de otro requerimiento.
+Por eso, en la Tabla~\ref{tab:hu}, se agrupan junto al requerimiento al que dan soporte en lugar de forzar una historia propia para cada uno.
 
 \begin{longtable}{@{}p{0.20\textwidth}p{0.77\textwidth}@{}}
 \caption[Historias de Usuario y Requerimientos Funcionales.]{Historias de Usuario y su relación con los Requerimientos Funcionales. Fuente: Elaboración propia.}
@@ -167,13 +206,31 @@ RF15 & \textit{Como responsable a cargo, quiero marcar una alerta como resuelta 
 \section{Mockups}
 \label{sec:mockups}
 
-Para validar la interpretación del frontend antes de comenzar su implementación, se diseñaron las pantallas principales de la aplicación móvil descripta en el diagrama de arquitectura (Sección~\ref{sec:diagrama_arquitectura}), destinada al responsable a cargo del adulto mayor. Este usuario no siempre tiene conocimientos técnicos, y suele revisar la aplicación en momentos de preocupación o mientras hace otra cosa. Por eso el diseño prioriza tres criterios por sobre cualquier otro, que la información se lea de un solo vistazo, que la jerarquía visual separe lo urgente de lo rutinario, y que cada alerta permita responder sin pasos intermedios innecesarios. Son la traducción a nivel de interfaz de la simplicidad que exige RNF8, y recorren todo el flujo, desde el inicio de sesión (RNF10) hasta el consumo de alertas (RF8) y reportes (RF9).
+Para validar la interpretación del frontend antes de comenzar su implementación, se diseñaron las pantallas principales de la aplicación móvil descripta en el diagrama de arquitectura (Sección~\ref{sec:diagrama_arquitectura}), destinada al responsable a cargo del adulto mayor.
+Este usuario no siempre tiene conocimientos técnicos, y suele revisar la aplicación en momentos de preocupación o mientras hace otra cosa.
+Por eso el diseño prioriza tres criterios por sobre cualquier otro, que la información se lea de un solo vistazo, que la jerarquía visual separe lo urgente de lo rutinario, y que cada alerta permita responder sin pasos intermedios innecesarios.
+Son la traducción a nivel de interfaz de la simplicidad que exige RNF8, y recorren todo el flujo, desde el inicio de sesión (RNF10) hasta el consumo de alertas (RF8) y reportes (RF9).
 
-La Figura~\ref{fig:mockup_flujo1} muestra el primer tramo de ese recorrido. La pantalla de \textit{Login} (01) resuelve RNF10 con la menor fricción posible, ya que solo pide correo y contraseña y concentra la atención en un único botón. Aun así, ya aquí se adelanta la promesa central del producto, con el logo y la frase de posicionamiento de la marca definida en la Sección~\ref{sec:branding}. El pie de página aclara que el monitoreo es no invasivo y que el video nunca sale del hogar, tal como exige RNF1, y esa aclaración construye la confianza del familiar antes incluso de que inicie sesión. Es coherente, además, con el posicionamiento frente a la competencia que se desarrolla más adelante en este capítulo (Sección~\ref{sec:competencia}).
+La Figura~\ref{fig:mockup_flujo1} muestra el primer tramo de ese recorrido.
+La pantalla de \textit{Login} (01) resuelve RNF10 con la menor fricción posible, ya que solo pide correo y contraseña y concentra la atención en un único botón.
+Aun así, ya aquí se adelanta la promesa central del producto, con el logo y la frase de posicionamiento de la marca definida en la Sección~\ref{sec:branding}.
+El pie de página aclara que el monitoreo es no invasivo y que el video nunca sale del hogar, tal como exige RNF1, y esa aclaración construye la confianza del familiar antes incluso de que inicie sesión.
+Es coherente, además, con el posicionamiento frente a la competencia que se desarrolla más adelante en este capítulo (Sección~\ref{sec:competencia}).
 
-Una vez dentro, la pantalla de \textit{Notificaciones} (02) funciona como home de la aplicación. Ahí aparece la decisión de diseño más importante de todo el recorrido, el uso del color como código de severidad. Cada tarjeta de evento sigue el mismo patrón, un borde de color a la izquierda, un ícono y un punto de no leído, para que la urgencia se reconozca sin leer el texto completo. El rojo es para las caídas (RF1), el amarillo para señales moderadas como la inactividad prolongada (RF3), y el verde para los eventos de rutina (RF2), la misma convención de semáforo que el usuario ya conoce de otros contextos cotidianos. Ese código se repite en los chips de filtro (``Todas'', ``Urgentes'', ``Moderadas'', ``Rutina'') y también en la Figura~\ref{fig:mockup_flujo2}, así el color significa siempre lo mismo en toda la aplicación. Además, las alertas urgentes y moderadas quedan fijadas arriba del feed hasta ser atendidas, para que no se pierdan entre los eventos de rutina si el familiar no revisa la aplicación enseguida.
+Una vez dentro, la pantalla de \textit{Notificaciones} (02) funciona como home de la aplicación.
+Ahí aparece la decisión de diseño más importante de todo el recorrido, el uso del color como código de severidad.
+Cada tarjeta de evento sigue el mismo patrón, un borde de color a la izquierda, un ícono y un punto de no leído, para que la urgencia se reconozca sin leer el texto completo.
+El rojo es para las caídas (RF1), el amarillo para señales moderadas como la inactividad prolongada (RF3), y el verde para los eventos de rutina (RF2), la misma convención de semáforo que el usuario ya conoce de otros contextos cotidianos.
+Ese código se repite en los chips de filtro (``Todas'', ``Urgentes'', ``Moderadas'', ``Rutina'') y también en la Figura~\ref{fig:mockup_flujo2}, así el color significa siempre lo mismo en toda la aplicación.
+Además, las alertas urgentes y moderadas quedan fijadas arriba del feed hasta ser atendidas, para que no se pierdan entre los eventos de rutina si el familiar no revisa la aplicación enseguida.
 
-Al tocar una alerta se abre el detalle (03) como una hoja inferior (\textit{bottom sheet}) que oscurece, pero no reemplaza, la pantalla anterior. Así el usuario no pierde de vista de dónde viene ni cuántas alertas quedan pendientes. Ahí aparece la segunda decisión de diseño relevante, la jerarquía entre los dos botones de acción. ``Llamar a Rosa'' es el botón primario, sólido y en rojo, mientras que ``Marcar como resuelta'' queda como secundario, con un simple borde. Ante una posible caída, lo que más importa es la llamada inmediata, y el botón primario es el que el ojo encuentra primero y el pulgar alcanza más cómodo en una pantalla de celular. Justo donde el familiar podría esperar ver una foto del evento, la tarjeta muestra en cambio la misma aclaración de privacidad del login, ``El video se procesa en tu hogar · nunca se envía a la nube''. Que ese mensaje aparezca ahí, y no escondido en una pantalla de configuración, busca sostener la confianza en el peor momento, cuando la alerta genera más ansiedad.
+Al tocar una alerta se abre el detalle (03) como una hoja inferior (\textit{bottom sheet}) que oscurece, pero no reemplaza, la pantalla anterior.
+Así el usuario no pierde de vista de dónde viene ni cuántas alertas quedan pendientes.
+Ahí aparece la segunda decisión de diseño relevante, la jerarquía entre los dos botones de acción.
+``Llamar a Rosa'' es el botón primario, sólido y en rojo, mientras que ``Marcar como resuelta'' queda como secundario, con un simple borde.
+Ante una posible caída, lo que más importa es la llamada inmediata, y el botón primario es el que el ojo encuentra primero y el pulgar alcanza más cómodo en una pantalla de celular.
+Justo donde el familiar podría esperar ver una foto del evento, la tarjeta muestra en cambio la misma aclaración de privacidad del login, ``El video se procesa en tu hogar · nunca se envía a la nube''.
+Que ese mensaje aparezca ahí, y no escondido en una pantalla de configuración, busca sostener la confianza en el peor momento, cuando la alerta genera más ansiedad.
 
 \begin{figure}[htb]
     \centering
@@ -189,10 +246,13 @@ Esa rutina no es un umbral genérico igual para todos los usuarios, sino la huel
 Por eso cada rango ``habitual'' que aparece en el panel, el horario en que se despierta, el de la primera comida o el tiempo que pasa sentada, es específico de Rosa y no una referencia general aplicada a cualquier residente, algo que además se apoya en RNF11, que asume un único residente monitoreado por hogar y evita tener que distinguir de quién es cada rango habitual dentro de una misma instalación.
 El panel del mockup usa esos tres indicadores a modo de ejemplo, aunque el sistema podría sumar otros a medida que la línea base se enriquezca.
 La aplicación implementada no incluye el indicador de despertar, porque ninguna de las clases que emite la cámara detecta cuándo la persona se levanta, y en su lugar muestra los indicadores de cocina y de movilidad.
-El desvío en sedentarismo, tres horas sentada frente a una hora habitual, usa el mismo ícono de advertencia y el mismo amarillo que las alertas moderadas. Se conecta de forma directa con la tarjeta de inactividad prolongada que aparece debajo, en el listado de eventos de la semana.
+El desvío en sedentarismo, tres horas sentada frente a una hora habitual, usa el mismo ícono de advertencia y el mismo amarillo que las alertas moderadas.
+Se conecta de forma directa con la tarjeta de inactividad prolongada que aparece debajo, en el listado de eventos de la semana.
 Ese listado repite el mismo lenguaje visual de tarjetas con borde de color e ícono de la pantalla de notificaciones, así el familiar no tiene que aprender una segunda forma de leer la información solo por cambiar de pestaña.
 
-Por último, la pantalla \textit{Día en orden} (05) representa el estado sin alertas activas. En vez de dejarla vacía, algo deliberado, la pantalla abre con un resumen de estado en verde (``Todo en orden hoy'') y un ícono de corazón en un tono calmo que refuerza el carácter de cuidado del sistema, y sigue mostrando debajo los eventos de rutina del día. Así se evita confundir la ausencia de alertas con una falla del sistema, un problema común en aplicaciones de monitoreo, donde ``no hay nada nuevo'' y ``la aplicación dejó de funcionar'' pueden verse igual si la pantalla no avisa activamente que el monitoreo sigue en curso.
+Por último, la pantalla \textit{Día en orden} (05) representa el estado sin alertas activas.
+En vez de dejarla vacía, algo deliberado, la pantalla abre con un resumen de estado en verde (``Todo en orden hoy'') y un ícono de corazón en un tono calmo que refuerza el carácter de cuidado del sistema, y sigue mostrando debajo los eventos de rutina del día.
+Así se evita confundir la ausencia de alertas con una falla del sistema, un problema común en aplicaciones de monitoreo, donde ``no hay nada nuevo'' y ``la aplicación dejó de funcionar'' pueden verse igual si la pantalla no avisa activamente que el monitoreo sigue en curso.
 
 \begin{figure}[htb]
     \centering
@@ -202,7 +262,16 @@ Por último, la pantalla \textit{Día en orden} (05) representa el estado sin al
 \end{figure}
 \FloatBarrier
 
-La aplicación también cubre la puesta en marcha del kit, que el familiar hace una sola vez y que por eso no forma parte del recorrido anterior. La Figura~\ref{fig:mockup_flujo3} muestra su primer tramo. La pantalla de \textit{Crear cuenta} (06) está pensada para quien recibe el kit y todavía no tiene usuario, y pide solo nombre, correo y contraseña. El correo solo se acepta si es de un proveedor conocido, como Gmail u Outlook, lo que evita errores de tipeo en el dominio. Las reglas de la contraseña se marcan a medida que se cumplen y el error de confirmación aparece debajo del campo antes de enviar el formulario, de modo que el familiar no descubre los problemas recién al tocar el botón. El acceso con correo y contraseña resuelve RNF10. Luego, la pantalla \textit{Vinculá tu kit} (07) resume la instalación en tres pasos numerados, conectar la controladora al router con un cable de red, buscar la etiqueta con el código QR en su base y escanearla, y abre una configuración de tres pasos que el indicador superior mantiene a la vista hasta el final. El escaneo (08) usa la cámara del celular, y en cuanto reconoce el código vincula el kit con la cuenta del familiar, que queda como responsable principal del hogar (RF14). Que la instalación se reduzca a apuntar el celular a una etiqueta es lo que permite poner el sistema en marcha sin ayuda técnica. La aclaración de privacidad del login se repite en esta pantalla para recordar que el código solo vincula el kit y que el video nunca sale del hogar.
+La aplicación también cubre la puesta en marcha del kit, que el familiar hace una sola vez y que por eso no forma parte del recorrido anterior.
+La Figura~\ref{fig:mockup_flujo3} muestra su primer tramo.
+La pantalla de \textit{Crear cuenta} (06) está pensada para quien recibe el kit y todavía no tiene usuario, y pide solo nombre, correo y contraseña.
+El correo solo se acepta si es de un proveedor conocido, como Gmail u Outlook, lo que evita errores de tipeo en el dominio.
+Las reglas de la contraseña se marcan a medida que se cumplen y el error de confirmación aparece debajo del campo antes de enviar el formulario, de modo que el familiar no descubre los problemas recién al tocar el botón.
+El acceso con correo y contraseña resuelve RNF10.
+Luego, la pantalla \textit{Vinculá tu kit} (07) resume la instalación en tres pasos numerados, conectar la controladora al router con un cable de red, buscar la etiqueta con el código QR en su base y escanearla, y abre una configuración de tres pasos que el indicador superior mantiene a la vista hasta el final.
+El escaneo (08) usa la cámara del celular, y en cuanto reconoce el código vincula el kit con la cuenta del familiar, que queda como responsable principal del hogar (RF14).
+Que la instalación se reduzca a apuntar el celular a una etiqueta es lo que permite poner el sistema en marcha sin ayuda técnica.
+La aclaración de privacidad del login se repite en esta pantalla para recordar que el código solo vincula el kit y que el video nunca sale del hogar.
 
 \begin{figure}[htb]
     \centering
@@ -212,7 +281,15 @@ La aplicación también cubre la puesta en marcha del kit, que el familiar hace 
 \end{figure}
 \FloatBarrier
 
-La Figura~\ref{fig:mockup_flujo4} completa la configuración. Si la cámara del celular no logra leer el QR, el familiar puede tipear el código impreso debajo (09). Son ocho caracteres elegidos para que no se confundan entre sí, y la aplicación tolera mayúsculas, espacios y la confusión entre la letra O y el cero, porque un error de tipeo no debería frenar la instalación. Una vez vinculado el kit, el segundo paso (10) pide el nombre del residente, que es el que aparece en las alertas y los reportes, y un teléfono opcional, el mismo que usa el botón ``Llamar a Rosa'' del detalle de alerta (03). El tercer paso (11) resuelve RF10, ya que el familiar asigna una ubicación a cada cámara, eligiendo entre sugerencias como ``Living'' o ``Cocina'' o escribiendo una propia, para que cada alerta indique dónde ocurrió. La cantidad de cámaras a ubicar no se elige en la aplicación, sino que la fija el plan del kit, definido de fábrica entre una y tres cámaras, de modo que la pantalla muestra exactamente las cámaras que el familiar compró. La nota sobre el baño traslada a la interfaz la sugerencia del hijo cuidador entrevistado, que propuso apuntar la cámara hacia la puerta y no hacia el interior, de forma que una demora inusual en salir igual genere una alerta. Por último, la pestaña \textit{Perfil} (12) reúne los datos del hogar, el residente, el kit vinculado y el rol del familiar, y permite elegir entre modo claro, oscuro o el que use el celular. En las cuatro pantallas se repite el criterio de RNF8, con un único botón principal por pantalla y textos que explican para qué se pide cada dato.
+La Figura~\ref{fig:mockup_flujo4} completa la configuración.
+Si la cámara del celular no logra leer el QR, el familiar puede tipear el código impreso debajo (09).
+Son ocho caracteres elegidos para que no se confundan entre sí, y la aplicación tolera mayúsculas, espacios y la confusión entre la letra O y el cero, porque un error de tipeo no debería frenar la instalación.
+Una vez vinculado el kit, el segundo paso (10) pide el nombre del residente, que es el que aparece en las alertas y los reportes, y un teléfono opcional, el mismo que usa el botón ``Llamar a Rosa'' del detalle de alerta (03).
+El tercer paso (11) resuelve RF10, ya que el familiar asigna una ubicación a cada cámara, eligiendo entre sugerencias como ``Living'' o ``Cocina'' o escribiendo una propia, para que cada alerta indique dónde ocurrió.
+La cantidad de cámaras a ubicar no se elige en la aplicación, sino que la fija el plan del kit, definido de fábrica entre una y tres cámaras, de modo que la pantalla muestra exactamente las cámaras que el familiar compró.
+La nota sobre el baño traslada a la interfaz la sugerencia del hijo cuidador entrevistado, que propuso apuntar la cámara hacia la puerta y no hacia el interior, de forma que una demora inusual en salir igual genere una alerta.
+Por último, la pestaña \textit{Perfil} (12) reúne los datos del hogar, el residente, el kit vinculado y el rol del familiar, y permite elegir entre modo claro, oscuro o el que use el celular.
+En las cuatro pantallas se repite el criterio de RNF8, con un único botón principal por pantalla y textos que explican para qué se pide cada dato.
 
 \begin{figure}[htb]
     \centering
@@ -222,7 +299,8 @@ La Figura~\ref{fig:mockup_flujo4} completa la configuración. Si la cámara del 
 \end{figure}
 \FloatBarrier
 
-El modo oscuro que se elige desde el perfil se aplica a toda la aplicación, como muestra la Figura~\ref{fig:mockup_oscuro} con las pantallas principales, y conserva el mismo código de color de severidad. De ese modo, una alerta urgente se reconoce igual sin importar la apariencia elegida.
+El modo oscuro que se elige desde el perfil se aplica a toda la aplicación, como muestra la Figura~\ref{fig:mockup_oscuro} con las pantallas principales, y conserva el mismo código de color de severidad.
+De ese modo, una alerta urgente se reconoce igual sin importar la apariencia elegida.
 La aplicación implementada sigue estos diseños, salvo el indicador de despertar ya mencionado, y la Sección~\ref{sec:demo_app} describe su funcionamiento conectada al backend.
 
 \begin{figure}[htb]
@@ -237,9 +315,15 @@ La aplicación implementada sigue estos diseños, salvo el indicador de desperta
 
 \subsection{Diagrama de casos de uso}
 
-A partir de los requerimientos funcionales y las historias de usuario presentadas, se construyó el diagrama de casos de uso de la Figura~\ref{fig:casos_uso}, que organiza las capacidades del sistema en tres actores y tres bloques funcionales. Los actores \textit{Cámara IP} y \textit{Temporizador del Sistema} representan las dos formas en que se dispara el procesamiento sobre el video, ya sea frame a frame o de forma periódica, mientras que \textit{Responsable a Cargo} es el actor humano identificado en el User Research.
+A partir de los requerimientos funcionales y las historias de usuario presentadas, se construyó el diagrama de casos de uso de la Figura~\ref{fig:casos_uso}, que organiza las capacidades del sistema en tres actores y tres bloques funcionales.
+Los actores \textit{Cámara IP} y \textit{Temporizador del Sistema} representan las dos formas en que se dispara el procesamiento sobre el video, ya sea frame a frame o de forma periódica, mientras que \textit{Responsable a Cargo} es el actor humano identificado en el User Research.
 
-En cuanto a la organización interna del Sistema, el Bloque 1 agrupa el procesamiento sobre el video que ocurre dentro del hogar (estimación de pose, detección de caídas, de inmovilidad prolongada y clasificación de actividades), coherente con el procesamiento local exigido por RNF1. El caso de uso \textit{Detectar Inmovilidad Prolongada} engloba tanto RF3 (sedentarismo, postura sentada) como RF4 (piso, postura acostada), ya que ambos comparten el mismo mecanismo de detección basado en pose y se distinguen internamente mediante un atributo de postura. El registro de eventos y todo lo que depende de él, la construcción y actualización de la línea base de comportamiento, la detección de desvíos y la generación de reportes, se ejecutan del lado de la nube. RNF6 solo exige que el dispositivo conserve los eventos de forma transitoria ante cortes de conexión, hasta poder sincronizarlos (RNF7). El Bloque 2 agrupa las funcionalidades expuestas al responsable a cargo desde la aplicación móvil, incluida la puesta en marcha del hogar, que consiste en vincular el kit escaneando su código QR (RF14) y asignar la ubicación de cada cámara (RF10). El Bloque 3 agrupa la administración y validación local de las cámaras desde el panel de operación local, de uso opcional para la familia.
+En cuanto a la organización interna del Sistema, el Bloque 1 agrupa el procesamiento sobre el video que ocurre dentro del hogar (estimación de pose, detección de caídas, de inmovilidad prolongada y clasificación de actividades), coherente con el procesamiento local exigido por RNF1.
+El caso de uso \textit{Detectar Inmovilidad Prolongada} engloba tanto RF3 (sedentarismo, postura sentada) como RF4 (piso, postura acostada), ya que ambos comparten el mismo mecanismo de detección basado en pose y se distinguen internamente mediante un atributo de postura.
+El registro de eventos y todo lo que depende de él, la construcción y actualización de la línea base de comportamiento, la detección de desvíos y la generación de reportes, se ejecutan del lado de la nube.
+RNF6 solo exige que el dispositivo conserve los eventos de forma transitoria ante cortes de conexión, hasta poder sincronizarlos (RNF7).
+El Bloque 2 agrupa las funcionalidades expuestas al responsable a cargo desde la aplicación móvil, incluida la puesta en marcha del hogar, que consiste en vincular el kit escaneando su código QR (RF14) y asignar la ubicación de cada cámara (RF10).
+El Bloque 3 agrupa la administración y validación local de las cámaras desde el panel de operación local, de uso opcional para la familia.
 
 Además de la agrupación en bloques, las relaciones punteadas entre casos de uso representan dependencias \textit{include}, ya que todo evento detectado (caída, inmovilidad prolongada o desvío de rutina) incluye siempre su registro (RF5) y su notificación al responsable a cargo (RF8).
 La autenticación del usuario (RF12) se incluye en toda funcionalidad de la aplicación móvil.
@@ -255,9 +339,15 @@ El panel de operación local, en cambio, no requiere autenticación, porque est�
 
 \subsection{Diagrama de flujo de información}
 
-Mientras que el diagrama de casos de uso responde qué hace el sistema, el diagrama de flujo de información de la Figura~\ref{fig:flujo_informacion} responde cómo un frame de video se convierte en un evento, una alerta o un reporte, y en qué punto pasa de ejecutarse en el borde a ejecutarse en la nube. Las tres franjas del diagrama, correspondientes a la Raspberry Pi 5 en el borde, la nube alojada en AWS y la aplicación móvil, hacen explícita esa frontera, coherente con la arquitectura modular entre borde y nube descripta en la Sección~\ref{sec:edge_marco}. Esa misma frontera se retoma más adelante, tanto en el diagrama de arquitectura de la Sección~\ref{sec:diagrama_arquitectura} como en el análisis de posicionamiento de este capítulo.
+Mientras que el diagrama de casos de uso responde qué hace el sistema, el diagrama de flujo de información de la Figura~\ref{fig:flujo_informacion} responde cómo un frame de video se convierte en un evento, una alerta o un reporte, y en qué punto pasa de ejecutarse en el borde a ejecutarse en la nube.
+Las tres franjas del diagrama, correspondientes a la Raspberry Pi 5 en el borde, la nube alojada en AWS y la aplicación móvil, hacen explícita esa frontera, coherente con la arquitectura modular entre borde y nube descripta en la Sección~\ref{sec:edge_marco}.
+Esa misma frontera se retoma más adelante, tanto en el diagrama de arquitectura de la Sección~\ref{sec:diagrama_arquitectura} como en el análisis de posicionamiento de este capítulo.
 
-Sobre el lado del borde, ambas ramas parten de la misma detección de pose por frame, pero se disparan con lógicas distintas. La detección de caídas e inmovilidad se evalúa en cada frame, consistente con la operación cercana al tiempo real que exige RNF4. En cambio, la clasificación de actividad con CLIP se consulta cada 10 segundos sobre una ventana de 3 segundos, la cadencia periódica descripta en la Sección~\ref{sec:vlm_marco} para compensar su mayor costo computacional frente a la estimación de pose. Ambas ramas incorporan además un filtro antes de generar un evento (la evaluación de \textit{situación de riesgo} en un caso, el umbral de confianza y la deduplicación frente a la actividad anterior en el otro). De ese modo, no todo lo detectado se traduce automáticamente en un evento registrado.
+Sobre el lado del borde, ambas ramas parten de la misma detección de pose por frame, pero se disparan con lógicas distintas.
+La detección de caídas e inmovilidad se evalúa en cada frame, consistente con la operación cercana al tiempo real que exige RNF4.
+En cambio, la clasificación de actividad con CLIP se consulta cada 10 segundos sobre una ventana de 3 segundos, la cadencia periódica descripta en la Sección~\ref{sec:vlm_marco} para compensar su mayor costo computacional frente a la estimación de pose.
+Ambas ramas incorporan además un filtro antes de generar un evento (la evaluación de \textit{situación de riesgo} en un caso, el umbral de confianza y la deduplicación frente a la actividad anterior en el otro).
+De ese modo, no todo lo detectado se traduce automáticamente en un evento registrado.
 
 Del lado de la nube, una caída confirmada o una inmovilidad en el piso se marcan como alerta en el momento en que llegan, sin esperar el cálculo de la línea base (Sección~\ref{sec:api_backend}).
 La construcción de la línea base de comportamiento (RF6), en cambio, se apoya en los eventos sincronizados y se recalcula una vez por día, y de ahí en más el flujo se bifurca en dos caminos independientes.
@@ -311,21 +401,25 @@ Ese modo batch no se representa como un componente aparte en la Figura~\ref{fig:
 \section{Modelo de datos}
 \label{sec:modelo_datos}
 
-Los diagramas de la sección anterior describen el comportamiento del sistema desde el punto de vista funcional, es decir, qué hace y cómo fluye la información entre sus partes. Lo que sigue es la infraestructura concreta que soporta ese comportamiento, desde el despliegue físico del sistema hasta el modelo de datos que esa infraestructura persiste.
+Los diagramas de la sección anterior describen el comportamiento del sistema desde el punto de vista funcional, es decir, qué hace y cómo fluye la información entre sus partes.
+Lo que sigue es la infraestructura concreta que soporta ese comportamiento, desde el despliegue físico del sistema hasta el modelo de datos que esa infraestructura persiste.
 
 \subsection{Diagrama de arquitectura}
 \label{sec:diagrama_arquitectura}
 
 A diferencia del diagrama de componentes de la Sección~\ref{sec:diagrama_componentes}, que documentó la organización del código, la Figura~\ref{fig:arquitectura} muestra el despliegue físico del sistema, desde la cámara IP hasta la aplicación móvil.
 Del lado del borde, la Raspberry Pi aloja el nodo de inferencia que ejecuta el pipeline de YOLO para estimación de pose, un clasificador temporal sobre el movimiento y CLIP para clasificación de actividades sobre el video capturado por la cámara, coherente con RNF5, que exige que la detección y la clasificación corran sobre el mismo hardware embebido y sin GPU.
-En el diseño previsto para el kit, las cámaras no se conectan a la red de la casa, sino a una red wifi privada que arma la propia controladora y que no tiene salida a internet. En cambio, la controladora sale a internet mediante un cable de red conectado al router del hogar.
+En el diseño previsto para el kit, las cámaras no se conectan a la red de la casa, sino a una red wifi privada que arma la propia controladora y que no tiene salida a internet.
+En cambio, la controladora sale a internet mediante un cable de red conectado al router del hogar.
 Se comprobó que el wifi de la Raspberry Pi 5 sostiene como punto de acceso tres cámaras transmitiendo en simultáneo, pero la configuración de esa red todavía no forma parte del software del prototipo.
 El video nunca sale de ese nodo, cumpliendo con RNF1, y la separación de redes prevista lo reforzaría, porque las cámaras no tendrían forma de enviar video hacia afuera aunque estuvieran configuradas para hacerlo.
 Lo único que cruza hacia la nube son los eventos generados, nunca imágenes.
 Esos eventos se persisten localmente en SQLite antes de sincronizarse, la implementación concreta del requisito de continuidad ante cortes de conexión que exige RNF6.
 Esa misma base es la que se vuelca hacia la nube una vez que la conexión se restablece, según RNF7.
 
-Del lado de la nube, AWS Elastic Beanstalk aloja la API que recibe los eventos sincronizados y los persiste en Amazon RDS sobre PostgreSQL, y que una vez por día calcula sobre ellos la línea base de comportamiento (RF6), cuyos desvíos se guardan como eventos. La aplicación móvil, desarrollada en React Native, consulta esa API para mostrar los eventos, las alertas y los reportes, e inicia sesión a través de Firebase Authentication. Firebase Cloud Messaging, por su parte, es el servicio que entrega las notificaciones push a la aplicación, cerrando el circuito que exige RF8 entre la detección de un evento crítico y el aviso al responsable a cargo.
+Del lado de la nube, AWS Elastic Beanstalk aloja la API que recibe los eventos sincronizados y los persiste en Amazon RDS sobre PostgreSQL, y que una vez por día calcula sobre ellos la línea base de comportamiento (RF6), cuyos desvíos se guardan como eventos.
+La aplicación móvil, desarrollada en React Native, consulta esa API para mostrar los eventos, las alertas y los reportes, e inicia sesión a través de Firebase Authentication.
+Firebase Cloud Messaging, por su parte, es el servicio que entrega las notificaciones push a la aplicación, cerrando el circuito que exige RF8 entre la detección de un evento crítico y el aviso al responsable a cargo.
 
 \begin{figure}[H]
     \centering
@@ -338,20 +432,34 @@ Del lado de la nube, AWS Elastic Beanstalk aloja la API que recibe los eventos s
 \subsection{Diagrama de base de datos}
 \label{sec:diagrama_base_datos}
 
-El Diagrama de Arquitectura mostró dónde vive cada nodo del sistema. Lo que falta es qué guarda cada uno. La Figura~\ref{fig:diagrama_bd_local} documenta el modelo de la controladora, sobre SQLite (Sección~\ref{sec:diagrama_componentes}), y la Figura~\ref{fig:diagrama_bd_cloud} documenta el modelo de la nube, implementado sobre PostgreSQL en Amazon RDS (Sección~\ref{sec:backend_nube}). El esquema de la nube se versiona con migraciones de Alembic, de modo que cada cambio en el modelo queda registrado y se aplica de la misma forma en desarrollo y en producción.
+El Diagrama de Arquitectura mostró dónde vive cada nodo del sistema.
+Lo que falta es qué guarda cada uno.
+La Figura~\ref{fig:diagrama_bd_local} documenta el modelo de la controladora, sobre SQLite (Sección~\ref{sec:diagrama_componentes}), y la Figura~\ref{fig:diagrama_bd_cloud} documenta el modelo de la nube, implementado sobre PostgreSQL en Amazon RDS (Sección~\ref{sec:backend_nube}).
+El esquema de la nube se versiona con migraciones de Alembic, de modo que cada cambio en el modelo queda registrado y se aplica de la misma forma en desarrollo y en producción.
 
 El modelo local es una única entidad, EVENTO, sin relaciones ni claves foráneas, lo que refleja el código de \texttt{events/schema.py} y \texttt{events/store.py}.
 El diagrama muestra los campos centrales, y la implementación suma tres auxiliares, \texttt{wall\_clock\_ts}, con la hora real del evento cuando proviene de una cámara en vivo, \texttt{cloud\_synced\_at}, que registra cuándo se confirmó su envío a la nube, y \texttt{event\_id}, un identificador único que la controladora genera al guardar el evento y repite en cada reenvío.
 El campo \texttt{video\_id} guarda, en modo en vivo, el identificador local de la cámara que generó el evento, pero no tiene una clave foránea declarada dado que el sistema asume hoy un único residente por instalación (RNF11), la misma restricción que más adelante justifica la relación uno a uno entre HOGAR y RESIDENTE en el modelo de nube.
 El campo \texttt{metadata} es un JSON de forma variable según el \texttt{event\_type} (\texttt{fall}, \texttt{immobility}, \texttt{activity}), cada uno con sus propios campos internos, en lugar de columnas fijas para cada tipo de evento, ya que forzar un esquema rígido hubiera significado agregar columnas vacías para la mayoría de los eventos cada vez que se sume un tipo nuevo.
 
-El modelo de nube parte de HOGAR y RESIDENTE en una relación estrictamente uno a uno, no uno a muchos, porque RNF11 restringe el sistema a un único residente monitoreado por instalación. HOGAR guarda un nombre descriptivo, como ``Casa de Rosa'', la fecha de alta, que coincide con el momento en que se vincula el kit, y una dirección opcional, que la aplicación no exige porque no la necesita para funcionar y es un dato sensible más sobre el residente. RESIDENTE, por su parte, suma un teléfono opcional, que es el que usa el botón ``Llamar a Rosa'' del detalle de alerta.
+El modelo de nube parte de HOGAR y RESIDENTE en una relación estrictamente uno a uno, no uno a muchos, porque RNF11 restringe el sistema a un único residente monitoreado por instalación.
+HOGAR guarda un nombre descriptivo, como ``Casa de Rosa'', la fecha de alta, que coincide con el momento en que se vincula el kit, y una dirección opcional, que la aplicación no exige porque no la necesita para funcionar y es un dato sensible más sobre el residente.
+RESIDENTE, por su parte, suma un teléfono opcional, que es el que usa el botón ``Llamar a Rosa'' del detalle de alerta.
 
-KIT representa el aparato físico, la controladora junto con sus cámaras, y se modela como una entidad separada de HOGAR por dos razones. La primera es que la credencial con la que la controladora se autentica ante el backend (\texttt{device\_api\_key\_hash}) pertenece al aparato y no a la casa. De ese modo, si la controladora se rompe y hay que reemplazarla, se da de baja el kit viejo y se vincula uno nuevo al mismo hogar sin perder el historial de eventos ni la línea base. La segunda es que el kit existe desde fábrica, antes de que haya un hogar al que pertenecer, por lo que su \texttt{hogar\_id} queda nulo hasta que un familiar escanea el código QR desde la aplicación (RF14). Además, KIT concentra todo lo que necesita la vinculación, con un número de serie único, el código de vinculación guardado como hash y nunca en claro, quién vinculó el kit y cuándo, y un campo \texttt{ultima\_conexion\_at} con la fecha de su última comunicación con la nube. Guarda también \texttt{cantidad\_camaras}, el plan comprado, de una a tres cámaras, ya que el kit incluye una cámara y cada cámara adicional se cobra por separado a USD 19, hasta un máximo de tres por controladora.
+KIT representa el aparato físico, la controladora junto con sus cámaras, y se modela como una entidad separada de HOGAR por dos razones.
+La primera es que la credencial con la que la controladora se autentica ante el backend (\texttt{device\_api\_key\_hash}) pertenece al aparato y no a la casa.
+De ese modo, si la controladora se rompe y hay que reemplazarla, se da de baja el kit viejo y se vincula uno nuevo al mismo hogar sin perder el historial de eventos ni la línea base.
+La segunda es que el kit existe desde fábrica, antes de que haya un hogar al que pertenecer, por lo que su \texttt{hogar\_id} queda nulo hasta que un familiar escanea el código QR desde la aplicación (RF14).
+Además, KIT concentra todo lo que necesita la vinculación, con un número de serie único, el código de vinculación guardado como hash y nunca en claro, quién vinculó el kit y cuándo, y un campo \texttt{ultima\_conexion\_at} con la fecha de su última comunicación con la nube.
+Guarda también \texttt{cantidad\_camaras}, el plan comprado, de una a tres cámaras, ya que el kit incluye una cámara y cada cámara adicional se cobra por separado a USD 19, hasta un máximo de tres por controladora.
 
-Las cámaras dependen del kit y no directamente del hogar. Se crean en fábrica junto con él, tantas como indica \texttt{cantidad\_camaras} y ya emparejadas con la red privada de la controladora, y reciben el \texttt{hogar\_id} recién cuando el kit se vincula, por lo que esa clave foránea admite nulos. Cada CAMARA conserva un identificador local que coincide con el que usa \texttt{cameras.yaml} en el borde (Sección~\ref{sec:diagrama_componentes}) y que es único dentro de su kit, una ubicación descriptiva que el familiar asigna desde la aplicación móvil, tal como exige RF10, y un estado activo que habilita darlas de alta o de baja. El backend hace cumplir que un kit nunca tenga más cámaras que su plan y rechaza cualquier cámara adicional que la controladora intente registrar, de modo que sumar una cámara requiere comprarla y actualizar el plan del kit.
+Las cámaras dependen del kit y no directamente del hogar.
+Se crean en fábrica junto con él, tantas como indica \texttt{cantidad\_camaras} y ya emparejadas con la red privada de la controladora, y reciben el \texttt{hogar\_id} recién cuando el kit se vincula, por lo que esa clave foránea admite nulos.
+Cada CAMARA conserva un identificador local que coincide con el que usa \texttt{cameras.yaml} en el borde (Sección~\ref{sec:diagrama_componentes}) y que es único dentro de su kit, una ubicación descriptiva que el familiar asigna desde la aplicación móvil, tal como exige RF10, y un estado activo que habilita darlas de alta o de baja.
+El backend hace cumplir que un kit nunca tenga más cámaras que su plan y rechaza cualquier cámara adicional que la controladora intente registrar, de modo que sumar una cámara requiere comprarla y actualizar el plan del kit.
 
-La mayoría de los eventos se origina en una cámara puntual, de ahí la clave foránea \texttt{camara\_id} en EVENTO, que sin embargo admite nulos porque los desvíos de rutina (RF7) surgen del análisis de la línea base y no de una cámara en particular. Además, cada evento referencia directamente al residente mediante \texttt{residente\_id}, una desnormalización deliberada que evita recorrer la cadena \texttt{camara} hacia \texttt{hogar} hacia \texttt{residente} cada vez que el módulo de línea base necesita traer todos los eventos de una persona, algo que va a hacer con frecuencia ya que la relación hogar-residente es uno a uno.
+La mayoría de los eventos se origina en una cámara puntual, de ahí la clave foránea \texttt{camara\_id} en EVENTO, que sin embargo admite nulos porque los desvíos de rutina (RF7) surgen del análisis de la línea base y no de una cámara en particular.
+Además, cada evento referencia directamente al residente mediante \texttt{residente\_id}, una desnormalización deliberada que evita recorrer la cadena \texttt{camara} hacia \texttt{hogar} hacia \texttt{residente} cada vez que el módulo de línea base necesita traer todos los eventos de una persona, algo que va a hacer con frecuencia ya que la relación hogar-residente es uno a uno.
 
 Frente al EVENTO local, el EVENTO de la nube conserva el \texttt{event\_id} de la controladora, con una restricción que impide repetirlo dentro de una misma cámara, de modo que un lote reenviado no se guarda dos veces.
 También difiere en dos campos.
@@ -361,9 +469,18 @@ El campo \texttt{synced\_at} registra cuándo llegó el evento a la nube, distin
 A eso se suman \texttt{resuelta\_at} y \texttt{resuelta\_por}, que registran cuándo y qué familiar marcó una alerta como atendida desde el detalle de alerta.
 Estos campos conviven con \texttt{es\_alerta} sin superponerse, ya que \texttt{es\_alerta} indica si el evento debía avisarse y los campos de resolución indican si alguien ya se hizo cargo, algo necesario cuando varios familiares reciben la misma alerta.
 
-FAMILIAR y HOGAR\_FAMILIAR resuelven la relación entre hogares y responsables a cargo. Un hogar puede tener varios familiares autorizados, tal como exige RF12, y un mismo familiar podría estar vinculado a más de un hogar, así que la relación es de muchos a muchos y se resuelve con HOGAR\_FAMILIAR como tabla intermedia, con clave primaria compuesta por \texttt{hogar\_id} y \texttt{familiar\_id}, más un campo \texttt{rol} que distingue el tipo de vínculo de cada familiar con ese hogar en particular. FAMILIAR no tiene contraseña propia en el modelo, sino un campo \texttt{firebase\_uid}, dado que la autenticación se delega completamente a Firebase Authentication, ya justificado en la Sección~\ref{sec:backend_nube}. El campo \texttt{rol} toma dos valores. El familiar que vinculó el kit queda como \texttt{responsable\_principal} y puede invitar y quitar a otros familiares, mientras que el resto queda como \texttt{familiar}, que consulta alertas y reportes y puede marcar una alerta como resuelta, pero no modifica la configuración del hogar. Por ahora la invitación alcanza solo a quienes ya crearon su cuenta, y dejar una invitación pendiente para alguien que todavía no la tiene requeriría una entidad propia, que queda como mejora futura. FAMILIAR guarda además el token de Firebase Cloud Messaging con el que el backend le envía las notificaciones push a su celular (RF8). El diseño prevé que la aplicación lo actualice cada vez que el familiar inicia sesión, ya que Firebase lo renueva periódicamente, un paso que todavía no está implementado del lado de la aplicación (Sección~\ref{sec:limitaciones}).
+FAMILIAR y HOGAR\_FAMILIAR resuelven la relación entre hogares y responsables a cargo.
+Un hogar puede tener varios familiares autorizados, tal como exige RF12, y un mismo familiar podría estar vinculado a más de un hogar, así que la relación es de muchos a muchos y se resuelve con HOGAR\_FAMILIAR como tabla intermedia, con clave primaria compuesta por \texttt{hogar\_id} y \texttt{familiar\_id}, más un campo \texttt{rol} que distingue el tipo de vínculo de cada familiar con ese hogar en particular.
+FAMILIAR no tiene contraseña propia en el modelo, sino un campo \texttt{firebase\_uid}, dado que la autenticación se delega completamente a Firebase Authentication, ya justificado en la Sección~\ref{sec:backend_nube}.
+El campo \texttt{rol} toma dos valores.
+El familiar que vinculó el kit queda como \texttt{responsable\_principal} y puede invitar y quitar a otros familiares, mientras que el resto queda como \texttt{familiar}, que consulta alertas y reportes y puede marcar una alerta como resuelta, pero no modifica la configuración del hogar.
+Por ahora la invitación alcanza solo a quienes ya crearon su cuenta, y dejar una invitación pendiente para alguien que todavía no la tiene requeriría una entidad propia, que queda como mejora futura.
+FAMILIAR guarda además el token de Firebase Cloud Messaging con el que el backend le envía las notificaciones push a su celular (RF8).
+El diseño prevé que la aplicación lo actualice cada vez que el familiar inicia sesión, ya que Firebase lo renueva periódicamente, un paso que todavía no está implementado del lado de la aplicación (Sección~\ref{sec:limitaciones}).
 
-Por último, LINEA\_BASE\_COMPORTAMIENTO corresponde al módulo \texttt{baseline/} (RF6, Secciones~\ref{sec:aprendizaje_adaptativo_marco} y~\ref{sec:rutinas}) y está prevista para guardar, por residente, los parámetros del clustering dinámico junto con la fecha de su última actualización. En la implementación actual la línea base no se almacena, sino que se recalcula cada día a partir del historial de eventos del residente, y lo que se guarda es su resultado, los desvíos de rutina, como registros de EVENTO. Recalcularla cada vez asegura que refleje siempre el historial más reciente, y la entidad queda disponible para guardar sus parámetros y evitar ese recálculo cuando el historial crezca.
+Por último, LINEA\_BASE\_COMPORTAMIENTO corresponde al módulo \texttt{baseline/} (RF6, Secciones~\ref{sec:aprendizaje_adaptativo_marco} y~\ref{sec:rutinas}) y está prevista para guardar, por residente, los parámetros del clustering dinámico junto con la fecha de su última actualización.
+En la implementación actual la línea base no se almacena, sino que se recalcula cada día a partir del historial de eventos del residente, y lo que se guarda es su resultado, los desvíos de rutina, como registros de EVENTO.
+Recalcularla cada vez asegura que refleje siempre el historial más reciente, y la entidad queda disponible para guardar sus parámetros y evitar ese recálculo cuando el historial crezca.
 
 \begin{figure}[H]
     \centering
@@ -407,7 +524,8 @@ Tampoco construye una línea base conductual personalizada por individuo ni razo
 
 Una cuarta categoría, de aparición reciente y actualmente muy visible en Argentina, son los asistentes conversacionales de inteligencia artificial sin cámara, orientados a la compañía y la estimulación cognitiva más que a la detección de emergencias.
 El caso más difundido es Ato, un dispositivo sin pantalla que inicia conversaciones de forma proactiva, envía recordatorios de medicación y genera reportes de actividad para la familia a través de una aplicación, con un costo de entre USD 179 y 200 más una suscripción de USD 29 mensuales tras el primer mes gratuito \parencite{Ato}.
-A diferencia de las categorías anteriores, no detecta caídas ni inmovilidad de forma automática, ni construye una línea base conductual a partir de video. De ese modo, resuelve una necesidad complementaria, la de compañía activa, y no compite de forma directa con el sistema propuesto en la dimensión de seguridad.
+A diferencia de las categorías anteriores, no detecta caídas ni inmovilidad de forma automática, ni construye una línea base conductual a partir de video.
+De ese modo, resuelve una necesidad complementaria, la de compañía activa, y no compite de forma directa con el sistema propuesto en la dimensión de seguridad.
 
 \subsection{Tabla comparativa de alternativas}
 \label{sec:tabla_comparativa_comercial}
@@ -437,7 +555,9 @@ Sistema propuesto                     & \checkmark & \checkmark & \checkmark & \
 \endgroup
 \end{table}
 
-{\footnotesize\textit{Nota. La tabla indica presencia o ausencia de cada capacidad en la solución comercial, siguiendo el mismo criterio metodológico utilizado en la Tabla~\ref{tab:comparacion} del Capítulo~\ref{chapter02}. No refleja diferencias de precisión o de calidad de implementación entre las distintas propuestas. El sistema propuesto figura como prototipo porque todavía no se comercializa.}}
+{\footnotesize\textit{Nota. La tabla indica presencia o ausencia de cada capacidad en la solución comercial, siguiendo el mismo criterio metodológico utilizado en la Tabla~\ref{tab:comparacion} del Capítulo~\ref{chapter02}.
+No refleja diferencias de precisión o de calidad de implementación entre las distintas propuestas.
+El sistema propuesto figura como prototipo porque todavía no se comercializa.}}
 
 \subsection{Cinco fuerzas de Porter}
 \label{sec:porter}
@@ -494,13 +614,22 @@ Ese desafío, no obstante, es exactamente el que la propuesta de valor del proye
 A partir del panorama competitivo y de las cinco fuerzas que estructuran ese mercado, se construye la estrategia de posicionamiento aplicando el modelo de Producto, Precio y Plaza.
 
 \paragraph{Producto}
-La oferta combina hardware y software en un mismo paquete, compuesto por la cámara IP, la Raspberry Pi 5 que procesa localmente, y una aplicación móvil para el responsable a cargo. A diferencia de la teleasistencia por botón, no requiere ninguna acción del adulto mayor; a diferencia de las cámaras con IA como AltumView Sentinare, no se limita a detectar eventos discretos, sino que incorpora un segundo módulo que construye una línea base de comportamiento y detecta desvíos de rutina a lo largo del tiempo; y a diferencia de los asistentes conversacionales como Ato, no depende de que el adulto mayor hable o interactúe para generar valor, sino que monitorea de forma completamente pasiva. El producto es, entonces, la combinación de ambas capas, no cada una por separado.
+La oferta combina hardware y software en un mismo paquete, compuesto por la cámara IP, la Raspberry Pi 5 que procesa localmente, y una aplicación móvil para el responsable a cargo.
+A diferencia de la teleasistencia por botón, no requiere ninguna acción del adulto mayor; a diferencia de las cámaras con IA como AltumView Sentinare, no se limita a detectar eventos discretos, sino que incorpora un segundo módulo que construye una línea base de comportamiento y detecta desvíos de rutina a lo largo del tiempo; y a diferencia de los asistentes conversacionales como Ato, no depende de que el adulto mayor hable o interactúe para generar valor, sino que monitorea de forma completamente pasiva.
+El producto es, entonces, la combinación de ambas capas, no cada una por separado.
 
 \paragraph{Precio}
-AltumView Sentinare fija la referencia de mercado más cercana en la categoría de cámaras, entre USD 200 y 230 sin cuota mensual \parencite{AltumView}, pero cubre solo detección de eventos sobre una habitación. La arquitectura del sistema propuesto, dividida entre procesamiento local (RNF1) y un componente en la nube que sostiene la línea base y los reportes (RNF6, RNF7), sugiere naturalmente un esquema mixto, con un costo inicial por el hardware, similar en orden de magnitud al de AltumView, más una suscripción mensual que cubra el cómputo y almacenamiento en la nube del segundo módulo. Este esquema ya tiene precedente en el mismo segmento de cliente, dado que Ato cobra un dispositivo de entre USD 179 y 200 más una suscripción de USD 29 mensuales \parencite{Ato}. Eso sugiere que las familias de este segmento están dispuestas a aceptar un costo recurrente cuando el valor entregado es continuo. El esquema propio todavía no está validado con costos de producción reales, pero es coherente con la arquitectura y cuenta con un antecedente de mercado que respalda su viabilidad.
+AltumView Sentinare fija la referencia de mercado más cercana en la categoría de cámaras, entre USD 200 y 230 sin cuota mensual \parencite{AltumView}, pero cubre solo detección de eventos sobre una habitación.
+La arquitectura del sistema propuesto, dividida entre procesamiento local (RNF1) y un componente en la nube que sostiene la línea base y los reportes (RNF6, RNF7), sugiere naturalmente un esquema mixto, con un costo inicial por el hardware, similar en orden de magnitud al de AltumView, más una suscripción mensual que cubra el cómputo y almacenamiento en la nube del segundo módulo.
+Este esquema ya tiene precedente en el mismo segmento de cliente, dado que Ato cobra un dispositivo de entre USD 179 y 200 más una suscripción de USD 29 mensuales \parencite{Ato}.
+Eso sugiere que las familias de este segmento están dispuestas a aceptar un costo recurrente cuando el valor entregado es continuo.
+El esquema propio todavía no está validado con costos de producción reales, pero es coherente con la arquitectura y cuenta con un antecedente de mercado que respalda su viabilidad.
 
 \paragraph{Plaza}
-El proyecto no cuenta hoy con canal de distribución propio. Dos vías parecen más viables que una tienda física, dado el perfil de comprador relevado en el User Research, cuidadores que ya buscan de forma activa una solución y se informan por redes o grupos de mensajería. La primera es la venta directa por canal digital, y la segunda son las alianzas institucionales con geriátricos, obras sociales o municipios interesados en programas de cuidado domiciliario, una oportunidad que se apoya en el crecimiento poblacional proyectado por INDEC \parencite{INDEC2024}. Esta segunda vía tiene además la ventaja de acortar el problema de confianza señalado en el análisis de Porter, porque la institución actúa como validador ante la familia.
+El proyecto no cuenta hoy con canal de distribución propio.
+Dos vías parecen más viables que una tienda física, dado el perfil de comprador relevado en el User Research, cuidadores que ya buscan de forma activa una solución y se informan por redes o grupos de mensajería.
+La primera es la venta directa por canal digital, y la segunda son las alianzas institucionales con geriátricos, obras sociales o municipios interesados en programas de cuidado domiciliario, una oportunidad que se apoya en el crecimiento poblacional proyectado por INDEC \parencite{INDEC2024}.
+Esta segunda vía tiene además la ventaja de acortar el problema de confianza señalado en el análisis de Porter, porque la institución actúa como validador ante la familia.
 
 \subsection{Análisis FODA}
 \label{sec:foda}
@@ -548,7 +677,8 @@ Dado que el sistema propuesto aborda un tema sensible vinculado a la salud y el 
 En Argentina, el tratamiento de información personal está regulado por la Ley N.º 25.326 de Protección de Datos Personales \parencite{Argentina2000}, reglamentada por el Decreto 1558/2001 \parencite{Argentina2001}.
 Su autoridad de aplicación es la Agencia de Acceso a la Información Pública (AAIP), según el Decreto 746/2017 \parencite{Argentina2017}.
 Esta ley define como dato personal a toda información referida a personas físicas determinadas o determinables, sin exigir que dicha información incluya un nombre, una imagen u otro identificador directo.
-Como se desarrolló en la Sección~\ref{sec:privacidad_marco} y la Sección~\ref{sec:edge_marco}, el sistema no transmite ni almacena video fuera del hogar. Los eventos que sí se envían a la nube (por ejemplo, ``caída detectada, usuario 4821, 14:32~h'') se identifican mediante un identificador de usuario interno, que es el que vincula las cámaras, el sistema, la nube y la aplicación entre sí, sin exponer nombre ni imagen en ningún punto del flujo.
+Como se desarrolló en la Sección~\ref{sec:privacidad_marco} y la Sección~\ref{sec:edge_marco}, el sistema no transmite ni almacena video fuera del hogar.
+Los eventos que sí se envían a la nube (por ejemplo, ``caída detectada, usuario 4821, 14:32~h'') se identifican mediante un identificador de usuario interno, que es el que vincula las cámaras, el sistema, la nube y la aplicación entre sí, sin exponer nombre ni imagen en ningún punto del flujo.
 Sin embargo, esa condición no elimina el carácter de dato personal de la información transmitida, porque dicho identificador sigue permitiendo asociar cada evento con una persona física determinada para quien tenga acceso al sistema, como el equipo de desarrollo o la familia del usuario.
 Este tipo de dato se conoce como dato seudonimizado, y se distingue del dato anonimizado, en el que ya no existe ninguna forma de reconstruir la identidad de la persona, ni siquiera para quien lo procesa.
 Por lo tanto, aunque el sistema minimiza la exposición de información sensible, los eventos y las clasificaciones de actividad que produce siguen quedando alcanzados por la Ley 25.326.
@@ -575,9 +705,11 @@ Aunque el video no sale de la controladora, las cámaras también pueden captar 
 Por eso el consentimiento debería incluir a quienes conviven con el adulto mayor, y las cámaras deberían señalizarse para que las visitas sepan que el ambiente está monitoreado.
 
 También se definió cuánto tiempo se conserva cada dato.
-El video no se guarda en ningún momento, ya que se procesa en la memoria de la controladora y se descarta. La única imagen que queda en el equipo es la última de cada cámara, que se sobrescribe de forma continua para la vista en vivo del panel local, nunca sale de él y se elimina cuando la cámara deja de detectar presencia o el sistema se detiene.
+El video no se guarda en ningún momento, ya que se procesa en la memoria de la controladora y se descarta.
+La única imagen que queda en el equipo es la última de cada cámara, que se sobrescribe de forma continua para la vista en vivo del panel local, nunca sale de él y se elimina cuando la cámara deja de detectar presencia o el sistema se detiene.
 En la controladora, la base local funciona como un almacenamiento transitorio.
-Cada evento permanece allí hasta que se confirma su envío a la nube, lo que sostiene la continuidad ante cortes de conexión que exigen RNF6 y RNF7. Se elimina a los siete días de enviado, un margen que permite al panel local mostrar la actividad reciente.
+Cada evento permanece allí hasta que se confirma su envío a la nube, lo que sostiene la continuidad ante cortes de conexión que exigen RNF6 y RNF7.
+Se elimina a los siete días de enviado, un margen que permite al panel local mostrar la actividad reciente.
 En la nube, los eventos de actividad se conservan doce meses, un plazo que cubre con margen el historial que usa la línea base, de 30 días para la rutina y de once semanas para la tendencia gradual, y que permite a los reportes mostrar cómo evolucionó la rutina a lo largo de un año.
 Las alertas se conservan veinticuatro meses, como historial para la familia.
 Ante la baja del servicio o un pedido de supresión del titular, los datos del residente se eliminan dentro del plazo que fija la ley, y el kit queda desvinculado para poder asignarse a otro hogar.
@@ -586,7 +718,8 @@ Los plazos de la nube se activan por configuración, y resta exponer la baja del
 
 Más allá del tratamiento de datos, la naturaleza del sistema exige un descargo de responsabilidad explícito sobre su uso.
 El sistema propuesto es una herramienta de apoyo al cuidado y no constituye un dispositivo médico ni reemplaza la supervisión profesional o familiar del adulto mayor.
-La detección de caídas y de desvíos de rutina depende del correcto funcionamiento del hardware, de la disponibilidad de conectividad para el envío de alertas y de que un familiar o cuidador esté en condiciones de responder a la notificación recibida. Por lo tanto, el sistema no garantiza una respuesta inmediata ante una emergencia ni sustituye los mecanismos de asistencia médica de urgencia.
+La detección de caídas y de desvíos de rutina depende del correcto funcionamiento del hardware, de la disponibilidad de conectividad para el envío de alertas y de que un familiar o cuidador esté en condiciones de responder a la notificación recibida.
+Por lo tanto, el sistema no garantiza una respuesta inmediata ante una emergencia ni sustituye los mecanismos de asistencia médica de urgencia.
 Esta limitación se comunica de manera explícita al usuario y a su familia al momento de la instalación, como parte del proceso de consentimiento informado.
 
 Finalmente, el presente trabajo constituye un prototipo académico y no un producto comercial.
@@ -609,10 +742,12 @@ Además, esta incompatibilidad no es solo teórica.
 Durante el desarrollo, el equipo intentó conectar el sistema a cámaras domésticas ya instaladas en el hogar de uno de los integrantes, pero la conexión fue rechazada por tratarse de un canal de video cifrado por el propio fabricante, lo que impidió el acceso directo que requiere el procesamiento local.
 Por lo tanto, permitir cámaras arbitrarias del usuario introduciría una dependencia no controlada por el equipo sobre si esa cámara transmite o no video a un tercero, o expone su video de forma accesible, algo que no puede garantizarse sin validar cada modelo de forma individual.
 En consecuencia, el kit incluye cámaras seleccionadas por el equipo para funcionar con la controladora, de modo que la privacidad que el sistema promete no dependa de una configuración que el usuario deba resolver por su cuenta.
-En el diseño previsto, además, esas cámaras no tienen salida a internet, porque vendrán configuradas de fábrica para conectarse solo a una red wifi privada que arma la propia controladora. De ese modo, no podrían enviar video a un tercero aunque su firmware estuviera preparado para hacerlo.
+En el diseño previsto, además, esas cámaras no tienen salida a internet, porque vendrán configuradas de fábrica para conectarse solo a una red wifi privada que arma la propia controladora.
+De ese modo, no podrían enviar video a un tercero aunque su firmware estuviera preparado para hacerlo.
 
 En cuanto al costo, se resume a continuación el presupuesto estimado, calculado a partir de una controladora y tres cámaras, la configuración prevista para el prototipo.
-Este presupuesto cubre únicamente el hardware del prototipo y no constituye un costo de producción ni una estructura de precios de venta a escala. La proyección de ambos, junto con los costos de infraestructura en la nube, se desarrolla en la Sección~\ref{sec:modelo-negocio} y queda señalada como pendiente de validar en la Sección~\ref{sec:foda}.
+Este presupuesto cubre únicamente el hardware del prototipo y no constituye un costo de producción ni una estructura de precios de venta a escala.
+La proyección de ambos, junto con los costos de infraestructura en la nube, se desarrolla en la Sección~\ref{sec:modelo-negocio} y queda señalada como pendiente de validar en la Sección~\ref{sec:foda}.
 
 \begin{table}[h!]
 \centering
@@ -635,7 +770,8 @@ La placa figura a USD 230, el precio relevado para el prototipo en Mercado Libre
 Este presupuesto corresponde a la etapa de prototipo, y el diseño contempla varias cámaras simultáneas sobre una misma controladora (RNF9), con un máximo previsto de tres, ya que el módulo orquestador invoca los módulos de detección por cada cámara activa sin necesidad de una controladora adicional por cámara.
 Por lo tanto, un kit doméstico típico, con una controladora y entre una y tres cámaras según la cantidad de ambientes a cubrir, se mantiene dentro de ese mismo orden de magnitud.
 
-A la escala del prototipo, tanto la Raspberry Pi 5 como las cámaras IP utilizadas son componentes disponibles comercialmente en Argentina a través de múltiples proveedores, sin depender de un fabricante único ni de importación directa por parte del equipo. Eso reduce el riesgo de desabastecimiento como barrera para producir el kit a pequeña escala.
+A la escala del prototipo, tanto la Raspberry Pi 5 como las cámaras IP utilizadas son componentes disponibles comercialmente en Argentina a través de múltiples proveedores, sin depender de un fabricante único ni de importación directa por parte del equipo.
+Eso reduce el riesgo de desabastecimiento como barrera para producir el kit a pequeña escala.
 Producir a la escala de los escenarios comerciales requeriría, en cambio, importar directamente los componentes (Sección~\ref{sec:supuestos}).
 
 Finalmente, el kit se entrega armado y preconfigurado, sin requerir conocimientos técnicos ni intervención de personal especializado en el domicilio.
@@ -809,7 +945,8 @@ En el escenario Base esto da 1.700, 5.440, 9.520, 10.880 y 6.460 kits por año.
 
 Cada kit vendido suma una suscripción, y cada año una parte de los clientes se da de baja.
 Las bajas son del 15\,\% anual en el escenario Bear, del 10\,\% en el Base y del 6\,\% en el Bull.
-Entre 2010 y 2019 murieron por año entre 3,9 y 4,3 de cada 100 personas de 60 años o más \parencite{MinSalud2021}, y a eso se suman las mudanzas con la familia, el ingreso a residencias y las cancelaciones. Por lo tanto, las tasas elegidas son un supuesto propio que debe validarse con un piloto.
+Entre 2010 y 2019 murieron por año entre 3,9 y 4,3 de cada 100 personas de 60 años o más \parencite{MinSalud2021}, y a eso se suman las mudanzas con la familia, el ingreso a residencias y las cancelaciones.
+Por lo tanto, las tasas elegidas son un supuesto propio que debe validarse con un piloto.
 Las bajas reducen los ingresos por cuota, pero no cambian la cantidad de kits vendidos.
 
 Del mercado de partida no todos son alcanzables.
@@ -846,7 +983,8 @@ Los valores en pesos se convierten al dólar oficial de \$1.545 del 29 de septie
 El costo del kit varía según el escenario y es de USD 250, 230 y 220 en Bear, Base y Bull, respectivamente.
 La Raspberry Pi 5 de 8 GB, que es el componente principal, se fija en USD 175 a precio minorista \parencite{PiShop2026} y se mantiene en ese valor en los tres escenarios, sin suponer ningún descuento sobre la placa, un valor menor a los USD 230 de la unidad relevada en Mercado Libre para el prototipo.
 Lo que varía entre escenarios es el resto del kit, la cámara, la fuente, la tarjeta microSD, la carcasa y el flete de abastecimiento de esos componentes, que suma USD 75, 55 y 45 respectivamente, según el descuento por volumen y la posibilidad de importar directamente que se logren en cada caso.
-Es un supuesto propio que debe validarse con cotizaciones firmes, ya que los revendedores locales llegan a ofrecer la placa a un precio bastante mayor al de PiShop \parencite{Siranet2026}. Por lo tanto, alcanzar la escala prevista en Base y Bull requeriría un acuerdo de importación directa o de volumen con el proveedor.
+Es un supuesto propio que debe validarse con cotizaciones firmes, ya que los revendedores locales llegan a ofrecer la placa a un precio bastante mayor al de PiShop \parencite{Siranet2026}.
+Por lo tanto, alcanzar la escala prevista en Base y Bull requeriría un acuerdo de importación directa o de volumen con el proveedor.
 El hardware se compra con cuatro meses de anticipación, por lo que en los primeros años hay que pagar los kits antes de venderlos y esto aumenta el financiamiento necesario.
 
 Desde el año 1 el equipo se estima en USD 1.500 por persona por mes.
@@ -854,7 +992,8 @@ Es menos que la tarifa del desarrollo inicial porque ese trabajo se valúa como 
 Ambos valores son supuestos propios.
 Se parte de un núcleo de desarrollo y gestión que crece con cada escenario y se agrega un agente de soporte cada 500 suscripciones.
 La estructura comercial y de gerencia se calcula como el 25\,\% de las ventas, bajo el supuesto de que la parte comercial está tercerizada y se paga por comisiones de canal.
-El impuesto a las ganancias en Argentina se calcula con una escala progresiva de tres tramos (25\,\%, 30\,\% y 35\,\%) y no con una alícuota única \parencite{ARCA2026}. Por simplicidad, el modelo aplica el tramo más alto, 35\,\%, a toda la ganancia, y las pérdidas de los primeros años se descuentan de las ganancias de los años siguientes.
+El impuesto a las ganancias en Argentina se calcula con una escala progresiva de tres tramos (25\,\%, 30\,\% y 35\,\%) y no con una alícuota única \parencite{ARCA2026}.
+Por simplicidad, el modelo aplica el tramo más alto, 35\,\%, a toda la ganancia, y las pérdidas de los primeros años se descuentan de las ganancias de los años siguientes.
 La Figura~\ref{fig:supuestos} muestra la hoja del modelo con los supuestos comunes a los tres escenarios y los que cambian según cada uno.
 
 \figuraexcel{captura_supuestos.png}{0.95}{Hoja de supuestos del modelo financiero.}{fig:supuestos}
@@ -1031,7 +1170,8 @@ Cumple la meta de 100.000 personas & No & Sí & Sí \\
 Estos resultados deben leerse con algunas precauciones.
 En primer lugar, todo depende de la penetración y del canal de venta.
 En el escenario Base se venden 1.700 kits en el primer año y casi 11.000 en el cuarto, y sostener ese ritmo requiere que la adopción efectivamente acelere año a año como prevé el modelo, algo que todavía debe validarse.
-En segundo lugar, el precio de la suscripción es la variable que más mueve el resultado, ya que con USD 30 en lugar de USD 35 el VAN del escenario Base pasa a ser de USD $-$217.534. Con un costo de kit de USD 250 frente a USD 230 el VAN baja a USD 197.666.
+En segundo lugar, el precio de la suscripción es la variable que más mueve el resultado, ya que con USD 30 en lugar de USD 35 el VAN del escenario Base pasa a ser de USD $-$217.534.
+Con un costo de kit de USD 250 frente a USD 230 el VAN baja a USD 197.666.
 Por eso resulta importante validar la disposición a pagar y asegurar precios de volumen con los proveedores.
 En tercer lugar, la tasa de bajas es un supuesto y no un dato medido.
 Para ver cuánto pesa se repitió el cálculo del escenario Base con otras tasas anuales (Tabla~\ref{tab:bajas}).
@@ -1173,7 +1313,8 @@ Por último, la aplicación \marca{} es lo que utiliza el familiar para recibir 
 
 La luz de estado de \modcont{} resume su situación sin necesidad de abrir la aplicación.
 Titila en ámbar cuando no tiene internet, titila en verde mientras espera la vinculación, queda fija en verde cuando todo funciona y se enciende en rojo ante un problema, como no detectar ninguna cámara.
-En la base de \modcont{}, una etiqueta con el código QR, el número de serie y el código de vinculación es todo lo que el familiar necesita para ponerla en marcha desde la aplicación. De ese modo, la experiencia de instalación se reduce a enchufar el equipo y escanear el código.
+En la base de \modcont{}, una etiqueta con el código QR, el número de serie y el código de vinculación es todo lo que el familiar necesita para ponerla en marcha desde la aplicación.
+De ese modo, la experiencia de instalación se reduce a enchufar el equipo y escanear el código.
 
 La Figura~\ref{fig:ia-kit} muestra la controladora sin su carcasa, con el disipador y el ventilador visibles, junto a dos cámaras, y el kit terminado, con la controladora en su carcasa y tres cámaras a su lado.
 La intención es hacer visible tanto lo que hay dentro del equipo como el aspecto que tendría ante el usuario.

@@ -1,6 +1,9 @@
 \chapter{Introducción}
 
-El envejecimiento de la población es uno de los fenómenos más significativos de la Argentina contemporánea. El aumento de la esperanza de vida y las mejoras sostenidas en las condiciones de salud permitieron que hoy más de 7,4 millones de personas tengan 60 años o más, un 15,7\,\% de la población total. Las proyecciones del propio INDEC indican que esa proporción superará el 20\,\% hacia 2040 \parencite{INDEC2024}. Vivir más años y con mayor autonomía es el resultado de décadas de avances en salud pública, nutrición y calidad de vida.
+El envejecimiento de la población es uno de los fenómenos más significativos de la Argentina contemporánea.
+El aumento de la esperanza de vida y las mejoras sostenidas en las condiciones de salud permitieron que hoy más de 7,4 millones de personas tengan 60 años o más, un 15,7\,\% de la población total.
+Las proyecciones del propio INDEC indican que esa proporción superará el 20\,\% hacia 2040 \parencite{INDEC2024}.
+Vivir más años y con mayor autonomía es el resultado de décadas de avances en salud pública, nutrición y calidad de vida.
 
 Sin embargo, este cambio en la estructura etaria del país, que pasa de ser una fracción menor de la población a representar cerca de uno de cada cinco argentinos hacia 2040, trae consigo nuevas realidades familiares y sociales que todavía no encuentran una respuesta adecuada.
 Solo el 46\,\% de las personas de 60 años y más vive en hogares multigeneracionales \parencite{INDECTablero2024}.
@@ -10,7 +13,11 @@ En la mayoría de los casos, esos hijos son personas de mediana edad con sus pro
 El resultado es una brecha de información cotidiana difícil de cerrar.
 Los familiares no saben si el adulto mayor comió, si se levantó a la hora habitual, o si algo cambió en su rutina.
 
-Esta incertidumbre no es un detalle menor. Un adulto mayor que pasa buena parte del día solo, sin supervisión, queda expuesto a riesgos que muchas veces no se ven a simple vista. El deterioro de la salud rara vez llega de golpe; suele empezar con cambios sutiles en la rutina, como levantarse más tarde, moverse menos o saltear alguna comida, que si alguien los notara a tiempo permitirían actuar antes de que deriven en una emergencia. En el extremo más crítico están las caídas, que afectan a cerca del 30\,\% de los adultos mayores independientes cada año \parencite{YeohLui2025}. Sin una presencia física constante o algún mecanismo que observe lo que ocurre en el hogar, tanto ese deterioro silencioso como los eventos agudos pasan inadvertidos hasta que ya es tarde para actuar.
+Esta incertidumbre no es un detalle menor.
+Un adulto mayor que pasa buena parte del día solo, sin supervisión, queda expuesto a riesgos que muchas veces no se ven a simple vista.
+El deterioro de la salud rara vez llega de golpe; suele empezar con cambios sutiles en la rutina, como levantarse más tarde, moverse menos o saltear alguna comida, que si alguien los notara a tiempo permitirían actuar antes de que deriven en una emergencia.
+En el extremo más crítico están las caídas, que afectan a cerca del 30\,\% de los adultos mayores independientes cada año \parencite{YeohLui2025}.
+Sin una presencia física constante o algún mecanismo que observe lo que ocurre en el hogar, tanto ese deterioro silencioso como los eventos agudos pasan inadvertidos hasta que ya es tarde para actuar.
 
 Las alternativas tecnológicas que existen hoy no resuelven este problema de fondo.
 Los \textit{wearables} y los botones de pánico dependen de que el adulto mayor los use, y los use de forma constante, algo que choca con una realidad ya comprobada, porque los adultos mayores argentinos son quienes menos usan tecnologías de la información y la comunicación de toda la población \parencite{INDEC2020}.
@@ -25,7 +32,11 @@ Su propósito es darles información inmediata y constante sobre el estado del a
 El sistema opera de forma completamente pasiva y autónoma.
 No requiere ninguna intervención por parte del adulto mayor, no utiliza dispositivos que deban portarse, y todo el procesamiento de video se realiza de manera local en el hogar, garantizando que los registros visuales no salgan del domicilio.
 
-El sistema integra dos módulos principales. El primero analiza el video de cámaras IP en tiempo real mediante dos componentes, un modelo de estimación de pose que identifica eventos críticos como caídas o inmovilidad prolongada, y un modelo de lenguaje visual que clasifica las actividades del individuo. Las actividades detectadas son registradas y enviadas al siguiente módulo. El segundo construye y actualiza de forma continua una línea base de comportamiento personalizada para cada individuo, permitiendo identificar desvíos significativos en la rutina diaria que podrían indicar un deterioro en el estado de salud. Los eventos detectados y las clasificaciones de actividad se transmiten a la nube para notificar a la familia y alimentar los reportes periódicos a través de una aplicación móvil.
+El sistema integra dos módulos principales.
+El primero analiza el video de cámaras IP en tiempo real mediante dos componentes, un modelo de estimación de pose que identifica eventos críticos como caídas o inmovilidad prolongada, y un modelo de lenguaje visual que clasifica las actividades del individuo.
+Las actividades detectadas son registradas y enviadas al siguiente módulo.
+El segundo construye y actualiza de forma continua una línea base de comportamiento personalizada para cada individuo, permitiendo identificar desvíos significativos en la rutina diaria que podrían indicar un deterioro en el estado de salud.
+Los eventos detectados y las clasificaciones de actividad se transmiten a la nube para notificar a la familia y alimentar los reportes periódicos a través de una aplicación móvil.
 
 \section{Objetivos}
 
@@ -49,16 +60,30 @@ Desarrollar un sistema de monitoreo no invasivo para adultos mayores en entornos
 
 \subsection{Características del prototipo funcional}
 
-El proyecto abarca el diseño e implementación de un prototipo funcional compuesto por dos módulos principales. El primero realiza el análisis visual mediante un \textit{pipeline} que combina un modelo de estimación de poses para la detección en tiempo real de eventos agudos, como caídas e inmovilidad prolongada, con consultas periódicas al modelo de lenguaje visual (VLM) para la clasificación semántica de actividades de la vida diaria (AVD). El segundo construye y actualiza de forma continua una línea base de comportamiento personalizada por usuario mediante \textit{clustering} dinámico, permitiendo identificar desvíos significativos en la rutina diaria como señales tempranas de deterioro funcional. El procesamiento de video se ejecuta localmente en una controladora conectada a cámaras IP, garantizando que los registros visuales no salgan del domicilio. Únicamente los eventos detectados y las clasificaciones de actividad se transmiten a la nube para el envío de notificaciones y el registro de actividad. El sistema incluye además una aplicación móvil para la visualización de alertas y reportes, y se valida en un entorno doméstico controlado mediante escenarios simulados. El modelo de estimación de poses y el modelo de lenguaje visual se emplean preentrenados, sin reentrenar sus pesos. Los conjuntos de datos públicos utilizados sirven para calibrar los umbrales de la heurística de caídas e inmovilidad, para entrenar un clasificador liviano sobre los embeddings que ya genera el modelo de lenguaje visual y para entrenar dos clasificadores temporales sobre la secuencia de \textit{keypoints}, uno que confirma las caídas y otro que se combina con el modelo de lenguaje visual en la clasificación de actividades. El origen y el tratamiento de esos datos se detallan en la Sección~\ref{sec:datasets}.
+El proyecto abarca el diseño e implementación de un prototipo funcional compuesto por dos módulos principales.
+El primero realiza el análisis visual mediante un \textit{pipeline} que combina un modelo de estimación de poses para la detección en tiempo real de eventos agudos, como caídas e inmovilidad prolongada, con consultas periódicas al modelo de lenguaje visual (VLM) para la clasificación semántica de actividades de la vida diaria (AVD).
+El segundo construye y actualiza de forma continua una línea base de comportamiento personalizada por usuario mediante \textit{clustering} dinámico, permitiendo identificar desvíos significativos en la rutina diaria como señales tempranas de deterioro funcional.
+El procesamiento de video se ejecuta localmente en una controladora conectada a cámaras IP, garantizando que los registros visuales no salgan del domicilio.
+Únicamente los eventos detectados y las clasificaciones de actividad se transmiten a la nube para el envío de notificaciones y el registro de actividad.
+El sistema incluye además una aplicación móvil para la visualización de alertas y reportes, y se valida en un entorno doméstico controlado mediante escenarios simulados.
+El modelo de estimación de poses y el modelo de lenguaje visual se emplean preentrenados, sin reentrenar sus pesos.
+Los conjuntos de datos públicos utilizados sirven para calibrar los umbrales de la heurística de caídas e inmovilidad, para entrenar un clasificador liviano sobre los embeddings que ya genera el modelo de lenguaje visual y para entrenar dos clasificadores temporales sobre la secuencia de \textit{keypoints}, uno que confirma las caídas y otro que se combina con el modelo de lenguaje visual en la clasificación de actividades.
+El origen y el tratamiento de esos datos se detallan en la Sección~\ref{sec:datasets}.
 
 \subsection{Limitaciones y exclusiones}
 \label{sec:limitaciones-exclusiones}
 
-El prototipo no contempla integración con sistemas médicos externos ni producción a escala comercial. El sistema está diseñado exclusivamente para entornos domésticos y no es aplicable a instituciones de salud, geriátricos ni espacios públicos. Tampoco incluye vinculación con servicios de emergencia o atención médica profesional.
+El prototipo no contempla integración con sistemas médicos externos ni producción a escala comercial.
+El sistema está diseñado exclusivamente para entornos domésticos y no es aplicable a instituciones de salud, geriátricos ni espacios públicos.
+Tampoco incluye vinculación con servicios de emergencia o atención médica profesional.
 
-El sistema asume la presencia de un único residente monitoreado por instalación. En hogares donde conviven dos o más personas, algo frecuente en adultos mayores que viven en pareja, el pipeline de detección de poses no puede distinguir de forma confiable entre individuos, lo que contaminaría el perfil conductual del residente objetivo. Esta limitación se reconoce explícitamente como trabajo futuro; el prototipo se valida en un entorno de residente único.
+El sistema asume la presencia de un único residente monitoreado por instalación.
+En hogares donde conviven dos o más personas, algo frecuente en adultos mayores que viven en pareja, el pipeline de detección de poses no puede distinguir de forma confiable entre individuos, lo que contaminaría el perfil conductual del residente objetivo.
+Esta limitación se reconoce explícitamente como trabajo futuro; el prototipo se valida en un entorno de residente único.
 
-La ubicación de las cámaras queda a criterio de los familiares responsables del adulto mayor. El sistema puede ofrecer recomendaciones de instalación basadas en los ambientes de mayor actividad y riesgo, como el living, la cocina y las áreas de circulación principal, pero no impone restricciones técnicas sobre qué espacios cubrir. La decisión final implica un balance entre cobertura y privacidad que corresponde a cada familia evaluar.
+La ubicación de las cámaras queda a criterio de los familiares responsables del adulto mayor.
+El sistema puede ofrecer recomendaciones de instalación basadas en los ambientes de mayor actividad y riesgo, como el living, la cocina y las áreas de circulación principal, pero no impone restricciones técnicas sobre qué espacios cubrir.
+La decisión final implica un balance entre cobertura y privacidad que corresponde a cada familia evaluar.
 
 \subsection{Estructura del documento}
 
