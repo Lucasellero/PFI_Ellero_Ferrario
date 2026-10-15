@@ -11,7 +11,10 @@ El control de versiones del proyecto corre sobre GitHub, tanto para el código d
 
 El desarrollo del proyecto se organiza bajo un enfoque Kanban, en lugar de un marco con iteraciones de duración fija como Scrum. Kanban, en la formulación de \textcite{Anderson2010}, es un método de gestión del trabajo que se basa en visualizar el flujo de tareas, limitar la cantidad de trabajo en curso y gestionar ese flujo de forma continua. En el proyecto, el trabajo se gestiona como un flujo continuo de tareas visualizadas en un tablero por columnas de estado, en lugar de comprometerse de antemano a un lote fijo de tareas por sprint. Este enfoque resulta adecuado para un equipo de dos integrantes con una carga de tareas heterogénea entre secciones del informe, módulos de código y preparación de entregas, donde la prioridad cambia con frecuencia según el estado de cada frente y no se justifica la sobrecarga de coordinación de ceremonias como planning o daily stand-up.
 
-La planificación y el seguimiento de tareas del equipo se gestionan en un tablero Kanban en Trello, organizado en tres columnas (Pendiente, En curso y Hecho), donde se desglosan los hitos del cronograma del proyecto, presentado como diagrama de Gantt en el Anexo~\ref{anexo:cronograma}, en tareas concretas asignadas a cada integrante. El seguimiento con el tutor se realiza mediante reuniones periódicas por Microsoft Teams, donde se revisa el avance del tablero y se ajustan prioridades para el próximo período.
+La planificación y el seguimiento de tareas del equipo se gestionan en un tablero Kanban en Trello, organizado en tres columnas (Pendiente, En curso y Hecho), donde se desglosan los hitos del cronograma del proyecto, presentado como diagrama de Gantt en el Anexo~\ref{anexo:cronograma}, en tareas concretas asignadas a cada integrante.
+El seguimiento con el tutor se realiza mediante reuniones periódicas por Microsoft Teams, donde se revisa el avance del tablero y se ajustan prioridades para el próximo período.
+Las dos herramientas cumplen funciones distintas, ya que el diagrama de Gantt fija los hitos de entrega de la cátedra y el tablero Kanban ordena las tareas dentro de cada etapa según el flujo de trabajo.
+% PENDIENTE GOVI: describir la práctica real de Kanban en el tablero (si hubo un límite de tareas en curso por integrante, qué condición pasaba una tarjeta de una columna a otra y cada cuánto se repriorizaba).
 
 Los diagramas presentados en el Capítulo~\ref{chapter03} (Diagrama de Casos de Uso, de Flujo de Información, de Componentes y de Arquitectura) se elaboraron en Lucidchart, en lugar de una herramienta de dibujo genérica, porque ofrece plantillas y notación estándar para diagramas UML y de arquitectura, lo que agiliza mantener una consistencia visual entre los distintos diagramas del informe.
 
@@ -26,14 +29,22 @@ El Marco Teórico (Sección~\ref{sec:vlm_marco}, Sección~\ref{sec:edge_marco}) 
 
 \subsection{Lenguaje y stack de desarrollo}
 
-Todo el sistema, tanto el pipeline de visión que corre en el borde como el backend que corre en la nube, está escrito en Python (versión 3.12 o superior). La decisión responde en primer lugar al ecosistema, dado que las librerías de referencia para cada una de las tareas del sistema (Ultralytics para estimación de pose, ONNX Runtime para la inferencia de CLIP, scikit-learn para clustering) están escritas o tienen sus \textit{bindings} principales en Python, y reescribir el pipeline en un lenguaje de más bajo nivel, como C++, hubiese significado renunciar a esas librerías o reimplementarlas sin necesidad, dado que RNF4 exige una operación cercana al tiempo real y no tiempo real estricto. En segundo lugar, usar el mismo lenguaje en el borde y en la nube reduce la fricción de mantener dos bases de código con convenciones distintas, y permite, en particular, reutilizar sin cambios el esquema de eventos definido con Pydantic (Sección~\ref{sec:diagrama_componentes}) tanto en el almacenamiento local de \texttt{events/} como en el backend que lo expone desde la nube. El costo de esta decisión es previsible, ya que Python introduce un overhead de interpretación que un lenguaje compilado no tendría, pero ese costo ya está absorbido en el diseño, dado que ni la estimación de pose ni la inferencia de CLIP corren sobre el intérprete de Python en sí, sino delegadas a Ultralytics y a ONNX Runtime respectivamente, ambas con su núcleo de cómputo implementado en C++ y expuesto a Python solo como interfaz.
+El código del borde y de la nube, tanto el pipeline de visión como el backend, está escrito en Python (versión 3.12 o superior), y la aplicación móvil en TypeScript, como se detalla al final de la Sección~\ref{sec:backend_nube}.
+La decisión responde en primer lugar al ecosistema, dado que las librerías de referencia para cada una de las tareas del sistema (Ultralytics para estimación de pose, ONNX Runtime para la inferencia de CLIP, scikit-learn para clustering) están escritas o tienen sus \textit{bindings} principales en Python, y reescribir el pipeline en un lenguaje de más bajo nivel, como C++, hubiese significado renunciar a esas librerías o reimplementarlas sin necesidad, dado que RNF4 exige una operación cercana al tiempo real y no tiempo real estricto.
+En segundo lugar, usar el mismo lenguaje en el borde y en la nube reduce la fricción de mantener dos bases de código con convenciones distintas, y permite, en particular, reutilizar sin cambios el esquema de eventos definido con Pydantic (Sección~\ref{sec:diagrama_componentes}) tanto en el almacenamiento local de \texttt{events/} como en el backend que lo expone desde la nube.
+El costo de esta decisión es previsible, ya que Python introduce un overhead de interpretación que un lenguaje compilado no tendría, pero ese costo ya está absorbido en el diseño, dado que ni la estimación de pose ni la inferencia de CLIP corren sobre el intérprete de Python en sí, sino delegadas a Ultralytics y a ONNX Runtime respectivamente, ambas con su núcleo de cómputo implementado en C++ y expuesto a Python solo como interfaz.
 
 \subsection{Frameworks y librerías por módulo}
 
 \subsubsection*{Ultralytics, OpenCV y NumPy en \texttt{vision/}}
-El módulo \texttt{vision/} implementa la heurística de detección de caídas e inmovilidad (Sección~\ref{sec:diagrama_componentes}) sobre keypoints de pose obtenidos con YOLO11n-pose a través de la librería Ultralytics. Implementar la arquitectura de YOLO desde cero, o recurrir a una implementación de terceros menos consolidada, hubiera significado resignar lo que Ultralytics ya resuelve, una interfaz de alto nivel que integra la descarga del modelo, la inferencia y la exportación a otros formatos. Además, es la misma línea de modelos que validan \textcite{Giri2025} y que confirman \textcite{Wang2025} como la variante de referencia para hardware embebido (Sección~\ref{sec:edge-inference}), de modo que usarla evita apartarse de la literatura que ya validó la viabilidad del enfoque. OpenCV se usa para todo el manejo de frames (lectura de archivos y de streams, recorte, dibujo del overlay de esqueleto) y NumPy para las operaciones vectoriales sobre los keypoints (velocidad vertical, ángulo de orientación) que alimentan la heurística de caída, ambas librerías estándar de facto en visión artificial con Python.
+El módulo \texttt{vision/} implementa la heurística de detección de caídas e inmovilidad (Sección~\ref{sec:diagrama_componentes}) sobre keypoints de pose obtenidos con YOLO11n-pose a través de la librería Ultralytics.
+Entre las alternativas livianas de estimación de pose, MediaPipe Pose y la versión Lightning de MoveNet están pensadas para una sola persona por imagen, mientras que YOLO11n-pose detecta a cada persona y sus 17 puntos clave en formato COCO en una única pasada.
+Ultralytics suma una interfaz de alto nivel que integra la descarga del modelo, la inferencia y la exportación a otros formatos.
+Además, \textcite{Giri2025} validan sobre una Raspberry Pi un modelo de la misma familia de Ultralytics (Sección~\ref{sec:edge-inference}), de modo que usarla evita apartarse de la literatura que ya validó la viabilidad del enfoque.
+OpenCV se usa para todo el manejo de frames (lectura de archivos y de streams, recorte, dibujo del overlay de esqueleto) y NumPy para las operaciones vectoriales sobre los keypoints (velocidad vertical, ángulo de orientación) que alimentan la heurística de caída, ambas librerías estándar de facto en visión artificial con Python.
 
 \subsubsection*{ONNX Runtime para la clasificación semántica}
+Para la clasificación semántica se eligió CLIP en su variante ViT-B/32 frente a un VLM generativo como LLaVA, porque clasifica por similitud sin generar texto y corre en CPU, y frente a la variante ViT-B/16, que con unas cuatro veces más cómputo dio 52,6\,\% de aciertos contra 51,6\,\% en la misma partición.
 CLIP no se reentrena.
 Se exporta una única vez a ONNX, en la máquina de desarrollo y con PyTorch, y lo único que se entrena es el clasificador liviano sobre sus representaciones, que se guarda aparte.
 En la Raspberry Pi, CLIP y los clasificadores temporales del esqueleto corren sobre ONNX Runtime, sin pasar por PyTorch.
@@ -42,13 +53,22 @@ Para la clasificación semántica la separación es deliberada, ya que PyTorch e
 Exportar a ONNX tiene además la ventaja de desacoplar el modelo del framework en el que fue entrenado, de modo que si en el futuro conviene migrar la inferencia a otro runtime no hace falta reentrenar ni reexportar CLIP desde cero.
 
 \subsubsection*{Pydantic y SQLite en el contrato de eventos}
-El esquema \texttt{MonitoringEvent} que actúa de contrato entre \texttt{vision/}, \texttt{vlm/} y \texttt{baseline/} (Sección~\ref{sec:diagrama_componentes}) está definido con Pydantic, que valida en tiempo de ejecución que cada evento tenga el tipo y la estructura esperada antes de persistirlo, algo que una clase de Python sin validación no garantizaría. La persistencia local usa SQLite a través del módulo estándar \texttt{sqlite3}, sin una capa de ORM intermedia. Se descartó un ORM como SQLAlchemy ya que el volumen y la variedad de consultas sobre \texttt{events/} son bajos (insertar un evento, leerlos todos o filtrados por identificador de video o de cámara), y esas consultas ya están expresadas con claridad en SQL directo, de modo que la capa de abstracción adicional de un ORM no aportaría legibilidad ni velocidad de desarrollo, solo una dependencia más. SQLite en sí, frente a un motor cliente-servidor como PostgreSQL, es la elección natural para este punto del sistema porque el requisito no es concurrencia entre múltiples clientes sino persistencia liviana de un único proceso local (RNF6), sin necesidad de levantar ni administrar un servidor de base de datos en un dispositivo embebido. El mismo esquema es el que usa el backend en la nube para recibir los eventos de la controladora, y la aplicación móvil replica en sus tipos de TypeScript la forma en que la API devuelve esos eventos, por lo que un cambio en el esquema obliga a actualizar los dos repositorios en conjunto.
+El esquema \texttt{MonitoringEvent} que actúa de contrato entre \texttt{vision/}, \texttt{vlm/} y \texttt{baseline/} (Sección~\ref{sec:diagrama_componentes}) está definido con Pydantic, que valida en tiempo de ejecución que cada evento tenga el tipo y la estructura esperada antes de persistirlo, algo que una clase de Python sin validación no garantizaría.
+La persistencia local usa SQLite a través del módulo estándar \texttt{sqlite3}, sin una capa de ORM intermedia.
+Se descartó un ORM como SQLAlchemy ya que el volumen y la variedad de consultas sobre \texttt{events/} son bajos (insertar un evento, leerlos todos o filtrados por identificador de video o de cámara), y esas consultas ya están expresadas con claridad en SQL directo, de modo que la capa de abstracción adicional de un ORM no aportaría legibilidad ni velocidad de desarrollo, solo una dependencia más.
+En la nube, en cambio, el backend sí usa SQLAlchemy como ORM y Alembic para versionar el esquema, porque el modelo relacional de hogares, familiares, kits, cámaras y eventos y sus migraciones justifican esa capa.
+SQLite en sí, frente a un motor cliente-servidor como PostgreSQL, es la elección natural para este punto del sistema porque el requisito no es concurrencia entre múltiples clientes sino persistencia liviana de un único proceso local (RNF6), sin necesidad de levantar ni administrar un servidor de base de datos en un dispositivo embebido.
+El mismo esquema es el que usa el backend en la nube para recibir los eventos de la controladora, y la aplicación móvil replica en sus tipos de TypeScript la forma en que la API devuelve esos eventos, por lo que un cambio en el esquema obliga a actualizar los dos repositorios en conjunto.
 
 \subsubsection*{scikit-learn para el aprendizaje adaptativo}
-El módulo \texttt{baseline/} implementa sobre scikit-learn el clustering dinámico con ventana móvil descripto en el Marco Teórico (\textcite{Snoun2024}), y corre en la nube, en AWS, sobre el historial de eventos de cada hogar (Sección~\ref{sec:backend_nube}). Una librería de deep learning como PyTorch o TensorFlow resultaría sobredimensionada para esta tarea, dado que el clustering sobre la línea base de comportamiento no requiere entrenar una red neuronal, sino aplicar algoritmos clásicos, en este caso K-means recalculado sobre una ventana móvil de días recientes, sobre un volumen de datos acotado (los eventos diarios de un único residente). Para ese caso de uso, scikit-learn ofrece implementaciones probadas y de bajo costo computacional.
+El módulo \texttt{baseline/} implementa sobre scikit-learn el clustering dinámico con ventana móvil descripto en el Marco Teórico (\textcite{Snoun2024}), y corre en la nube, en AWS, sobre el historial de eventos de cada hogar (Sección~\ref{sec:backend_nube}).
+Una librería de deep learning como PyTorch o TensorFlow resultaría sobredimensionada para esta tarea, dado que el clustering sobre la línea base de comportamiento no requiere entrenar una red neuronal, sino aplicar algoritmos clásicos, en este caso K-means con dos grupos, recalculado sobre una ventana móvil de los 30 días previos, sobre un volumen de datos acotado (los eventos diarios de un único residente).
+Para ese caso de uso, scikit-learn ofrece implementaciones probadas y de bajo costo computacional.
 
 \subsubsection*{FastAPI, uvicorn y WebSockets en el panel de operación}
-El módulo \texttt{dashboard/}, que arranca y detiene \texttt{runner/}, gestiona \texttt{cameras.yaml} y muestra los eventos registrados, está construido sobre FastAPI con uvicorn como servidor ASGI. Un framework sincrónico como Flask no alcanza aquí, porque el panel necesita atender al mismo tiempo peticiones REST convencionales (alta de cámaras, subida de video) y una conexión WebSocket persistente que transmite eventos y logs del runner en tiempo real a la interfaz, y el soporte nativo de FastAPI para operaciones asíncronas es una ventaja directa frente a agregar una extensión externa sobre un framework pensado para trabajar de a una petición por vez. Además, al estar basado en type hints de Python, FastAPI puede reutilizar directamente los modelos Pydantic ya definidos en \texttt{events/}, evitando redefinir la validación de datos en la capa web.
+El módulo \texttt{dashboard/}, que arranca y detiene \texttt{runner/}, gestiona \texttt{cameras.yaml} y muestra los eventos registrados, está construido sobre FastAPI con uvicorn como servidor ASGI.
+El panel necesita atender al mismo tiempo peticiones REST convencionales (alta de cámaras, subida de video) y una conexión WebSocket persistente que transmite eventos y logs del runner en tiempo real a la interfaz.
+Flask, basado en WSGI, no soporta WebSockets de forma nativa y exige una extensión externa para mantener esa conexión, mientras que FastAPI, sobre ASGI, atiende las peticiones REST y los WebSockets en el mismo proceso.
 
 \subsubsection*{Threading y configuración declarativa en la orquestación}
 El módulo \texttt{runner/} corre un \textit{thread} por cámara para poder procesar varias fuentes de video en paralelo (RNF9), cada uno con su propia instancia del detector de caídas e inmovilidad, pero compartiendo una única instancia del clasificador CLIP, dado que ONNX Runtime admite inferencia concurrente de forma segura y cargar el modelo una vez por cámara sería redundante. La configuración de cámaras (identificador, fuente, modo de reproducción) se declara en \texttt{cameras.yaml} mediante PyYAML, en lugar de codificarse directamente en el programa, de modo que agregar, quitar o modificar una cámara no requiere cambiar ni redesplegar el código del runner, algo relevante para el panel de control local, desde el cual la propia familia, o el soporte técnico en una visita presencial, pueden dar de alta o modificar las cámaras de un kit.
@@ -56,10 +76,12 @@ El módulo \texttt{runner/} corre un \textit{thread} por cámara para poder proc
 \subsection{Backend en la nube y arquitectura de red}
 \label{sec:backend_nube}
 
-Del lado de la nube, el backend que recibe los eventos de la Raspberry Pi, calcula la línea base y los expone a la aplicación móvil (Sección~\ref{sec:diagrama_arquitectura}) está construido sobre FastAPI, el mismo framework que ya corre en \texttt{dashboard/} para el panel de operación local. Reutilizar el mismo framework en ambas puntas tiene dos razones concretas. Permite compartir el mismo esquema Pydantic de \texttt{MonitoringEvent} entre el backend local y el de la nube sin duplicar la validación, y aprovecha que el equipo ya resolvió la curva de aprendizaje de FastAPI con \texttt{dashboard/}, lo que evita sumar un framework nuevo, por ejemplo Flask o Django, exclusivamente para el backend en la nube.
+Del lado de la nube, el backend que recibe los eventos de la Raspberry Pi, calcula la línea base y los expone a la aplicación móvil (Sección~\ref{sec:diagrama_arquitectura}) está construido sobre FastAPI, el mismo framework que ya corre en \texttt{dashboard/} para el panel de operación local.
+Reutilizar el mismo framework en ambas puntas tiene dos razones concretas.
+Permite que la nube valide los eventos con el mismo esquema Pydantic \texttt{MonitoringEvent} con el que los guarda la controladora, sin duplicar la validación, y aprovecha que el equipo ya resolvió la curva de aprendizaje de FastAPI con \texttt{dashboard/}, lo que evita sumar un framework nuevo, por ejemplo Flask o Django, exclusivamente para el backend en la nube.
 
 La comunicación entre la Raspberry Pi y el backend en AWS se resolvió sobre REST por HTTP, y no sobre un protocolo de mensajería como MQTT.
-La razón es el patrón de tráfico, ya que el sistema no transmite un flujo continuo de datos (el video nunca sale del dispositivo, según RNF1) sino eventos discretos y de baja frecuencia, como una caída, un cambio de actividad o una sincronización periódica de la línea base, un volumen para el que un modelo publish/subscribe agrega complejidad operativa, al requerir un broker adicional para administrar, sin un beneficio claro frente a llamadas HTTP directas.
+La razón es el patrón de tráfico, ya que el sistema no transmite un flujo continuo de datos (el video nunca sale del dispositivo, según RNF1) sino eventos discretos y de baja frecuencia, como una caída, un cambio de actividad o el envío periódico de los eventos acumulados, que la controladora hace cada 30 segundos por defecto, un volumen para el que un modelo publish/subscribe agrega complejidad operativa, al requerir un broker adicional para administrar, sin un beneficio claro frente a llamadas HTTP directas.
 Desde el punto de vista de la arquitectura de red, la Raspberry Pi solo necesita realizar conexiones salientes hacia el endpoint de AWS, sin exponer ningún puerto entrante en la red doméstica, algo especialmente relevante porque el dispositivo corre dentro de la red interna del hogar, típicamente detrás de un router con NAT, sin IP pública ni administración remota de firewall a cargo del usuario.
 La controladora sale a internet por un cable de red conectado a ese router.
 En el diseño previsto para el kit, las cámaras se conectan a una red wifi privada que arma la propia controladora y no tienen salida a internet, de modo que la Raspberry Pi sea el único equipo del kit que se comunique con la nube.
@@ -74,7 +96,12 @@ Del lado de la persistencia en la nube, el backend usa Amazon RDS sobre PostgreS
 
 La autenticación de la aplicación móvil se apoya en Firebase Authentication en lugar de un esquema de tokens propio administrado por el backend, principalmente porque el sistema ya depende de Firebase Cloud Messaging para las notificaciones push (RF8). Sumar también Firebase Authentication evita administrar un segundo proveedor de identidad y aprovecha que el SDK de Firebase en el cliente móvil (React Native) ya integra ambos servicios de forma nativa. El costo es una dependencia mayor de un proveedor externo, pero se trata de un servicio de autenticación estándar, con inicio de sesión por correo y contraseña o proveedores federados, y no de un componente que procese datos sensibles del video ni de la línea base de comportamiento, por lo que no compromete el requisito de privacidad desarrollado en el Marco Teórico (Sección~\ref{sec:edge_marco}). En el prototipo no se exige verificar el correo electrónico al crear la cuenta, y sumar esa verificación antes de vincular el kit queda como mejora futura para reforzar el control de acceso que exigen RNF10 y RF12.
 
-Por último, la aplicación móvil está desarrollada en React Native. Desarrollar de forma nativa en Swift y en Kotlin por separado no se justifica en este caso, porque la aplicación no requiere acceso a funcionalidades de bajo nivel del dispositivo más allá de recibir notificaciones push, usar la cámara del celular para escanear el código QR del kit y consumir una API REST, necesidades que React Native cubre con las librerías del ecosistema Expo, y duplicar ese desarrollo tiene poco sentido para un equipo de dos personas con un cronograma acotado. Esta decisión es además independiente de RNF8, que exige que la aplicación sea simple, clara e intuitiva, un objetivo de diseño de interfaz que no depende de si el código corre sobre un framework nativo o multiplataforma. La aplicación está construida con Expo y escrita en TypeScript, lo que permite probarla directamente en el celular durante el desarrollo y detectar al revisar el código cualquier diferencia con los datos que devuelve la API. El código se organiza en una carpeta por funcionalidad, y todas las pantallas acceden al backend a través de una única capa de acceso a datos, que además puede trabajar con datos de prueba, lo que permitió diseñar y probar las pantallas antes de que el backend estuviera disponible.
+Por último, la aplicación móvil está desarrollada en React Native.
+Desarrollar de forma nativa en Swift y en Kotlin por separado no se justifica en este caso, porque la aplicación no requiere acceso a funcionalidades de bajo nivel del dispositivo más allá de recibir notificaciones push, usar la cámara del celular para escanear el código QR del kit y consumir una API REST, necesidades que React Native cubre con las librerías del ecosistema Expo, y duplicar ese desarrollo tiene poco sentido para un equipo de dos personas con un cronograma acotado.
+Frente a Flutter, la otra alternativa multiplataforma, React Native permite escribir la aplicación en TypeScript en lugar de Dart y usar las librerías de Expo para el escaneo del código QR.
+La aplicación está construida con Expo y escrita en TypeScript, lo que permite probarla directamente en el celular durante el desarrollo.
+Frente a JavaScript, TypeScript detecta al compilar cualquier diferencia entre los tipos de la aplicación y los datos que devuelve la API.
+El código se organiza en una carpeta por funcionalidad, y todas las pantallas acceden al backend a través de una única capa de acceso a datos, que además puede trabajar con datos de prueba, lo que permitió diseñar y probar las pantallas antes de que el backend estuviera disponible.
 
 \subsection{Datasets y pipeline de datos}
 \label{sec:datasets}
@@ -93,51 +120,54 @@ La Tabla~\ref{tab:datasets} resume el origen, la licencia, el contenido y el uso
 \textbf{Dataset} & \textbf{Origen} & \textbf{Licencia} & \textbf{Contenido} & \textbf{Uso en el proyecto} \\
 \midrule
 Toyota Smarthome \parencite{Das2019} & Inria y Toyota, departamento con siete cámaras fijas & Solo investigación académica & 31 actividades cotidianas de 18 adultos mayores de entre 60 y 80 años, en versión recortada y sin recortar & Clasificación de actividades, sedentarismo, entradas y salidas, y negativos de caída \\
-GMDCSA-24 \parencite{Alam2024} & Zenodo, DOI 10.5281/zenodo.11216408 & CC BY 4.0 & Caídas simuladas por cuatro actores en tres ambientes domésticos & Calibración y evaluación de la detección de caídas \\
+GMDCSA-24 \parencite{Alam2024} & Zenodo, DOI 10.5281/zenodo.11216408 & CC BY 4.0 & 79 clips de caídas simuladas, el subconjunto de solo caídas del dataset de cuatro actores en tres ambientes domésticos & Calibración y evaluación de la detección de caídas \\
 CAUCAFall \parencite{Eraso2022} & Universidad del Cauca, Mendeley Data & CC BY 4.0 & Diez sujetos, cinco tipos de caída y cinco actividades, en un ambiente doméstico no controlado & Calibración y evaluación de la detección de caídas \\
 URFD \parencite{Kwolek2014} & Universidad de Rzeszów & CC BY-NC-SA 4.0 & 30 caídas y 40 actividades que se asemejan a una caída & Negativos difíciles para la detección de caídas \\
 CASAS \parencite{Cook2013} & Washington State University, Zenodo, DOI 10.5281/zenodo.15708568 & CC BY 4.0 & Sensores de movimiento y puerta de 81 hogares reales, unos 26,3 millones de eventos & Construcción y evaluación de la línea base \\
-Multiple Cameras Fall \parencite{Auvinet2011} & Université de Montréal, publicado en Kaggle & -- & 24 escenarios grabados con ocho cámaras simultáneas & Evaluado y no incorporado \\
+Multiple Cameras Fall \parencite{Auvinet2011} & Université de Montréal, publicado en Kaggle & Sin licencia declarada & 24 escenarios grabados con ocho cámaras simultáneas & Evaluado y no incorporado \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsubsection*{Datasets de video}
 
-El rol de cada dataset de video en la calibración y validación del sistema se presentó en la Sección~\ref{sec:brecha}.
+GMDCSA-24 aporta caídas de tipos variados con un encuadre de cámara fijo, y sus 79 clips de caídas son la base con la que se calibró la heurística geométrica.
+CAUCAFall agrega variación de distancia y de ángulo entre sujetos, la que obligó a medir la velocidad de caída en relación con la altura de la persona.
+URFD aporta secuencias de casi caídas, como sentarse, agacharse o acostarse, etiquetadas como no evento, que sirven de negativos difíciles.
+Ninguno de los tres se grabó con adultos mayores, porque las caídas se simulan con voluntarios.
 Toyota Smarthome se usa en sus dos versiones.
 De la versión recortada, en la que cada clip contiene una sola actividad, el equipo organizó por actividad unos 2.200 clips que cubren 18 de las 31 actividades, y con ellos entrenó el clasificador temporal del esqueleto.
 El clasificador sobre las representaciones de CLIP se entrenó, en cambio, con 14.561 muestras de las 31 actividades de la versión recortada completa, tomando hasta 120 videos por actividad.
 De la versión sin recortar se tomaron cuatro grabaciones continuas de entre 18 y 27 minutos, de una persona sentada mirando televisión o leyendo, que forman el conjunto \texttt{ToyotaSmarthome\_FP}.
 Este conjunto funciona como negativo difícil adicional para la detección de caídas, porque cubre falsos positivos que las secuencias de casi caídas de URFD no representan, como las posturas bajas en un sillón.
 
-Se evaluó también el Kaggle Multiple Cameras Fall Dataset como candidato adicional, pero no se integró debido a un problema no resuelto en la tasa de frames por segundo del material original.
+Se evaluó también el Kaggle Multiple Cameras Fall Dataset como candidato adicional, pero no se integró porque la cantidad de cuadros por segundo que declaran los archivos no pudo confirmarse y parte de los cuadros está dañada.
 Esta decisión se retoma como limitación en la Sección~\ref{sec:limitaciones}.
 
-El detalle ampliado de origen, licencia y limitaciones de cada uno de estos datasets se documenta en los README de los módulos \texttt{videos/}, \texttt{vision/} y \texttt{vlm/} del repositorio.
 
 \subsubsection*{Dataset de eventos}
 
 El módulo \texttt{baseline/} se apoya en CASAS Smart Home Datasets, que reúne datos de sensores binarios de movimiento y puerta.
 Según la documentación del dataset, los hogares utilizados pertenecen a adultos mayores que viven de forma independiente, parte de ellos en comunidades de jubilados y el resto en sus propias casas.
-A diferencia de los datasets de video, que son simulados o grabados en un entorno controlado, CASAS aporta comportamiento real de hogares a una escala que permite validar el clustering de línea base sobre una población amplia de residentes en lugar de sobre un único caso de prueba.
+A diferencia de los datasets de video, que son simulados o grabados en un entorno controlado, CASAS aporta comportamiento real de hogares a una escala que permite validar la línea base sobre 21 hogares con al menos 60 días de historial en lugar de sobre un único caso de prueba.
 Que la fuente original de estos eventos sean sensores binarios y no video no compromete su utilidad para este trabajo, dado que tanto el almacenamiento en la nube como el entrenamiento del módulo de línea base operan sobre el esquema abstracto de eventos (\texttt{MonitoringEvent}), independientemente de si el evento fue producido por un sensor o por el pipeline de visión.
-El detalle ampliado de su tratamiento se documenta en \texttt{baseline/README.md}.
 
 \subsubsection*{Pipeline de transformación}
 
 A diferencia de los datasets de video, que se consumen directamente, el dataset de eventos requiere un proceso de transformación antes de poder alimentar el módulo de línea base.
-El pipeline se organiza en tres etapas, siguiendo una arquitectura por capas de tipo bronze, silver y gold.
+El pipeline se organiza en tres capas, siguiendo una arquitectura de tipo \textit{bronze}, \textit{silver} y \textit{gold}.
 
-En la etapa bronze, \texttt{etl.py} parsea cada archivo CSV por hogar, empareja los tramos begin y end de cada etiqueta, y descarta líneas corruptas o tramos de duración inválida o huérfanos.
+La capa \textit{bronze} es el archivo CSV crudo de cada hogar.
+El script \texttt{etl.py} la lleva a la capa \textit{silver}, ya que parsea cada archivo, empareja los tramos de inicio y fin de cada etiqueta y descarta líneas corruptas o tramos de duración inválida o huérfanos.
 Cada evento resultante se valida contra el esquema compartido \texttt{MonitoringEvent} (Sección~\ref{sec:diagrama_componentes}), y los hogares con baja cobertura o indicios de múltiples residentes se excluyen o se marcan explícitamente, en línea con la restricción de residente único (RNF11).
 
-En la etapa silver, \texttt{activity\_map.py} mapea las 56 etiquetas heterogéneas del dataset original a un vocabulario canónico de 19 clases de actividad, y a un subconjunto de 11 clases más generales, correspondiente a lo que un único punto de cámara puede detectar.
+En ese mismo paso, \texttt{activity\_map.py} mapea las 56 etiquetas heterogéneas del dataset original a un vocabulario canónico de 19 clases de actividad, y a un vocabulario de nueve clases más generales, más una clase residual, correspondiente a lo que un único punto de cámara puede detectar.
 
-En la etapa gold, \texttt{build\_table.py} convierte los eventos validados en una tabla analítica tipada y genera un timeline resampleado en bins de tiempo fijo, que es la entrada que consume el clustering de \texttt{baseline/}, además de un reporte de calidad versionado junto con los datos.
+Luego \texttt{build\_table.py} convierte los eventos validados en una tabla analítica tipada, que sigue en la capa \textit{silver}, y genera la capa \textit{gold}, un timeline resampleado en bins de diez minutos, además de un reporte de calidad versionado junto con los datos.
+La línea base arma su vector diario por hogar a partir de la tabla de eventos, y no del timeline.
 
 La corrida completa del pipeline sobre CASAS produjo 319.229 eventos válidos correspondientes a 80 residentes, distribuidos en las 19 clases canónicas, con un total aproximado de 63.370 horas etiquetadas y una tasa de solapamiento entre actividades del 0,1\,\%.
-Esta salida es la que consume el clustering de \texttt{baseline/}, cuya evaluación se presenta en la Sección~\ref{sec:pruebas_baseline}.
+Esa tabla de eventos es la que consume el clustering de \texttt{baseline/}, cuya evaluación se presenta en la Sección~\ref{sec:pruebas_baseline}.
 
 \section{Del diseño inicial a la implementación}
 \label{sec:evolucion_diseno}
@@ -173,6 +203,7 @@ Al calibrarla aparecieron falsos positivos frecuentes cuando la persona se senta
 Esos descriptores miran un instante, y en ese instante una persona que se acuesta a propósito y una que cae se ven parecidas.
 Lo que las distingue es la forma del movimiento en los segundos previos, la misma información temporal que usan \textcite{Ramirez2022} para clasificar actividades y \textcite{Wang2024} para detectar caídas sobre la pose.
 Por eso la heurística se mantuvo como primera etapa, porque es barata y corre sobre cada frame, y cuando dispara se consulta un clasificador temporal de tipo GRU entrenado sobre la secuencia de keypoints de los últimos segundos.
+Se eligió una GRU de dos capas y 64 unidades frente a una LSTM porque, con menos compuertas, tiene menos parámetros \parencite{Cho2014}, y es más simple de exportar a ONNX y cuantizar para la controladora.
 Cuando YOLO no logra ver el esqueleto, por ejemplo con la persona en un sillón lejos de la cámara, la confirmación queda a cargo de CLIP, que evalúa si la imagen corresponde a una persona caída.
 
 \subsection{Clasificación de actividades}
@@ -192,14 +223,14 @@ Detectar los objetos cercanos a la persona con una segunda pasada de YOLO aport�
 
 \subsection{Línea base}
 
-La línea base sigue el clustering dinámico con ventana móvil de \textcite{Snoun2024}, implementado con K-means sobre los días recientes de cada residente, que compara la forma general de cada día contra los días habituales.
+La línea base sigue el clustering dinámico con ventana móvil de \textcite{Snoun2024}, implementado con K-means sobre los 30 días previos de cada residente, que compara la forma general de cada día contra los días habituales.
 Al probarlo con desvíos simulados sobre el dataset CASAS aparecieron tres casos que ese puntaje único no detectaba.
 Un cambio concentrado en una actividad breve, como dejar de tomar la medicación, quedaba diluido entre las demás actividades del día.
 Un corrimiento de horario, como almorzar tres horas más tarde, no altera la cantidad ni la duración de las actividades, por lo que tampoco se reflejaba.
 Y un deterioro gradual, el \textit{behavioral drift} que describen \textcite{Snoun2024}, produce días que individualmente parecen normales y solo se nota al comparar semanas.
-Por eso el clustering se complementó con tres detectores, uno por actividad, uno por horario habitual y uno de tendencia que compara bloques de semanas.
+Por eso el clustering se complementó con tres detectores, uno por actividad, uno por horario habitual y uno de tendencia que compara las últimas tres semanas con las ocho anteriores.
 Las entradas y salidas de la casa, que alimentan al detector por actividad, se obtienen sin un modelo adicional.
-La controladora ya calcula la posición de la cadera en cada muestra, y registra una salida cuando la última posición vista cae en la zona de la puerta y la persona no reaparece durante un tiempo mínimo, y una entrada cuando la primera detección posterior a esa ausencia cae en la misma zona.
+La controladora ya calcula la posición de la cadera en cada muestra, y registra una salida cuando la última posición vista cae en la zona de la puerta y la persona no reaparece durante al menos 60 segundos, y una entrada cuando la primera detección posterior a esa ausencia cae en la misma zona.
 Con ellas el sistema avisa cuando el residente deja de salir, y no evalúa a qué hora lo hace.
 De los tres detectores, el de horario habitual quedó implementado pero sin emitir alertas, porque en las pruebas generó demasiados avisos sobre días normales (Sección~\ref{sec:pruebas_baseline}).
 
@@ -252,6 +283,7 @@ El backend corre en AWS dentro de un contenedor Docker, desplegado sobre AWS Ela
 La imagen del contenedor incluye, además del código del backend, el del módulo \texttt{baseline/} y el esquema de \texttt{events/}, de modo que la línea base que corre en la nube usa exactamente el mismo código que se desarrolló y evaluó de forma local.
 Empaquetar el backend en un contenedor hace que el entorno de ejecución sea el mismo en la máquina de desarrollo y en AWS, y que cambiar de proveedor o de forma de alojamiento no requiera modificar el código.
 Elastic Beanstalk administra la instancia que ejecuta ese contenedor, y cada nueva versión se publica subiendo un paquete con el código, sin intervenir la instancia a mano.
+Se eligió frente a una instancia de EC2 administrada a mano porque resuelve esa gestión de la instancia y del despliegue, y frente a AWS Lambda porque la API ejecuta dentro del mismo proceso la tarea diaria de la línea base y mantiene una conexión persistente con la base de datos.
 El contenedor ejecuta la API y, dentro de ella, la tarea que calcula la línea base una vez por día a las 03:00, hora de Argentina (Sección~\ref{sec:api_backend}), por lo que no hace falta ningún servicio adicional de AWS para programarla.
 
 La base de datos PostgreSQL corre en Amazon RDS y no es accesible desde internet.
@@ -261,14 +293,19 @@ Las credenciales, como la contraseña de la base de datos y la clave de servicio
 \section{Demo}
 \label{sec:demo}
 
-Todas las decisiones tecnológicas descriptas hasta aquí ya se traducen en un sistema que funciona de punta a punta, desde la detección en la Raspberry Pi hasta la aplicación móvil del familiar.
+Esta sección muestra el sistema en funcionamiento, desde la detección en la Raspberry Pi hasta la aplicación móvil del familiar, con la salvedad de que la recepción de las notificaciones push en la aplicación todavía no está implementada.
 
 \subsection{Panel de operación local}
 \label{sec:demo_panel}
 
-Las capturas de esta subsección corresponden al panel de operación local (\texttt{dashboard/}) construido sobre FastAPI y WebSockets, tal como se justificó más arriba. A través de él, el equipo ya puede dar de alta cámaras o archivos de video, iniciar y detener el monitoreo, y visualizar en vivo el resultado de la detección superpuesto sobre cada fuente, resolviendo así RF11 desde la propia controladora.
+Las capturas de esta subsección corresponden al panel de operación local (\texttt{dashboard/}) construido sobre FastAPI y WebSockets, tal como se justificó más arriba.
+A través de él, el equipo ya puede dar de alta cámaras o archivos de video, iniciar y detener el monitoreo, y visualizar en vivo el resultado de la detección superpuesto sobre cada fuente, resolviendo así RF11 desde la propia controladora.
+El video que muestra el panel se sirve desde la controladora y solo es accesible desde la red del hogar, sin pasar por el backend ni guardarse fuera del domicilio.
+El panel todavía no pide contraseña, y protegerlo con una queda pendiente.
 
-En primer lugar, la Figura~\ref{fig:demo_caida} muestra la vista de una única fuente sobre el video \texttt{fall}, con el esqueleto de keypoints de YOLO superpuesto sobre la persona detectada en el piso. A la derecha, la pestaña Postura · YOLO lista cuatro eventos de caída detectada, no porque haya cuatro caídas distintas, sino porque \texttt{fall} es un clip corto de prueba configurado en bucle, y el sistema vuelve a detectar la caída correctamente en cada repetición, con el aspect ratio del cuadro delimitador y el ángulo del cuerpo que \texttt{vision/} usa para esa detección (RF1). La pestaña Actividad · CLIP de esa misma fuente no registra eventos, algo que confirma en la práctica lo que ya describía el Diagrama de Flujo de Información, que las dos ramas de detección corren de forma independiente sobre cada frame.
+En primer lugar, la Figura~\ref{fig:demo_caida} muestra la vista de una única fuente sobre el video \texttt{fall}, con el esqueleto de keypoints de YOLO superpuesto sobre la persona detectada en el piso.
+A la derecha, la pestaña Postura · YOLO lista cuatro eventos de caída detectada, no porque haya cuatro caídas distintas, sino porque \texttt{fall} es un clip corto de prueba configurado en bucle, y el sistema vuelve a detectar la caída correctamente en cada repetición, con el aspect ratio del cuadro delimitador y el ángulo del cuerpo que \texttt{vision/} usa para esa detección (RF1).
+La pestaña Actividad · CLIP de esa misma fuente no registra eventos en ese momento.
 
 \begin{figure}[H]
     \centering
@@ -278,7 +315,11 @@ En primer lugar, la Figura~\ref{fig:demo_caida} muestra la vista de una única f
 \end{figure}
 \FloatBarrier
 
-Por su parte, la Figura~\ref{fig:demo_actividad} muestra el mismo panel sobre la fuente \texttt{video2}, donde el patrón se invierte. La pestaña Postura · YOLO no registra eventos porque no hubo caídas ni inmovilidad, mientras que Actividad · CLIP acumula siete eventos de clasificación semántica (RF2), también repetidos por el mismo motivo, un clip corto en bucle. Esos eventos alternan entre ``posiblemente comiendo, bebiendo o con medicación'' con hasta 73\,\% de confianza y ``leyendo o usando una pantalla'' con hasta 72\,\%, porque la persona de la escena está haciendo las dos cosas a la vez, leyendo mientras toma algo, y el sistema capta correctamente las dos lecturas de esa actividad compuesta en lugar de quedarse con una sola. La etiqueta ``sin confirmar'' y la variación de confianza entre eventos muestran, además, el umbral de confianza y la deduplicación que exige el diagrama de flujo antes de registrar un evento.
+Por su parte, la Figura~\ref{fig:demo_actividad} muestra el mismo panel sobre la fuente \texttt{video2}, donde el patrón se invierte.
+La pestaña Postura · YOLO no registra eventos porque no hubo caídas ni inmovilidad, mientras que Actividad · CLIP acumula siete eventos de clasificación semántica (RF2), también repetidos por el mismo motivo, un clip corto en bucle.
+Esos eventos alternan entre ``posiblemente comiendo, bebiendo o con medicación'' con hasta 73\,\% de confianza y ``leyendo o usando una pantalla'' con hasta 72\,\%, porque el clip corresponde a la actividad de beber de una taza de Toyota Smarthome y la persona tiene papeles sobre la mesa, de modo que el clasificador alterna entre dos categorías de gestos sedentarios parecidos.
+Esa ambigüedad es la misma que se mide en la Sección~\ref{sec:pruebas_actividades}.
+La etiqueta ``sin confirmar'' corresponde a una versión anterior del panel, que marcaba así la categoría de comer, beber o medicación cuando no alcanzaba el umbral de confianza propio de esa clase, y la versión actual informa en ese caso la segunda categoría más probable.
 
 \begin{figure}[H]
     \centering
