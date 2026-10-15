@@ -18,7 +18,7 @@ El sistema mantiene a la familia informada sobre el estado y la rutina del adult
 El primer objetivo era detectar caídas e inmovilidad a partir de la pose.
 La cadena de detección conservó 132 de las 158 caídas anotadas, el 83,5\,\%, con 9 falsas alertas y ninguna en las 1,40 horas de video continuo.
 El evento se genera en promedio 1,9 segundos después del inicio de la caída.
-El detector de sedentarismo acertó en los ocho tramos de validación, y la inmovilidad en el piso se verificó por partes.
+El detector de sedentarismo acertó en los ocho tramos de validación que llegaron a la ventana de inmovilidad, y la inmovilidad en el piso se verificó por partes.
 
 El segundo objetivo era clasificar las actividades de la vida diaria con un modelo de lenguaje visual.
 El clasificador entrenado sobre CLIP, combinado con el movimiento del esqueleto, acierta el 82,8\,\% en las cuatro categorías en que se midieron juntos, y con la zona del hogar llega al 67,1\,\% sobre las seis categorías.
@@ -38,9 +38,7 @@ La validación se hizo sobre cinco datasets públicos grabados en ambientes dom�
 Todo lo anterior se mantuvo dentro del alcance planteado.
 El sistema monitorea a un único residente por instalación, está pensado solo para entornos domésticos y no se integra con sistemas médicos ni con servicios de emergencia.
 
-Además, dos componentes fueron más allá de lo previsto.
-El backend quedó desplegado en AWS y la aplicación funciona contra él con cuentas reales, vinculación del kit por código QR y administración de familiares con roles.
-Y el clasificador temporal de caídas, que no figuraba en el planteo inicial, resultó la mejora individual más efectiva del sistema.
+Dos componentes superaron lo previsto, el backend desplegado en AWS y el clasificador temporal de caídas, como se analiza en la Sección~\ref{sec:alcance_logrado}.
 
 \subsection{Aportes técnicos}
 
@@ -66,7 +64,7 @@ El hallazgo más importante del proyecto fue metodológico.
 Las primeras mediciones daban valores altos que no se sostenían con personas nuevas, y separar los datos por participante, por video o por hogar puso esa diferencia en evidencia.
 A partir de ahí cada decisión de diseño se tomó con una medición de ese tipo.
 Los valores que se informan son los que el sistema sostiene con personas y hogares que no conoce, con la excepción de la cadena completa de caídas, cuyas etapas de confirmación se ajustaron con los mismos clips en que se midió.
-Así se descartaron la detección de objetos y un encoder más grande, se desactivaron las alertas de horario y se incorporaron el clasificador temporal de caídas y las entradas y salidas de la casa, cambios que resume la Tabla~\ref{tab:evolucion_diseno}.
+Así se descartaron la detección de objetos y un encoder más grande, se desactivaron las alertas de horario y se incorporaron el clasificador temporal de caídas y las entradas y salidas de la casa, cambios que se analizan en las Secciones~\ref{sec:evolucion_diseno} y~\ref{sec:pruebas_baseline}.
 
 \subsection{Aportes desde el producto}
 

@@ -35,8 +35,9 @@ El límite parece estar en lo que una única cámara de ambiente alcanza a ver y
 
 \subsection{Línea base}
 
-La línea base señala el 76,8\,\% de los desvíos inyectados, y el 80,1\,\% de aquellos en los que una actividad deja de ocurrir, un resultado sólido para un sistema que aprende la rutina de cada residente con solo siete días de historial y sin ninguna configuración manual.
-El valor se obtuvo además con hogares que no intervinieron en el ajuste, lo que permite esperar un comportamiento similar en un hogar nuevo.
+La línea base señala el 76,8\,\% de los desvíos inyectados, y el 80,1\,\% de aquellos en los que una actividad deja de ocurrir, un resultado sólido para un sistema que aprende la rutina de cada residente con solo siete días de historial y sin más configuración manual que marcar las zonas de cada cámara.
+La cifra estrictamente fuera de muestra es la de la validación cruzada, un 68,7\,\%, porque el juego adoptado se eligió con los mismos hogares sobre los que se mide.
+Esa cifra, obtenida con hogares que no intervinieron en el ajuste, permite esperar un comportamiento similar en un hogar nuevo.
 La contrapartida son los falsos positivos, cerca del 16\,\% de los días normales, que equivalen a un aviso infundado cada seis días.
 Esa tasa es el principal aspecto a mejorar, y las mediciones muestran el camino, ya que exigir dos días seguidos sin salir o un período de aprendizaje de 14 días la llevan al 14\,\% con una pérdida moderada de detección.
 
@@ -48,7 +49,8 @@ Lo mismo ocurre con los corrimientos de horario, ya que el detector correspondie
 
 El resultado más importante es que la línea base resiste el error del clasificador de actividades.
 Al aplicarle las confusiones medidas sobre el clasificador real, la detección global pasa del 76,8\,\% al 71,3\,\%, una baja de cinco puntos y medio.
-Esto se debe a que dos de sus señales no dependen de reconocer la actividad, las entradas y salidas, que se obtienen de la posición de la persona, y el indicador de sedentarismo, que suma los minutos del día.
+Esto se debe a que las entradas y salidas no dependen de reconocer la actividad, porque se obtienen de la posición de la persona.
+El indicador de sedentarismo sí usa la salida del clasificador, pero suma los minutos del día, de modo que un error aislado pesa poco en ese total.
 La variante sin entradas y salidas, en cambio, caía del 58,6\,\% al 33,5\,\% con una matriz de confusión anterior, más severa, con la que el sistema adoptado quedaba en el 66,8\,\%.
 Esa diferencia confirma que incorporar las entradas y salidas fue la decisión que le dio estabilidad al módulo.
 El costo del error se concentra en el día sin comida, que baja del 85,7\,\% al 46,6\,\%, porque una sola confusión con comer alcanza para ocultar esa ausencia, de modo que mejorar el clasificador de actividades es la vía más directa para seguir mejorando la línea base.
@@ -128,12 +130,12 @@ La Tabla~\ref{tab:objetivos_logrados} contrasta los objetivos específicos de la
 \toprule
 \textbf{Objetivo} & \textbf{Estado} & \textbf{Observación} \\
 \midrule
-Detección de caídas e inmovilidad con estimación de pose & Cumplido & Caídas y sedentarismo validados sobre datasets públicos; la inmovilidad en el piso se verificó por partes, con la postura comprobada en clips de caída y el contador de tiempo en el sedentarismo \\
+Detección de caídas e inmovilidad con estimación de pose & Cumplido & Caídas y sedentarismo validados sobre datasets públicos. La inmovilidad en el piso se verificó por partes, con la postura comprobada en clips de caída y el contador de tiempo en el sedentarismo. El tiempo por frame en la Raspberry Pi (RNF4) no se midió \\
 Clasificación de actividades con un VLM & Cumplido & Clasificador entrenado sobre CLIP, combinado con el esqueleto y con las zonas del hogar \\
-Línea base personalizada y detección de desvíos & Cumplido & Implementada en la nube, recalculada cada día y evaluada sobre CASAS con hogares que no intervinieron en el ajuste \\
+Línea base personalizada y detección de desvíos & Cumplido & Implementada en la nube, recalculada cada día y evaluada sobre CASAS con validación cruzada por hogar, con un 68,7\,\% de los desvíos detectados fuera de muestra \\
 Procesamiento local del video & Cumplido & El video no sale de la controladora y solo se transmiten eventos \\
 Aplicación móvil con notificaciones y reportes & Cumplido & Alertas, notificaciones, reportes, historial y administración de familiares con roles en funcionamiento \\
-Validación en un entorno doméstico controlado & Cumplido & Escenarios simulados de cinco datasets grabados en ambientes domésticos y rutina real de 21 hogares de CASAS; la prueba en un hogar con su residente, ya iniciada, amplía este objetivo \\
+Validación en un entorno doméstico controlado & Cumplido & Escenarios simulados de cinco datasets grabados en ambientes domésticos y rutina real de 21 hogares de CASAS, en lugar de un montaje en un único hogar. La prueba en un hogar con su residente está en curso y amplía este objetivo \\
 \bottomrule
 \end{tabular}
 \end{table}

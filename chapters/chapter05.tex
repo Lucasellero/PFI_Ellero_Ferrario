@@ -7,11 +7,11 @@ Todas las mediciones de detección se hicieron en la máquina de desarrollo, pro
 \label{sec:criterios_evaluacion}
 
 Las pruebas combinan cinco técnicas.
-Las pruebas funcionales de caja negra verifican cada requerimiento de detección comparando la salida del sistema con datos etiquetados, sin intervenir en su funcionamiento interno.
-Las pruebas de regresión repiten esas mismas mediciones después de cada cambio en el código, para confirmar que una mejora en un caso no empeora otro.
-Las pruebas unitarias automatizadas verifican por separado el comportamiento de cada pieza del código del sistema (Sección~\ref{sec:pruebas_unitarias}).
-Las pruebas de integración recorren el camino completo, desde el evento hasta la aplicación móvil, para verificar que los módulos funcionan en conjunto (Sección~\ref{sec:pruebas_integracion}).
-Por último, las pruebas de aceptación ponen la aplicación en manos de usuarios del perfil al que está dirigida, para comprobar que responde a lo que esperaban (Sección~\ref{sec:pruebas_usuarios}).
+Las pruebas funcionales de caja negra verifican cada requerimiento de detección comparando la salida del sistema con datos etiquetados, mediante programas de evaluación propios escritos en Python, sin intervenir en su funcionamiento interno.
+Las pruebas de regresión repiten esas mismas mediciones con los mismos programas después de cada cambio en el código, para confirmar que una mejora en un caso no empeora otro.
+Las pruebas unitarias automatizadas, escritas con pytest, verifican por separado el comportamiento de cada pieza del código del sistema (Sección~\ref{sec:pruebas_unitarias}).
+Las pruebas de integración recorren el camino completo, desde el evento hasta la aplicación móvil instalada en un celular y conectada al backend en AWS, para verificar que los módulos funcionan en conjunto (Sección~\ref{sec:pruebas_integracion}).
+Por último, las pruebas de aceptación ponen la aplicación en manos de usuarios del perfil al que está dirigida, mediante un recorrido guiado en un celular, para comprobar que responde a lo que esperaban (Sección~\ref{sec:pruebas_usuarios}).
 
 Las pruebas de detección se resumen con dos medidas.
 Por un lado, la sensibilidad es la proporción de casos reales que el sistema detecta, por ejemplo cuántas caídas de las anotadas en un dataset generaron un evento.
@@ -40,7 +40,7 @@ Las caídas son simuladas por voluntarios en todos los datasets disponibles.
 \textbf{Prueba} & \textbf{Datos} & \textbf{Volumen} \\
 \midrule
 Detección de caídas & GMDCSA-24, CAUCAFall, URFD, Toyota Smarthome y \texttt{ToyotaSmarthome\_FP} & 292 clips con 158 caídas anotadas \\
-Sedentarismo e inmovilidad & Toyota Smarthome sin recortar & Ocho tramos de entre 64 y 484 segundos \\
+Sedentarismo e inmovilidad & Toyota Smarthome sin recortar & Doce tramos, ocho de ellos de entre 64 y 484 segundos \\
 Clasificación de actividades & Toyota Smarthome completo & 14.561 muestras de 31 actividades \\
 Combinación con el esqueleto & Subconjunto de Toyota Smarthome organizado por actividad & 273 videos no usados en el entrenamiento \\
 Línea base & CASAS & 21 hogares con 4.362 días \\
@@ -103,6 +103,10 @@ Como se observa, las dos etapas de confirmación redujeron las falsas alertas de
 De las 132 caídas con evento, 120 generan la alerta de forma directa, el 75,9\,\% del total, y 12 quedan registradas como sospecha.
 Las sospechas son eventos en los que la persona aparece cortada contra el borde de la imagen, que el sistema guarda sin avisar y solo convierte en alerta si la persona queda inmóvil durante 45 segundos.
 Tratarlos de ese modo permite conservar las caídas en las que solo se ve el torso sin pagar por ellas en falsas alertas.
+Las sospechas, en cambio, se acumulaban en la lista de eventos de la aplicación.
+En una prueba con un video continuo de Toyota Smarthome usado como cámara de un hogar, la aplicación recibió 16 sospechas en unos 12 minutos, 7 de ellas en 26 segundos.
+Por eso cada cámara pasó a publicar como máximo una posible caída por minuto, sin ocultar nunca una caída confirmada que llegue después, y en esa prueba las sospechas habrían quedado en 6.
+Las mediciones de esta sección son anteriores a ese agrupado, que no cambia la sensibilidad por clip.
 Con el sistema desplegado, el evento se genera en promedio 1,9 segundos después del inicio de la caída.
 
 Además, el resultado más relevante para el uso real está en las cuatro grabaciones continuas, que suman 1,40 horas de una persona en su casa, donde el sistema no generó ninguna falsa alerta.
@@ -127,7 +131,8 @@ El umbral de movimiento se calibró con tramos reales de Toyota Smarthome sin re
 El desplazamiento del cuerpo por segundo tiene una mediana de 0,0056 cuando la persona está sentada y quieta y de 0,0606 cuando camina, una separación de diez veces que permitió fijar el umbral en 0,02.
 La ventana de inmovilidad se estableció en 180 segundos, el valor por defecto de RNF3.
 
-Sobre ocho tramos de validación, el detector generó el evento de sedentarismo en los cuatro que superaban los 180 segundos y no generó ninguno en los cuatro más cortos, con la persona detectada en al menos el 99,6\,\% de los frames.
+De doce tramos de validación, cuatro no llegaron a probar la inmovilidad, porque el detector de caídas generó antes una falsa caída con la persona sentada.
+En los ocho restantes, el detector generó el evento de sedentarismo en los cuatro que superaban los 180 segundos y no generó ninguno en los cuatro más cortos, con la persona detectada en al menos el 99,6\,\% de los frames.
 La prueba descubrió además un error en el que un hueco de detección de más de 2,5 segundos reiniciaba la cuenta de inmovilidad, corregido con un historial propio que tolera huecos de hasta 15 segundos.
 
 En cambio, la inmovilidad en el piso no pudo validarse en toda su duración.
@@ -242,7 +247,8 @@ Falsos positivos & 1.260 & 15,2\,\% & 16,2\,\% & 16,9\,\% \\
 \end{tabular}
 \end{table}
 
-El sistema señala tres de cada cuatro desvíos inyectados, y el resultado se sostiene con hogares que no intervinieron en el ajuste.
+El sistema señala tres de cada cuatro desvíos inyectados.
+La cifra fuera de muestra es la de la validación cruzada, un 68,7\,\% con un 15,2\,\% de falsos positivos, porque el juego adoptado se eligió con los mismos 21 hogares sobre los que se mide, y cada uno de ellos intervino en el ajuste de cuatro de las cinco particiones.
 Los desvíos que consisten en que algo deje de ocurrir, como no comer, no cocinar o no salir, se detectan en el 80,1\,\% de los casos, 454 de 567.
 Los excesos se detectan menos mediante alertas, lo que responde al diseño, ya que el detector por actividad cuenta cuántas veces ocurre cada actividad y no cuánto dura.
 Ese cambio de duración lo cubre el indicador de sedentarismo de la pantalla de reportes, y con él el sistema llega al 60,4\,\% de los excesos, 67 de 111.
@@ -270,7 +276,8 @@ Solo tres hogares tienen las once semanas de historial que exige esa prueba, por
 Como CASAS registra las entradas y salidas con sensores de puerta, el mecanismo que las obtiene de la cámara se probó aparte con los clips de Toyota Smarthome en los que una persona entra o sale del ambiente.
 La zona de la puerta de cada cámara se fijó con nueve participantes y la medición se hizo con otros siete.
 El sistema detectó 112 de 133 entradas, el 84,2\,\%, y 92 de 107 salidas, el 86,0\,\%.
-Además, en las cuatro grabaciones continuas sin entradas ni salidas, que suman 84 minutos, no registró ninguna.
+En las cuatro grabaciones continuas, que suman 84 minutos y tienen doce ausencias anotadas, no generó ningún evento inventado.
+De esas ausencias, solo una superó los 60 segundos que exige el detector, y esa no se detectó.
 
 \subsection{Efecto del error del clasificador de actividades}
 \label{sec:pruebas_ruido}
@@ -357,7 +364,8 @@ Del mismo modo se probó el recorrido de las entradas y salidas, desde los event
 \label{sec:pruebas_corte}
 
 La continuidad ante cortes de conexión (RNF6 y RNF7) se probó con un backend real ejecutándose en un proceso aparte, que se apagó y se volvió a encender mientras la controladora generaba eventos.
-Cada evento lleva un identificador único que la controladora genera al guardarlo y repite en cada reenvío, de modo que la nube no vuelve a guardar un evento que ya recibió de ese kit.
+Una primera versión de la prueba mostró que, si se perdía la respuesta de la nube después de guardar un lote, la controladora lo reenviaba y la nube lo guardaba dos veces, con 10 eventos convertidos en 20 filas.
+Por eso cada evento pasó a llevar un identificador único que la controladora genera al guardarlo y repite en cada reenvío, de modo que la nube no vuelve a guardar un evento que ya recibió de ese kit.
 La Tabla~\ref{tab:corte_reconexion} resume los cinco escenarios.
 
 \begin{table}[H]
@@ -449,11 +457,17 @@ La Tabla~\ref{tab:sintesis_pruebas} reúne el resultado de cada prueba frente al
 \midrule
 RF1, RNF2 & Caídas sobre 292 clips & 83,5\,\% de las caídas con evento y 75,9\,\% con alerta directa, 9 falsas alertas, ninguna de ellas en 1,40 horas de video doméstico continuo, y 1,9 segundos de demora promedio \\
 RF2 & Clasificación de actividades & 82,8\,\% de aciertos en cuatro categorías y 67,1\,\% en seis \\
-RF3, RNF3 & Sedentarismo en ocho tramos & Ocho de ocho correctos \\
+RF3, RNF3 & Sedentarismo en doce tramos & Ocho de ocho correctos en los tramos que llegaron a la ventana, y cuatro que derivaron antes en una falsa caída \\
 RF4 & Inmovilidad en el piso & Postura verificada en clips de caída, sin validar la duración completa \\
 RF6, RF7 & Desvíos inyectados en CASAS & 76,8\,\% de los desvíos señalados por el sistema y 72,0\,\% como alerta, con 16,2\,\% de falsos positivos, y 71,3\,\% al sumar el error del clasificador \\
 RNF6, RNF7 & Corte y reconexión & 855 eventos en cinco escenarios, todos entregados y sin duplicados \\
 RF8 & Notificaciones & Envío implementado en el backend, recepción en la aplicación sin implementar \\
+RF5 & Registro de eventos & Sin prueba específica, el registro con tipo, marca temporal y metadatos se ejercita en las pruebas automatizadas del almacenamiento local \\
+RF11, RNF9 & Panel local & Sin prueba específica, el panel muestra varias fuentes en simultáneo con la pose superpuesta (Sección~\ref{sec:demo_panel}) \\
+RNF1 & Procesamiento local del video & Sin prueba específica, el esquema del evento que se envía a la nube no tiene campos de imagen \\
+RNF5 & Ejecución en la Raspberry Pi & El sistema completo corre en la Raspberry Pi 5 con una cámara en vivo, sin medición de tiempos \\
+RNF10 & Autenticación & Token inválido rechazado con credenciales reales de Firebase \\
+RNF11 & Residente único & Sin prueba específica \\
 RF9, RF10, RF12, RF13, RF14 & Recorrido completo en un celular & Verificados contra el backend en AWS, con eventos de prueba y con la rutina real de un residente de CASAS \\
 RF12, RNF6 & Pruebas automatizadas & 262 pruebas que pasan en su totalidad, con siete defectos introducidos a propósito y todos detectados \\
 RNF8 & Aceptación con dos cuidadores & Interfaz clara y vinculación sencilla, sin medición de usabilidad \\
