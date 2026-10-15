@@ -9,8 +9,7 @@ Con el objetivo de validar la problemática identificada y comprender las necesi
 \subsection{Encuesta}
 
 Se diseñó y distribuyó una encuesta orientada a comprender el perfil del cuidador familiar de adultos mayores, sus niveles de preocupación, las soluciones que utilizan hoy y su percepción ante el sistema propuesto.
-La encuesta fue distribuida de forma no probabilística a través de grupos de mensajería instantánea, con alcance principalmente a personas que ejercen el rol de cuidadores de adultos mayores.
-% PENDIENTE GOVI: en qué grupos se difundió la encuesta y con qué criterio se consideró válida una respuesta (por ejemplo, tener a cargo a un adulto mayor).
+La encuesta fue distribuida de forma no probabilística en grupos de mensajería de personas de mediana edad y en redes sociales, con alcance principalmente a personas que ejercen el rol de cuidadores de adultos mayores.
 Se obtuvieron 121 respuestas válidas a lo largo de aproximadamente doce semanas (Figura~\ref{fig:encuesta_general}).
 Los resultados completos se presentan en el Anexo~\ref{anexo:encuesta}.
 
@@ -35,7 +34,8 @@ Al presentarles la propuesta, el 89\,\% la calificó con 4 o 5 sobre 5 en térmi
 \subsection{Entrevistas}
 
 Se realizaron tres entrevistas semiestructuradas, dos a familiares cuidadores y una a una adulta mayor que vive con supervisión limitada.
-% PENDIENTE GOVI: cómo se contactó a las tres personas entrevistadas (por ejemplo, entorno cercano del equipo) y en qué fechas se hicieron las entrevistas. Este tamaño muestral responde al carácter cualitativo de la herramienta, que busca profundidad interpretativa antes que representatividad estadística, un rol que ya cumple la encuesta con sus 121 respuestas.
+Las tres personas se contactaron a través del entorno cercano del equipo, entre familiares y amigos de familiares.
+Este tamaño muestral responde al carácter cualitativo de la herramienta, que busca profundidad interpretativa antes que representatividad estadística, un rol que ya cumple la encuesta con sus 121 respuestas.
 Los tres perfiles se seleccionaron para cubrir ambos extremos de la relación de cuidado, dos cuidadores con patrones de contacto opuestos y la persona efectivamente monitoreada por el sistema, de modo que las entrevistas aporten ángulos complementarios y no una simple repetición del mismo punto de vista.
 De los cuidadores, uno sostiene una rutina diaria de contacto con la persona que cuida y el otro tiene visitas irregulares, aun viviendo a pocos minutos de distancia.
 Los tres perfiles son relevantes para el proyecto, ya que los dos primeros concentran la mayor parte de los encuestados y permiten contrastar dos formas distintas en que se manifiesta la misma brecha de supervisión, mientras que el tercero representa al usuario directamente monitoreado por el sistema.
@@ -126,7 +126,6 @@ A continuación se detallan los requerimientos no funcionales (RNF) del sistema.
     \item \textbf{RNF5:} Los módulos de estimación de pose y de clasificación de actividades deben ejecutarse sobre el mismo hardware embebido, sin GPU.
     \item \textbf{RNF6:} El sistema debe seguir registrando eventos localmente ante cortes de conexión a internet.
     \item \textbf{RNF7:} El sistema debe sincronizar con la nube los eventos locales al restablecerse la conexión.
-    % PENDIENTE GOVI: confirmar el criterio verificable de RNF8 (cantidad de toques y, si se mide, un puntaje de usabilidad como SUS).
     \item \textbf{RNF8:} La aplicación móvil debe permitir que un familiar sin capacitación previa abra el detalle de una alerta y llame al adulto mayor en no más de dos toques desde la pantalla de notificaciones.
     \item \textbf{RNF9:} El sistema debe soportar más de una cámara por hogar de forma simultánea.
     \item \textbf{RNF10:} El acceso a la aplicación móvil debe requerir autenticación.
@@ -626,13 +625,13 @@ Este presupuesto cubre únicamente el hardware del prototipo y no constituye un 
 \midrule
 Raspberry Pi 5, 8GB & 1 & USD 230 & USD 230 \\
 Cámara IP & 3 & USD 15 & USD 45 \\
-% PENDIENTE GOVI: precios del prototipo de la fuente de alimentación, la tarjeta microSD y la carcasa con disipador (proveedor y costo unitario) para sumarlos como filas y actualizar el total.
 \midrule
 \textbf{Total} & & & \textbf{USD 275} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
+El presupuesto incluye solo la placa y las cámaras, y la fuente de alimentación, la tarjeta microSD y la carcasa con disipador se suman en el costo del kit del modelo económico (Sección~\ref{sec:supuestos}).
 La placa figura a USD 230, el precio relevado para el prototipo en Mercado Libre, mientras que el modelo económico usa USD 175, su precio minorista internacional (Sección~\ref{sec:supuestos}).
 Este presupuesto corresponde a la etapa de prototipo, y el diseño contempla varias cámaras simultáneas sobre una misma controladora (RNF9), con un máximo previsto de tres, ya que el módulo orquestador invoca los módulos de detección por cada cámara activa sin necesidad de una controladora adicional por cámara.
 Por lo tanto, un kit doméstico típico, con una controladora y entre una y tres cámaras según la cantidad de ambientes a cubrir, se mantiene dentro de ese mismo orden de magnitud.
@@ -1156,12 +1155,11 @@ Las recomendaciones sobre diseño de logos indican que conviene preferir formas 
 El símbolo propuesto cumple con esa pauta, y se reconoce en tamaños pequeños, lo que importa porque su uso principal es como ícono de la aplicación móvil (Figura~\ref{fig:icono}).
 También se definió una variante sobre fondo verde oscuro, que mantiene la legibilidad cuando el logo deba ubicarse sobre la carcasa del dispositivo o sobre material impreso (Figura~\ref{fig:logo-oscuro}).
 
-% PENDIENTE GOVI: confirmar si el logo, el ícono y la variante oscura se hicieron con inteligencia artificial; si fue así, agregar "Imagen generada con inteligencia artificial." en los tres captions, como en las Figuras de representación conceptual.
-\figuramarca{logo_principal.png}{0.60}{Logo principal de \marca{} con su frase de posicionamiento. Fuente: Elaboración propia.}{fig:logo}
+\figuramarca{logo_principal.png}{0.60}{Logo principal de \marca{} con su frase de posicionamiento. Imagen generada con inteligencia artificial. Fuente: Elaboración propia.}{fig:logo}
 
-\figuramarca{icono_app.png}{0.30}{Ícono de la aplicación móvil. Fuente: Elaboración propia.}{fig:icono}
+\figuramarca{icono_app.png}{0.30}{Ícono de la aplicación móvil. Imagen generada con inteligencia artificial. Fuente: Elaboración propia.}{fig:icono}
 
-\figuramarca{logo_oscuro.png}{0.60}{Variante del logo sobre fondo verde oscuro. Fuente: Elaboración propia.}{fig:logo-oscuro}
+\figuramarca{logo_oscuro.png}{0.60}{Variante del logo sobre fondo verde oscuro. Imagen generada con inteligencia artificial. Fuente: Elaboración propia.}{fig:logo-oscuro}
 
 \subsection{Paleta de color y tipografía}
 \label{sec:branding-paleta}
