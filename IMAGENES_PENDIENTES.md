@@ -8,7 +8,7 @@ El orden va de lo que más pesa en la rúbrica a lo opcional.
 
 ## A. Obligatorias (contradicen el texto o tienen errores visibles)
 
-### 1. Fig. 3.6, diagrama de casos de uso
+### 1. Fig. 3.6, diagrama de casos de uso (descartado lo que queda)
 **Archivo:** `Imagenes/Diagrama_Casos_Uso_PFI.png`
 
 - [x] Borrar el recuadro **"Banco de figuras de casos de uso"** de la izquierda, abajo de la leyenda. Es un resto de la plantilla.
@@ -81,25 +81,18 @@ Ya es bastante genérica, así que alcanza con corregir los rótulos:
 - [x] **"Notificaciones PUSH en la App Mobile"** → **"Notificaciones en la aplicación móvil"**.
 - [x] **"Machine Learning: construcción de línea base de comportamiento"** → **"Aprendizaje automático: construcción de la línea base de comportamiento"**.
 
-### 9. Capturas del modelo financiero (Fig. 3.14 a 3.20), opcional
+### 9. Capturas del modelo financiero (Fig. 3.14 a 3.20) ✓
 
-Surgió de la revisión interna (H117), no es un pedido de la cátedra. Es por consistencia con el formato de números del texto.
-**Archivos:** `captura_supuestos.png`, `captura_wacc.png`, `captura_bear_flujo.png`, `captura_base_datos.png`, `captura_base_indicadores.png`, `captura_base_flujo.png`, `captura_bull_flujo.png`
-
-- [ ] Configurar la planilla en **español (Argentina)** y volver a exportar. Hoy figura "1,360,000", "$206.61", "0.87%" y "14.7x", y debe quedar **1.360.000**, **206,61**, **0,87 %** y **14,7x**.
-- [ ] Rótulos en inglés:
-  - "Infraestructura cloud" → **"Infraestructura en la nube"**
-  - "Payback" → **"Período de recupero"**
-- [ ] En `captura_base_datos.png`, el título **"Flujo de caja del proyecto"** no corresponde a lo que muestra. Cambiarlo a **"Clientes e ingresos"**.
-- [ ] En `captura_base_indicadores.png`, agregar la fila de encabezado **"Año 0 … Año 5"** en el flujo descontado.
-- [ ] En `captura_supuestos.png`, la nota "Base y Bull suponen ventas por canal institucional" choca con el texto, que dice que ese canal no se modela por separado. Borrar la nota o ajustarla.
+- [x] Reexportadas en formato argentino, con "Clientes e ingresos", la fila de años en los indicadores y sin la nota del canal institucional.
+- [x] "Infraestructura cloud" → "Infraestructura en la nube" en los tres flujos.
+- "Payback" queda así: el texto usa el mismo término (chapter03, definición y tabla de resultados).
 
 ### 10. Fig. 3.13, Business Model Canvas ✓
 **Archivo:** `bmc.png`
 
 - [x] **"Sin visita presencial"** → **"Visita presencial solo excepcional"**, como dice el texto.
 
-### 11. Anexo A, diagrama de Gantt
+### 11. Anexo A, diagrama de Gantt (descartado lo que queda)
 **Archivos:** `Imagenes/Gantt/DiagramaGantt1.png` y `DiagramaGantt5.png`
 
 - [ ] **Parte 1:** el encabezado dice **"Inicio: 15/03/26"** pero la tarea "Brainstorming" va del 10/03 al 14/03. Mover el inicio a **10/03/26**.
