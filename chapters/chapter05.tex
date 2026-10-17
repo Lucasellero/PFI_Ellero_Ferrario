@@ -362,6 +362,23 @@ El proceso diario generó el desvío de rutina por ausencia de comida, frente a 
 Ejecutarlo dos veces sobre el mismo día no duplicó el desvío, y sobre ese mismo día con sus comidas reales no se generó ninguno.
 Del mismo modo se probó el recorrido de las entradas y salidas, desde los eventos de puerta que guarda la controladora hasta la alerta en la nube cuando el residente deja de salir.
 Se verificó que una salida a una hora inusual no genera ningún aviso.
+
+\subsection{Notificaciones push}
+
+Las notificaciones push se probaron el 17 de octubre de 2026 en un celular Android, con la aplicación conectada al backend en AWS y un kit de prueba vinculado a la cuenta.
+Con la credencial del kit se enviaron una caída confirmada y una inmovilidad de severidad alta, y las dos llegaron al celular como notificación, con los textos ``Posible caída detectada'' y ``Sin movimiento en el piso''.
+Para el desvío de rutina se cargaron en ese hogar 60 días de la rutina del hogar \texttt{hh113}, con el último día sin comidas, y el proceso diario generó el desvío y envió la notificación ``Cambio en la rutina: Hoy no se registró comer o beber'' (Figura~\ref{fig:app_push}).
+Las notificaciones llegaron tanto con la aplicación abierta como en segundo plano y cerrada, y al tocar una la aplicación abrió el detalle de esa alerta.
+Una caída sin confirmar, una inmovilidad de severidad baja y una actividad, en cambio, quedaron registradas sin generar ninguna notificación, y después de cerrar sesión el celular dejó de recibirlas.
+En un Samsung Galaxy A12 las notificaciones llegaban solo con la aplicación abierta, porque el ahorro de batería del sistema la tenía suspendida, y empezaron a llegar en segundo plano al quitarle esa restricción desde los ajustes del celular.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.4\textwidth]{Imagenes/App_Push.jpg}
+    \caption[Notificaciones push en un celular Android.]{Notificaciones push de una caída y de un desvío de rutina recibidas en un celular Android. Fuente: Elaboración propia.}
+    \label{fig:app_push}
+\end{figure}
+
 \subsection{Corte y reconexión}
 \label{sec:pruebas_corte}
 
@@ -396,8 +413,8 @@ El último escenario es el más exigente, porque la nube ya había guardado el l
 Estas pruebas verifican el camino que va del evento a la aplicación.
 La etapa anterior, la que convierte el video en eventos, se evaluó por separado en las secciones precedentes, porque unirlas sobre la rutina de una misma persona exige una grabación continua de alrededor de un mes.
 
-Por otro lado, las notificaciones push quedaron implementadas solo del lado del backend, que dispara el envío ante cada alerta.
-La aplicación todavía no registra el identificador del celular ni recibe la notificación, por lo que el familiar ve las alertas al abrir la aplicación y no en el momento en que ocurren.
+Por otro lado, las notificaciones push se probaron solo en Android.
+En iOS la aplicación no registra el celular para recibirlas, porque hace falta una cuenta paga de Apple Developer y un mecanismo de envío distinto, de modo que en esa plataforma el familiar ve las alertas al abrir la aplicación, que actualiza el listado cada 30 segundos.
 
 Finalmente, la Raspberry Pi 5 ejecuta el sistema completo leyendo una cámara en vivo, pero el tiempo de procesamiento por frame sobre ese hardware no se midió de forma sistemática, de modo que el límite de 200 milisegundos de RNF4 no pudo verificarse.
 
@@ -463,7 +480,7 @@ RF3, RNF3 & Sedentarismo en doce tramos & Ocho de ocho correctos en los tramos q
 RF4 & Inmovilidad en el piso & Postura verificada en clips de caída, sin validar la duración completa \\
 RF6, RF7 & Desvíos inyectados en CASAS & 76,8\,\% de los desvíos señalados por el sistema y 72,0\,\% como alerta, con 16,2\,\% de falsos positivos, y 71,3\,\% al sumar el error del clasificador \\
 RNF6, RNF7 & Corte y reconexión & 855 eventos en cinco escenarios, todos entregados y sin duplicados \\
-RF8 & Notificaciones & Envío implementado en el backend, recepción en la aplicación sin implementar \\
+RF8 & Notificaciones push en un celular Android & Caída, inmovilidad y desvío de rutina notificados en el celular, y eventos que no son alerta sin notificación \\
 RF5 & Registro de eventos & Sin prueba específica, el registro con tipo, marca temporal y metadatos se ejercita en las pruebas automatizadas del almacenamiento local \\
 RF11, RNF9 & Panel local & Sin prueba específica, el panel muestra varias fuentes en simultáneo con la pose superpuesta (Sección~\ref{sec:demo_panel}) \\
 RNF1 & Procesamiento local del video & Sin prueba específica, el esquema del evento que se envía a la nube no tiene campos de imagen \\

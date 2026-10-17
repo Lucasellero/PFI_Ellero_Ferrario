@@ -104,8 +104,9 @@ El sistema corre sobre ese hardware con una cámara en vivo y descarta los frame
 
 \subsection{Limitaciones del prototipo}
 
-Las notificaciones push no llegan al celular, porque la aplicación todavía no registra el identificador del dispositivo.
-El backend genera el aviso ante cada alerta y el familiar la encuentra al abrir la aplicación, lo que cumple RF8 solo en parte y deja sin resolver el caso que más importa, el de una caída que requiere reacción inmediata.
+Las notificaciones push funcionan solo en Android.
+En iOS el familiar encuentra las alertas al abrir la aplicación, lo que en esa plataforma cumple RF8 solo en parte y deja sin resolver el caso que más importa, el de una caída que requiere reacción inmediata.
+Además, el ahorro de batería de algunos fabricantes, como Samsung, bloquea las notificaciones con la aplicación cerrada hasta que el familiar le quita esa restricción, y la aplicación todavía no le avisa que tiene que hacerlo.
 
 Además, durante los primeros siete días de uso el sistema no informa desvíos de rutina, porque no tiene historial suficiente, y el detector de tendencia gradual necesita alrededor de once semanas.
 Extender ese período inicial reduce los avisos infundados, pero también la detección (Sección~\ref{sec:pruebas_aprendizaje}).
@@ -134,7 +135,7 @@ Detección de caídas e inmovilidad con estimación de pose & Cumplido & Caídas
 Clasificación de actividades con un VLM & Cumplido & Clasificador entrenado sobre CLIP, combinado con el esqueleto y con las zonas del hogar \\
 Línea base personalizada y detección de desvíos & Cumplido & Implementada en la nube, recalculada cada día y evaluada sobre CASAS con validación cruzada por hogar, con un 68,7\,\% de los desvíos detectados fuera de muestra \\
 Procesamiento local del video & Cumplido & El video no sale de la controladora y solo se transmiten eventos \\
-Aplicación móvil con notificaciones y reportes & Cumplido & Alertas, notificaciones, reportes, historial y administración de familiares con roles en funcionamiento \\
+Aplicación móvil con notificaciones y reportes & Cumplido & Alertas, notificaciones push en Android, reportes, historial y administración de familiares con roles en funcionamiento \\
 Validación en un entorno doméstico controlado & Cumplido & Escenarios simulados de cinco datasets grabados en ambientes domésticos y rutina real de 21 hogares de CASAS, en lugar de un montaje en un único hogar. La prueba en un hogar con su residente está en curso y amplía este objetivo \\
 \bottomrule
 \end{tabular}

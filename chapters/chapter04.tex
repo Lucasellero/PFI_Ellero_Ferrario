@@ -324,7 +324,7 @@ Las credenciales, como la contraseña de la base de datos y la clave de servicio
 \section{Demo}
 \label{sec:demo}
 
-Esta sección muestra el sistema en funcionamiento, desde la detección en la Raspberry Pi hasta la aplicación móvil del familiar, con la salvedad de que la recepción de las notificaciones push en la aplicación todavía no está implementada.
+Esta sección muestra el sistema en funcionamiento, desde la detección en la Raspberry Pi hasta la aplicación móvil del familiar.
 
 \subsection{Panel de operación local}
 \label{sec:demo_panel}
@@ -393,6 +393,7 @@ La aplicación móvil está implementada siguiendo los mockups de la Sección~\r
 El familiar crea su cuenta e indica si tiene un kit para vincular o si otro familiar ya usa Lares y lo va a invitar a su hogar.
 En el primer caso vincula el kit escaneando su código QR con la cámara del celular y carga los datos del residente y la ubicación de las cámaras.
 Desde ese momento recibe en la pantalla de notificaciones los eventos y alertas del hogar, puede ver el detalle de cada alerta y marcarla como atendida.
+Ante una alerta recibe además una notificación push en el celular, por ahora solo en Android, y al tocarla la aplicación abre el detalle de esa alerta.
 La pantalla de reportes resume la rutina del residente frente a lo que es habitual para él, muestra su evolución a lo largo del tiempo y permite consultar el historial de eventos filtrado por período y por tipo.
 Desde el perfil, el responsable principal puede modificar los datos del residente y de las cámaras y administrar a los familiares que tienen acceso al hogar, y cualquier familiar puede elegir entre el modo claro y el oscuro.
 
