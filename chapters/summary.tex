@@ -1,36 +1,24 @@
 \chapter*{Resumen}
 
-% Pendiente: redactar el resumen final cuando estén los resultados. Debajo queda el borrador anterior, comentado.
-Completar.
+En la Argentina más de 7,4 millones de personas tienen 60 años o más, y menos de la mitad vive en hogares multigeneracionales.
+Muchas pasan buena parte del día solas, expuestas a cambios graduales en su rutina que anticipan un deterioro de la salud y a caídas que pueden pasar inadvertidas durante horas.
+Los botones de pánico y los dispositivos portátiles dependen de que el adulto mayor los use siempre, y con frecuencia terminan abandonados.
+Las cámaras de seguridad convencionales tampoco lo resuelven, porque obligan a la familia a estar mirando y suelen enviar el video a servidores del fabricante, con lo que exponen datos personales del adulto mayor.
 
+Este proyecto presenta Lares, un sistema de monitoreo no invasivo que brinda a la familia información inmediata y constante sobre el adulto mayor.
+El video de las cámaras se procesa dentro del hogar, en una Raspberry Pi 5 sin GPU, y a la nube solo llegan los eventos detectados, nunca imágenes.
+Un primer módulo clasifica las actividades cotidianas combinando un modelo de lenguaje visual con el movimiento del esqueleto, y detecta caídas e inmovilidad prolongada a partir de la estimación de pose.
+Un segundo módulo construye en la nube una línea base propia de cada residente, a partir de su historial y no de umbrales genéricos.
+Con ella, el sistema señala los desvíos en la rutina del residente.
+Una aplicación móvil, que pueden compartir varios familiares de un mismo hogar, notifica las alertas y muestra reportes de rutina.
 
-%% Si se quiere enviar este resumen en una p\'agina a alguien, descomentar esto.
+Los requerimientos surgieron de una encuesta a cuidadores y de entrevistas con dos familiares, que relataron su experiencia con el cuidado, y con una adulta mayor, que habló de su rutina y de los riesgos que más le preocupan.
+Cada módulo se validó con datasets públicos que reúnen actividades cotidianas grabadas en ambientes domésticos, caídas simuladas y la rutina real de hogares de adultos mayores.
 
-%\begin{center}
-%\textbf{\large Universidad Argentina De la Empresa}
+La clasificación de actividades alcanzó el 82,8\,\% de aciertos en cuatro categorías.
+El sistema detectó el 83,5\,\% de 158 caídas con nueve falsas alertas, ninguna en 1,40 horas de video doméstico continuo, y emitió cada evento en promedio 1,9 segundos después del inicio de la caída.
+Sobre la rutina real de 21 hogares, la línea base señaló el 76,8\,\% de los desvíos inyectados.
+El modelo de negocio, basado en la venta del kit y una suscripción mensual, resulta rentable en el escenario Base, con una TIR del 31,6\,\%.
 
-%\textbf{Facultad de Ingenier\'{\i}a y Ciencias Exactas}
-
-%\textbf{Departamento de Tecnolog\'{\i}a Inform\'atica}
-
-%\end{center}
-
-%\begin{center}
-%\large Ingenier\'{\i}a en Inform\'atica
-%\end{center}
-
-%\begin{center}
-%\textbf{\large Título de la PFI}
-%\end{center}
-
-%\begin{center}
-%Apellido, Nombres
-%Apellido, Nombres
-%\end{center}
-
-%\noindent
-%El envejecimiento de la población genera una demanda creciente de soluciones que permitan a los familiares mantenerse informados sobre el estado y la rutina de los adultos mayores a su cargo, especialmente cuando la distancia o las obligaciones cotidianas impiden una presencia continua. Los sistemas existentes requieren en su mayoría que el adulto mayor porte algún dispositivo o interactúe activamente con la tecnología, lo que limita su efectividad en situaciones de emergencia.
-
-%Este proyecto propone el desarrollo de un sistema de monitoreo completamente no invasivo para adultos mayores en entornos domésticos, basado en visión artificial y aprendizaje adaptativo del comportamiento. El sistema detecta caídas, inmovilidad prolongada y actividades de la vida cotidiana, a partir del análisis de video en tiempo real mediante modelos de estimación de poses. Adicionalmente, construye de forma continua una línea base de rutina personalizada por individuo, permitiendo identificar cambios en los patrones habituales de comportamiento.
-
-%El procesamiento se realiza localmente en una controladora, garantizando la privacidad del usuario, y solo los eventos detectados se transmiten a una aplicación móvil para la notificación a los familiares. El sistema se valida en un entorno doméstico controlado, demostrando la viabilidad del enfoque propuesto.
+Los resultados muestran que es viable reunir la comprensión de las actividades cotidianas, la detección de caídas y el aviso ante desvíos de la rutina en un único sistema que no saca el video del hogar.
+Con Lares, la distancia deja de ser un problema.

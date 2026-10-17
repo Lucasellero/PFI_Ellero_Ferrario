@@ -1,11 +1,28 @@
-%\chapter*{Abstract}
+\chapter*{Abstract}
 
-%% Recordar que el abstract contiene lo mismo que el resumen, pero en inglés.
+\begin{center}
+\textbf{Non-Invasive Monitoring System for Older Adults Based on Computer Vision and Adaptive Behavioral Learning}
+\end{center}
 
-%\textit{``Non-Invasive Monitoring System for the Elderly Using Artificial Vision and Adaptive Behavioral Learning''}
+In Argentina, more than 7.4 million people are aged 60 or over, and fewer than half live in multigenerational households.
+Many spend much of the day alone, exposed to gradual changes in their routine that anticipate a decline in health and to falls that can go unnoticed for hours.
+Panic buttons and wearable devices depend on the older adult using them at all times, and they are often abandoned.
+Conventional security cameras do not solve the problem either, because they force the family to keep watching and often send video to the manufacturer's servers, exposing the older adult's personal data.
 
-%Population aging generates a growing demand for solutions that allow family members to stay informed about the condition and daily routine of elderly relatives in their care, especially when distance or daily obligations prevent continuous presence. Most existing systems require the elderly person to wear a device or actively interact with technology, which limits their effectiveness in emergency situations.
+This project presents Lares, a non-invasive monitoring system that gives families immediate and continuous information about the older adult.
+Video from the cameras is processed inside the home, on a Raspberry Pi 5 without a GPU, and only the detected events reach the cloud, never images.
+A first module classifies daily activities by combining a vision language model with the movement of the skeleton, and detects falls and prolonged immobility through pose estimation.
+A second module builds in the cloud a baseline specific to each resident, drawn from their own history rather than from generic thresholds.
+With it, the system flags deviations from the resident's routine.
+A mobile application, which several family members of the same household can share, notifies alerts and shows routine reports.
 
-%This project proposes the development of a fully non-invasive monitoring system for elderly individuals in domestic environments, based on artificial vision and adaptive behavioral learning. The system detects falls, prolonged immobility, and activities of daily living, through real-time video analysis using pose estimation models. Additionally, it continuously builds a personalized behavioral baseline for each individual, enabling the identification of changes in habitual behavioral patterns.
+The requirements emerged from a survey of caregivers and from interviews with two family members, who described their experience of care, and with an older woman, who spoke about her routine and the risks that worry her most.
+Each module was validated on public datasets covering daily activities recorded in domestic settings, simulated falls and the real routines of older adults' households.
 
-%Video processing is performed locally on a controller unit, ensuring user privacy, and only detected events are transmitted to a mobile application to notify family members. The system was validated in a controlled domestic environment, demonstrating the technical feasibility of the proposed approach.
+Activity classification reached 82.8\% accuracy across four categories.
+The system detected 83.5\% of 158 falls with nine false alerts, none of them in 1.40 hours of continuous home video, and issued each event on average 1.9 seconds after the fall began.
+On the real routines of 21 households, the baseline flagged 76.8\% of the injected deviations.
+The business model, based on the sale of the kit and a monthly subscription, is profitable in the base scenario, with an internal rate of return of 31.6\%.
+
+The results show that the understanding of daily activities, fall detection and alerts on routine deviations can be combined in a single system that never takes video out of the home.
+With Lares, distance is no longer a problem.
