@@ -243,9 +243,9 @@ Que ese mensaje aparezca ahí, y no escondido en una pantalla de configuración,
 La Figura~\ref{fig:mockup_flujo2} muestra el segundo tramo, los reportes periódicos que exige RF9.
 La pestaña de \textit{Reportes} (04) no busca mostrar toda la actividad del día, sino señalar dónde se aparta Rosa de su propia rutina.
 Esa rutina no es un umbral genérico igual para todos los usuarios, sino la huella de comportamiento que el sistema fue construyendo día a día a partir de su propio historial de eventos, la línea base que exige RF6 (Sección~\ref{sec:aprendizaje_adaptativo_marco}).
-Por eso cada rango ``habitual'' que aparece en el panel, el horario en que se despierta, el de la primera comida o el tiempo que pasa sentada, es específico de Rosa y no una referencia general aplicada a cualquier residente, algo que además se apoya en RNF11, que asume un único residente monitoreado por hogar y evita tener que distinguir de quién es cada rango habitual dentro de una misma instalación.
+Por eso cada rango ``habitual'' que aparece en el panel, el tiempo que pasa en la cocina, el horario de la primera comida o el tiempo que pasa sentada, es específico de Rosa y no una referencia general aplicada a cualquier residente, algo que además se apoya en RNF11, que asume un único residente monitoreado por hogar y evita tener que distinguir de quién es cada rango habitual dentro de una misma instalación.
 El panel del mockup usa esos tres indicadores a modo de ejemplo, aunque el sistema podría sumar otros a medida que la línea base se enriquezca.
-La aplicación implementada no incluye el indicador de despertar, porque ninguna de las clases que emite la cámara detecta cuándo la persona se levanta, y en su lugar muestra los indicadores de cocina y de movilidad.
+La aplicación implementada suma un cuarto indicador, el de movilidad, con el tiempo que la persona pasa moviéndose por la casa.
 El desvío en sedentarismo, tres horas sentada frente a una hora habitual, usa el mismo ícono de advertencia y el mismo amarillo que las alertas moderadas.
 Se conecta de forma directa con la tarjeta de inactividad prolongada que aparece debajo, en el listado de eventos de la semana.
 Ese listado repite el mismo lenguaje visual de tarjetas con borde de color e ícono de la pantalla de notificaciones, así el familiar no tiene que aprender una segunda forma de leer la información solo por cambiar de pestaña.
@@ -301,7 +301,7 @@ En las cuatro pantallas se repite el criterio de RNF8, con un único botón prin
 
 El modo oscuro que se elige desde el perfil se aplica a toda la aplicación, como muestra la Figura~\ref{fig:mockup_oscuro} con las pantallas principales, y conserva el mismo código de color de severidad.
 De ese modo, una alerta urgente se reconoce igual sin importar la apariencia elegida.
-La aplicación implementada sigue estos diseños, salvo el indicador de despertar ya mencionado, y la Sección~\ref{sec:demo_app} describe su funcionamiento conectada al backend.
+La aplicación implementada sigue estos diseños, y la Sección~\ref{sec:demo_app} describe su funcionamiento conectada al backend.
 
 \begin{figure}[htb]
     \centering
@@ -323,6 +323,7 @@ El caso de uso \textit{Detectar Inmovilidad Prolongada} engloba tanto RF3 (seden
 El registro de eventos y todo lo que depende de él, la construcción y actualización de la línea base de comportamiento, la detección de desvíos y la generación de reportes, se ejecutan del lado de la nube.
 RNF6 solo exige que el dispositivo conserve los eventos de forma transitoria ante cortes de conexión, hasta poder sincronizarlos (RNF7).
 El Bloque 2 agrupa las funcionalidades expuestas al responsable a cargo desde la aplicación móvil, incluida la puesta en marcha del hogar, que consiste en vincular el kit escaneando su código QR (RF14) y asignar la ubicación de cada cámara (RF10).
+También incluye la gestión de las alertas y del acceso al hogar, ya que el responsable a cargo puede marcar una alerta como resuelta y administrar los familiares que acceden a la información (RF15).
 El Bloque 3 agrupa la administración y validación local de las cámaras desde el panel de operación local, de uso opcional para la familia.
 
 Además de la agrupación en bloques, las relaciones punteadas entre casos de uso representan dependencias \textit{include}, ya que todo evento detectado (caída, inmovilidad prolongada o desvío de rutina) incluye siempre su registro (RF5) y su notificación al responsable a cargo (RF8).
