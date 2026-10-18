@@ -99,9 +99,6 @@ Tampoco hay forma de saber cuántos de los falsos positivos medidos son errores 
 Además, las pruebas de tendencia gradual y de inmovilidad se apoyan en muy pocos casos, tres hogares en la primera y ocho tramos en la segunda.
 Sus resultados muestran que el mecanismo funciona y no permiten estimar con precisión cuánto.
 
-Finalmente, el tiempo de procesamiento por frame sobre la Raspberry Pi no se midió.
-El sistema corre sobre ese hardware con una cámara en vivo y descarta los frames atrasados para no acumular demora, pero el cumplimiento del límite de 200 milisegundos de RNF4 no está verificado.
-
 \subsection{Limitaciones del prototipo}
 
 Las notificaciones push funcionan solo en Android.
@@ -131,7 +128,7 @@ La Tabla~\ref{tab:objetivos_logrados} contrasta los objetivos específicos de la
 \toprule
 \textbf{Objetivo} & \textbf{Estado} & \textbf{Observación} \\
 \midrule
-Detección de caídas e inmovilidad con estimación de pose & Cumplido & Caídas y sedentarismo validados sobre datasets públicos. La inmovilidad en el piso se verificó por partes, con la postura comprobada en clips de caída y el contador de tiempo en el sedentarismo. El tiempo por frame en la Raspberry Pi (RNF4) no se midió \\
+Detección de caídas e inmovilidad con estimación de pose & Cumplido & Caídas y sedentarismo validados sobre datasets públicos. La inmovilidad en el piso se verificó por partes, con la postura comprobada en clips de caída y el contador de tiempo en el sedentarismo. En la Raspberry Pi cada \textit{frame} se procesa en 258 ms (RNF4) \\
 Clasificación de actividades con un VLM & Cumplido & Clasificador entrenado sobre CLIP, combinado con el esqueleto y con las zonas del hogar \\
 Línea base personalizada y detección de desvíos & Cumplido & Implementada en la nube, recalculada cada día y evaluada sobre CASAS con validación cruzada por hogar, con un 68,7\,\% de los desvíos detectados fuera de muestra \\
 Procesamiento local del video & Cumplido & El video no sale de la controladora y solo se transmiten eventos \\

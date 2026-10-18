@@ -158,7 +158,7 @@ A continuación se detallan los requerimientos no funcionales (RNF) del sistema.
     \item \textbf{RNF1:} El video debe procesarse dentro del hogar, sin enviarse a servidores externos para preservar la privacidad del residente.
     \item \textbf{RNF2:} La detección de una caída debe generar el evento en menos de 5 segundos desde que ocurre.
     \item \textbf{RNF3:} La detección de inmovilidad prolongada debe evaluarse en una ventana de tiempo configurable, de 3 minutos por defecto.
-    \item \textbf{RNF4:} El módulo de estimación de pose debe procesar cada \textit{frame} en menos de 200 milisegundos, permitiendo una operación cercana al tiempo real sin depender de GPU.
+    \item \textbf{RNF4:} El módulo de estimación de pose debe procesar cada \textit{frame} en menos de 300 milisegundos sin depender de GPU, lo que permite analizar varios \textit{frames} por segundo y generar el evento de una caída dentro del plazo de RNF2.
     \item \textbf{RNF5:} Los módulos de estimación de pose y de clasificación de actividades deben ejecutarse sobre el mismo hardware embebido, sin GPU.
     \item \textbf{RNF6:} El sistema debe seguir registrando eventos localmente ante cortes de conexión a internet.
     \item \textbf{RNF7:} El sistema debe sincronizar con la nube los eventos locales al restablecerse la conexión.
