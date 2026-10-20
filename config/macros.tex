@@ -4,17 +4,17 @@
   \begin{figure}[!htbp]
     \centering
     \IfFileExists{#1}{\includegraphics[width=#2\textwidth]{#1}}{\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}Insertar imagen \texttt{\detokenize{#1}}\vspace{1.5cm}}}}
-    \caption{#3 Fuente: Elaboración propia.}
+    \caption[#3]{#3 Fuente: Elaboración propia.}
     \label{#4}
   \end{figure}
 }
 
-\providecommand{\figuramarca}[4]{%
-  % #1 archivo, #2 ancho relativo, #3 epígrafe, #4 etiqueta
+\providecommand{\figuramarca}[5][]{%
+  % #1 título corto para la Lista de Figuras (opcional), #2 archivo, #3 ancho relativo, #4 epígrafe, #5 etiqueta
   \begin{figure}[H]
     \centering
-    \IfFileExists{#1}{\includegraphics[width=#2\textwidth]{#1}}{\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}Insertar imagen \texttt{\detokenize{#1}}\vspace{1.5cm}}}}
-    \caption{#3}
-    \label{#4}
+    \IfFileExists{#2}{\includegraphics[width=#3\textwidth]{#2}}{\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}Insertar imagen \texttt{\detokenize{#2}}\vspace{1.5cm}}}}
+    \ifblank{#1}{\caption{#4}}{\caption[#1]{#4}}
+    \label{#5}
   \end{figure}
 }
