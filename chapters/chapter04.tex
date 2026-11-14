@@ -52,7 +52,7 @@ El costo de esta decisión es previsible, ya que Python introduce un \textit{ove
 
 \subsubsection*{Ultralytics, OpenCV y NumPy en \texttt{vision/}}
 El módulo \texttt{vision/} implementa la heurística de detección de caídas e inmovilidad (Sección~\ref{sec:diagrama_componentes}) sobre \textit{keypoints} de pose obtenidos con YOLO11n-pose a través de la librería Ultralytics.
-Entre las alternativas livianas de estimación de pose, MediaPipe Pose y la versión Lightning de MoveNet están pensadas para una sola persona por imagen, mientras que YOLO11n-pose detecta a cada persona y sus 17 puntos clave en formato COCO en una única pasada.
+Entre las alternativas livianas de estimación de pose, MediaPipe Pose y la versión Lightning de MoveNet están pensadas para una sola persona por imagen \parencite{Bazarevsky2020,TFMoveNet}, mientras que YOLO11n-pose detecta a cada persona y sus 17 puntos clave en formato COCO en una única pasada.
 Ultralytics suma una interfaz de alto nivel que integra la descarga del modelo, la inferencia y la exportación a otros formatos.
 Además, \textcite{Giri2025} validan sobre una Raspberry Pi un modelo de la misma familia de Ultralytics (Sección~\ref{sec:edge-inference}), de modo que usarla evita apartarse de la literatura que ya validó la viabilidad del enfoque.
 OpenCV se usa para todo el manejo de \textit{frames} (lectura de archivos y de streams, recorte, dibujo del overlay de esqueleto) y NumPy para las operaciones vectoriales sobre los keypoints (velocidad vertical, ángulo de orientación) que alimentan la heurística de caída, ambas librerías estándar de facto en visión artificial con Python.
@@ -104,7 +104,9 @@ La razón es el patrón de tráfico, ya que el sistema no transmite un flujo con
 Desde el punto de vista de la arquitectura de red, la Raspberry Pi solo necesita realizar conexiones salientes hacia el endpoint de AWS, sin exponer ningún puerto entrante en la red doméstica, algo especialmente relevante porque el dispositivo corre dentro de la red interna del hogar, típicamente detrás de un router con NAT, sin IP pública ni administración remota de firewall a cargo del usuario.
 La controladora sale a internet por un cable de red conectado a ese router.
 En el diseño previsto para el kit, las cámaras se conectan a una red wifi privada que arma la propia controladora y no tienen salida a internet, de modo que la Raspberry Pi sea el único equipo del kit que se comunique con la nube.
-Para hacerlo se autentica con una credencial propia del kit, que se guarda en la controladora desde fábrica y en el backend solo como hash, y que identifica al aparato y no al familiar.
+Esa red se prevé protegida con WPA2 o WPA3, de modo que el video que viaja entre las cámaras y la controladora también vaya cifrado.
+Para comunicarse con la nube, la controladora se autentica con una credencial propia del kit, que se guarda en la controladora desde fábrica y en el backend solo como hash, y que identifica al aparato y no al familiar.
+En cada pedido, la credencial viaja en la cabecera \texttt{X-API-Key}, y el backend la compara contra el hash guardado.
 Esa misma conexión saliente es la que se reintenta cuando se restablece la conectividad tras un corte (RNF7), sincronizando los eventos acumulados en SQLite durante ese lapso (RNF6).
 
 La vinculación del kit con la cuenta del familiar (RF14) también pasa por el backend.
@@ -289,7 +291,9 @@ La Figura~\ref{fig:swagger} muestra los endpoints agrupados por función.
 \end{figure}
 
 Los endpoints del grupo Controladora son los únicos que usa la Raspberry Pi, para registrar sus cámaras y enviar los eventos detectados, y se autentican con la clave del kit.
-El resto los usa la aplicación móvil y se autentican con el token que Firebase le entrega al familiar al iniciar sesión, que el backend verifica en cada pedido.
+El resto los usa la aplicación móvil y se autentican con el token que Firebase le entrega al familiar al iniciar sesión.
+Ese token es un ID token en formato JWT, firmado por Google, que la aplicación envía en la cabecera \texttt{Authorization} con el esquema Bearer.
+En cada pedido, el backend verifica su firma y su vencimiento con el SDK de administración de Firebase y obtiene de él la identidad del familiar.
 El candado que muestra la documentación junto a cada endpoint indica que requiere una de esas dos credenciales.
 Además, el backend verifica en cada pedido qué puede hacer el familiar sobre ese hogar según su rol (Sección~\ref{sec:diagrama_base_datos}), y nunca deja un hogar sin responsable principal, por lo que rechaza quitarle ese rol o desvincular al único que lo tiene.
 
@@ -320,6 +324,7 @@ El contenedor ejecuta la API y, dentro de ella, la tarea que calcula la línea b
 La base de datos PostgreSQL corre en Amazon RDS y no es accesible desde internet.
 Una regla de red solo admite conexiones desde la instancia de Elastic Beanstalk, de modo que a los datos de los hogares únicamente se llega a través de la API y sus controles de acceso.
 Las credenciales, como la contraseña de la base de datos y la clave de servicio de Firebase con la que el backend verifica los tokens y envía las notificaciones, no se guardan en el repositorio, sino que se cargan como variables de entorno de Elastic Beanstalk.
+Por ahora la API se expone por HTTP sin cifrar, por lo que la clave del kit, el token del familiar y los datos del hogar viajan en texto plano, y antes de cualquier uso con una familia real hace falta servirla por HTTPS.
 
 \section{Demo}
 \label{sec:demo}
@@ -332,7 +337,8 @@ Esta sección muestra el sistema en funcionamiento, desde la detección en la Ra
 Las capturas de esta subsección corresponden al panel de operación local (\texttt{dashboard/}) construido sobre FastAPI y WebSockets, tal como se justificó más arriba.
 A través de él, el equipo ya puede dar de alta cámaras o archivos de video, iniciar y detener el monitoreo, y visualizar en vivo el resultado de la detección superpuesto sobre cada fuente, resolviendo así RF11 desde la propia controladora.
 El video que muestra el panel se sirve desde la controladora y solo es accesible desde la red del hogar, sin pasar por el backend ni guardarse fuera del domicilio.
-El panel todavía no pide contraseña, y protegerlo con una queda pendiente.
+El navegador recibe la página y el video en vivo por HTTP, este último como un stream MJPEG, es decir, una sucesión de imágenes JPEG que se muestran a medida que llegan, mientras que el estado del monitoreo y los eventos nuevos llegan por un WebSocket que la controladora actualiza cada segundo.
+Como el panel corre sobre HTTP sin cifrar y todavía no pide contraseña, cualquier equipo conectado a la red de la casa puede verlo, y protegerlo queda pendiente.
 
 En primer lugar, la Figura~\ref{fig:demo_caida} muestra la vista de una única fuente sobre el video \texttt{fall}, con el esqueleto de keypoints de YOLO superpuesto sobre la persona detectada en el piso.
 A la derecha, la pestaña Postura · YOLO lista cuatro eventos de caída detectada, no porque haya cuatro caídas distintas, sino porque \texttt{fall} es un clip corto de prueba configurado en bucle.

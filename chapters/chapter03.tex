@@ -86,6 +86,7 @@ Si bien el incidente ocurrió en el living, también planteó una solución conc
 \subsubsection{Entrevista a adulto mayor}
 
 La tercera entrevistada es una mujer de más de 70 años que vive con su marido pero con escasa supervisión de sus hijos, quienes residen fuera del hogar.
+Al vivir con su marido, su hogar quedaría fuera del alcance actual del prototipo, que asume un único residente (RNF11).
 Su rutina no tiene horarios fijos, ya que se levanta temprano, realiza actividades según el ánimo del momento y come cuando tiene hambre.
 Esta irregularidad en los patrones cotidianos es precisamente el tipo de comportamiento que el módulo de modelado de rutinas del sistema busca capturar de forma personalizada, sin imponer estructuras externas.
 
@@ -165,7 +166,7 @@ A continuación se detallan los requerimientos no funcionales (RNF) del sistema.
     \item \textbf{RNF8:} La aplicación móvil debe permitir que un familiar sin capacitación previa abra el detalle de una alerta y llame al adulto mayor en no más de dos toques desde la pantalla de notificaciones.
     \item \textbf{RNF9:} El sistema debe soportar más de una cámara por hogar de forma simultánea.
     \item \textbf{RNF10:} El acceso a la aplicación móvil debe requerir autenticación.
-    \item \textbf{RNF11:} El sistema debe asumir un único residente monitoreado por hogar.
+    \item \textbf{RNF11:} El sistema debe asumir un único residente monitoreado por hogar, como consecuencia de la limitación del alcance del prototipo.
 \end{itemize}
 \vspace*{2pt}
 
@@ -421,6 +422,11 @@ Del lado de la nube, AWS Elastic Beanstalk aloja la API que recibe los eventos s
 La aplicación móvil, desarrollada en React Native, consulta esa API para mostrar los eventos, las alertas y los reportes, e inicia sesión a través de Firebase Authentication.
 Firebase Cloud Messaging, por su parte, es el servicio que entrega las notificaciones push a la aplicación, cerrando el circuito que exige RF8 entre la detección de un evento crítico y el aviso al responsable a cargo.
 
+En cuanto a la forma en que se comunican esos nodos, la cámara IP entrega el video a la Raspberry Pi dentro de la red local, por RTSP o como un stream MJPEG sobre HTTP.
+La Raspberry Pi y la aplicación móvil consultan la API mediante pedidos REST sobre HTTP, la primera autenticada con la clave del kit y la segunda con el token que Firebase Authentication le entrega al familiar.
+Para las alertas, el backend le pide el envío a Firebase Cloud Messaging, que es el servicio que hace llegar la notificación al celular.
+El panel de operación local, por último, se usa desde un navegador conectado a la red de la casa, por HTTP y WebSocket, sin pasar por la nube.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{Imagenes/Diagrama_Arquitectura.png}
@@ -562,7 +568,7 @@ El sistema propuesto figura como prototipo porque todavía no se comercializa.}}
 \subsection{Cinco fuerzas de Porter}
 \label{sec:porter}
 
-El modelo de las cinco fuerzas de Porter permite evaluar la atractividad competitiva de un mercado a partir de cinco dimensiones.
+El modelo de las cinco fuerzas de Porter \parencite{Porter2008} permite evaluar la atractividad competitiva de un mercado a partir de cinco dimensiones.
 Se aplica aquí sobre el panorama relevado en la sección anterior, con el objetivo de entender qué tan sostenible puede ser la posición del proyecto una vez que salga del prototipo.
 La Figura~\ref{fig:porter} resume la intensidad estimada de cada fuerza, que se desarrolla a continuación.
 
@@ -612,7 +618,7 @@ La propuesta de valor apunta a ese desafío, ya que ninguna de las alternativas 
 \subsection{Triple P}
 \label{sec:triple_p}
 
-A partir del panorama competitivo y de las cinco fuerzas que estructuran ese mercado, se construye la estrategia de posicionamiento aplicando el modelo de Producto, Precio y Plaza.
+A partir del panorama competitivo y de las cinco fuerzas que estructuran ese mercado, se construye la estrategia de posicionamiento aplicando el modelo de Producto, Precio y Plaza, tres de las 4P del marketing \parencite{McCarthy1960}.
 
 \paragraph{Producto}
 La oferta combina hardware y software en un mismo paquete, compuesto por la cámara IP, la Raspberry Pi 5 que procesa localmente, y una aplicación móvil para el responsable a cargo.
@@ -637,7 +643,7 @@ Esta segunda vía tiene además la ventaja de acortar el problema de confianza s
 \subsection{Análisis FODA}
 \label{sec:foda}
 
-A partir del panorama competitivo, las cinco fuerzas de Porter y el posicionamiento de producto, precio y plaza relevados en las secciones anteriores, se construye un FODA.
+A partir del panorama competitivo, las cinco fuerzas de Porter y el posicionamiento de producto, precio y plaza relevados en las secciones anteriores, se construye un FODA \parencite{Gurel2017}.
 
 \paragraph{Fortalezas}
 \begin{itemize}
@@ -649,7 +655,7 @@ A partir del panorama competitivo, las cinco fuerzas de Porter y el posicionamie
 
 \paragraph{Oportunidades}
 \begin{itemize}
-    \item \textbf{Mercado latinoamericano prácticamente vacío en esta categoría.} Los actores relevados en la región, como SPS y Atempo en Argentina o GCare en Chile, operan sobre el modelo de botón y teleasistencia, sin competidor directo identificado en cámara o radar en ningún país de la región.
+    \item \textbf{Mercado latinoamericano prácticamente vacío en esta categoría.} Los actores relevados en la región, como SPS y Atempo en Argentina o GCare en Chile, operan sobre el modelo de botón y teleasistencia, sin competidor directo identificado en cámara o radar en ningún país de la región, según el relevamiento propio de la Tabla~\ref{tab:comparativa_comercial}.
     \item \textbf{Resistencia documentada a \textit{wearables}.} La evidencia del INDEC sobre la dificultad de adopción de nuevas tecnologías entre adultos mayores empuja la demanda hacia soluciones pasivas como esta \parencite{INDEC2020}.
     \item \textbf{Posible interés institucional.} Existe espacio para alianzas con obras sociales, geriátricos o municipios interesados en programas de cuidado domiciliario.
     \item \textbf{Crecimiento sostenido de la población objetivo.} Las proyecciones del INDEC indican que la población de 60 años o más va a superar el 20\,\% hacia 2040, lo que amplía el mercado potencial de forma sostenida en el tiempo \parencite{INDEC2024}.
@@ -739,10 +745,12 @@ En consecuencia, este componente no es intercambiable por hardware genérico del
 
 Las cámaras, en cambio, sí podrían en principio reemplazarse por otro modelo compatible.
 Sin embargo, el equipo optó por incluirlas en el mismo kit en lugar de dejar que el usuario aporte sus propias cámaras, ya que la razón no es comercial sino técnica y está directamente ligada a la garantía de privacidad central del sistema, desarrollada en la Sección~\ref{sec:privacidad_marco} y la Sección~\ref{sec:edge_marco}.
-Esto se debe a que la mayoría de las cámaras IP domésticas de uso masivo están diseñadas para transmitir su video hacia un servicio en la nube del propio fabricante, de modo que el usuario pueda verlas remotamente desde una aplicación, lo que implica que el video saldría del hogar antes de llegar siquiera a la controladora, incumpliendo así la restricción de procesamiento local que sostiene todo el diseño del sistema.
+Esto se debe a que muchas de las cámaras IP domésticas de uso masivo están diseñadas para transmitir su video hacia un servicio en la nube del propio fabricante, de modo que el usuario pueda verlas remotamente desde una aplicación, lo que implica que el video saldría del hogar antes de llegar siquiera a la controladora, incumpliendo así la restricción de procesamiento local que sostiene todo el diseño del sistema.
 
 Además, esta incompatibilidad no es solo teórica.
 Durante el desarrollo, el equipo intentó conectar el sistema a cámaras domésticas ya instaladas en el hogar de uno de los integrantes, pero la conexión fue rechazada por tratarse de un canal de video cifrado por el propio fabricante, lo que impidió el acceso directo que requiere el procesamiento local.
+Para que la controladora pueda procesarlo, la cámara tiene que entregar el video de forma directa dentro de la red local, por RTSP o como un stream MJPEG sobre HTTP, que son los dos protocolos que admite el sistema.
+Por RTSP el video llega comprimido, típicamente en H.264, y en MJPEG como una sucesión de imágenes JPEG, y en ambos casos la controladora lo decodifica con OpenCV antes de procesarlo.
 Por lo tanto, permitir cámaras arbitrarias del usuario introduciría una dependencia no controlada por el equipo sobre si esa cámara transmite o no video a un tercero, o expone su video de forma accesible, algo que no puede garantizarse sin validar cada modelo de forma individual.
 En consecuencia, el kit incluye cámaras seleccionadas por el equipo para funcionar con la controladora, de modo que la privacidad que el sistema promete no dependa de una configuración que el usuario deba resolver por su cuenta.
 En el diseño previsto, además, esas cámaras no tienen salida a internet, porque vendrán configuradas de fábrica para conectarse solo a una red wifi privada que arma la propia controladora.
@@ -927,7 +935,7 @@ La forma concreta de instrumentarla, en particular su compatibilidad con el dere
 
 Si se toma solo el costo de conseguir al cliente, sin contar lo que se pierde en el kit, ese gasto se recupera con unos 8 meses de cuota en el escenario Base (9 en Bear y 7 en Bull).
 Con la tasa de bajas del escenario Base, que se presenta más adelante, un cliente deja a lo largo de toda su permanencia unos USD 1.900, unas 15 veces lo que cuesta conseguirlo.
-En negocios de suscripción se suele considerar sano que esa relación sea de 3 veces o más.
+En negocios de suscripción se suele considerar sano que esa relación sea de 3 veces o más \parencite{Skok2013}.
 Es una cuenta simple y se presenta solo como orden de magnitud.
 
 \subsubsection{Mercado objetivo}
@@ -968,6 +976,7 @@ Los primeros cuidadores que contratan el sistema no tienen ninguna referencia pr
 A medida que esas primeras familias comprueban, mes a mes, que las alertas de caída corresponden a eventos reales y no a falsas alarmas, que los reportes de rutina reflejan lo que efectivamente pasa en el hogar, y que el video en ningún momento sale del hogar, empiezan a recomendar el sistema dentro de su propia red de contactos, otros cuidadores en situaciones parecidas, grupos familiares, círculos de conocidos, lo que reduce el costo de conseguir al siguiente cliente sin que el equipo tenga que gastar más en marketing para lograrlo.
 Ese boca a boca basado en experiencia concreta, reforzado por las alianzas institucionales descriptas en el apartado de Canales, es lo que explica la baja progresiva del CAC.
 En el modelo el CAC baja un porcentaje fijo por año, y en el escenario Base pasa de USD 130 a USD 85 en el año 5 (Figura~\ref{fig:supuestos}).
+Tanto el valor inicial del CAC como su baja anual son supuestos propios, que deben validarse con un piloto.
 
 \subsection{Análisis económico-financiero}
 \label{sec:analisis-financiero}
@@ -1282,7 +1291,7 @@ También se definió una variante sobre fondo verde oscuro, que mantiene la legi
 La paleta se organiza en dos grupos que no se mezclan, como se ve en la Figura~\ref{fig:paleta}.
 El primero reúne los colores de marca, que son un verde profundo, un verde suave secundario, un fondo claro y un neutro cálido.
 El color de una marca comunica atributos de personalidad, como la competencia que suele asociarse a los tonos fríos \parencite{Labrecque2012}, por lo que se elige en función de lo que el comprador debe percibir.
-Se optó por un verde profundo, asociado comúnmente con la calma, la naturaleza y la salud, porque debe transmitir serenidad sin perder seriedad ante un familiar que confía la seguridad de un pariente a un sistema.
+Se optó por un verde profundo porque el equipo buscó un color que transmita serenidad sin perder seriedad ante un familiar que confía la seguridad de un pariente a un sistema.
 El verde suave y el neutro cálido acompañan al principal y alejan a la marca del aspecto frío de los productos de vigilancia.
 
 El segundo grupo reúne los colores de severidad, que se corresponden con la prioridad de cada evento.

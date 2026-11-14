@@ -9,13 +9,13 @@ Sin embargo, este cambio en la estructura etaria del país, que pasa de ser una 
 Solo el 46\,\% de las personas de 60 años y más vive en hogares multigeneracionales \parencite{INDECTablero2024}.
 El resto vive solo o con otras personas mayores, situaciones en las que la supervisión suele ser parcial o nula.
 Incluso quienes conviven con hijos u otros familiares no cuentan necesariamente con supervisión continua.
-En la mayoría de los casos, esos hijos son personas de mediana edad con sus propias familias y trabajos, y no pueden estar disponibles todo el día.
+Muchos de esos hijos son personas de mediana edad con sus propias familias y trabajos, y no pueden estar disponibles todo el día.
 El resultado es una brecha de información cotidiana difícil de cerrar.
 Los familiares no saben si el adulto mayor comió, si se levantó a la hora habitual, o si algo cambió en su rutina.
 
 Esta incertidumbre no es un detalle menor.
 Un adulto mayor que pasa buena parte del día solo, sin supervisión, queda expuesto a riesgos que muchas veces no se ven a simple vista.
-El deterioro de la salud rara vez llega de golpe; suele empezar con cambios sutiles en la rutina, como levantarse más tarde, moverse menos o saltear alguna comida, que si alguien los notara a tiempo permitirían actuar antes de que deriven en una emergencia.
+El deterioro de la salud rara vez llega de golpe; suele empezar con cambios sutiles en la rutina, como levantarse más tarde, moverse menos o saltear alguna comida, que si alguien los notara a tiempo permitirían actuar antes de que deriven en una emergencia \parencite{Bierman2001}.
 En el extremo más crítico están las caídas, que afectan a cerca del 30\,\% de los adultos mayores independientes cada año \parencite{YeohLui2025}.
 Sin una presencia física constante o algún mecanismo que observe lo que ocurre en el hogar, tanto ese deterioro silencioso como los eventos agudos pasan inadvertidos hasta que ya es tarde para actuar.
 
@@ -77,8 +77,10 @@ El prototipo no contempla integración con sistemas médicos externos ni producc
 El sistema está diseñado exclusivamente para entornos domésticos y no es aplicable a instituciones de salud, geriátricos ni espacios públicos.
 Tampoco incluye vinculación con servicios de emergencia o atención médica profesional.
 
-El sistema asume la presencia de un único residente monitoreado por instalación.
+El sistema asume la presencia de un único residente monitoreado por instalación, una limitación del alcance del prototipo y no una regla de negocio.
 En hogares donde conviven dos o más personas, algo frecuente en adultos mayores que viven en pareja, el pipeline de detección de poses no puede distinguir de forma confiable entre individuos, lo que contaminaría el perfil conductual del residente objetivo.
+Lo mismo ocurre ante la presencia ocasional de una visita, un cuidador o un familiar de paso, ya que el sistema no distingue a esa persona del residente y sus eventos pueden atribuirse a este último.
+Como trabajo futuro, se prevé que el sistema pause el registro mientras detecte a más de una persona en el hogar, de modo que esas situaciones no generen eventos ni alteren la línea base.
 Esta limitación se reconoce explícitamente como trabajo futuro; el prototipo se valida en un entorno de residente único.
 
 La ubicación de las cámaras queda a criterio de los familiares responsables del adulto mayor.

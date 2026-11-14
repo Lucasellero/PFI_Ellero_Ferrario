@@ -24,7 +24,7 @@ Sin embargo, vivir más años no siempre implica hacerlo en condiciones de plena
 En cuanto a las modalidades de convivencia, los datos del INDEC revelan un panorama heterogéneo.
 El 46\,\% de las personas de 60 años y más vive en hogares multigeneracionales, compartiendo el domicilio con hijos u otros familiares \parencite{INDECTablero2024}, aunque una proporción creciente vive sola.
 De hecho, el índice de envejecimiento pasó de 40 personas mayores de 65 años por cada 100 menores de 14 años en 2010, a 53 en 2022, lo que refleja una transformación estructural sostenida en la composición de los hogares \parencite{INDEC2024}.
-En el extremo opuesto, una minoría reside en instituciones geriátricas, modalidad reservada principalmente para casos de deterioro cognitivo avanzado o dependencia severa.
+En el extremo opuesto, otra parte reside en instituciones geriátricas, una modalidad asociada principalmente a casos de deterioro cognitivo avanzado o dependencia severa.
 
 Esta distribución es relevante porque el segmento con mayor necesidad de apoyo no es el que ya vive en una institución, donde existe supervisión profesional continua.
 Lo es quien vive solo, o con supervisión parcial de familiares que trabajan y no pueden estar presentes todo el tiempo.
@@ -83,7 +83,7 @@ La adopción de tecnología de monitoreo en el hogar no depende únicamente de s
 La privacidad y la no invasividad no son características opcionales del sistema sino requisitos de diseño que determinan si una solución funciona en la práctica o queda sin uso.
 Estudios recientes documentan que las preocupaciones por la privacidad y la autonomía son una de las principales barreras para la adopción de tecnologías de monitoreo doméstico en adultos mayores, y que estas preocupaciones persisten incluso cuando los propios usuarios reconocen el valor de la solución \parencite{PercyCampbell2024}.
 
-El concepto de \textit{privacy by design} plantea que la privacidad debe incorporarse en la arquitectura del sistema desde su concepción, y no agregarse después como una capa adicional.
+El concepto de \textit{privacy by design} plantea que la privacidad debe incorporarse en la arquitectura del sistema desde su concepción, y no agregarse después como una capa adicional \parencite{Cavoukian2009}.
 Aplicado al monitoreo de adultos mayores, esto tiene una implicancia muy concreta, porque los datos más sensibles (en este caso, el video del interior del hogar) no deben salir del domicilio bajo ninguna circunstancia.
 Las tecnologías pensadas para el cuidado de adultos mayores tienen que partir de un compromiso ético con la dignidad humana, cuestionando la idea de que la seguridad y la eficiencia deban prevalecer por sobre la autonomía y el bienestar del individuo \parencite{Joseph2025}.
 
@@ -114,7 +114,7 @@ Las cámaras de seguridad convencionales apenas registran video sin analizarlo, 
 
 Dentro de la visión artificial aplicada al monitoreo de personas, la estimación de poses humanas es una de las técnicas predominantes.
 Consiste en localizar un conjunto de puntos clave anatómicos del cuerpo, como la cabeza, los hombros, los codos, las muñecas, las caderas, las rodillas y los tobillos, y reconstruir a partir de ellos la postura global del individuo.
-El estándar más utilizado es el formato COCO, que define 17 \textit{keypoints} distribuidos a lo largo del cuerpo \parencite{Lin2014}, aunque algunas implementaciones como MediaPipe extienden ese conjunto a 33 puntos para mayor resolución articular.
+El estándar más utilizado es el formato COCO, que define 17 \textit{keypoints} distribuidos a lo largo del cuerpo \parencite{Lin2014}, aunque algunas implementaciones como MediaPipe extienden ese conjunto a 33 puntos para mayor resolución articular \parencite{Bazarevsky2020}.
 La información que entregan estos keypoints no es solo geométrica.
 También permite inferir estados corporales.
 Una persona de pie, sentada, en movimiento o tirada en el suelo tiene configuraciones de keypoints radicalmente distintas, y esa diferencia es la base sobre la cual un sistema puede determinar si ocurrió una caída o si existe una situación de inmovilidad prolongada \parencite{Salimi2022}.
@@ -162,11 +162,11 @@ Esa distinción depende del contexto de la escena más que de la pose en sí mis
 Una familia de modelos que puede cumplir este rol de clasificación es la de los modelos de lenguaje visual (\textit{Vision Language Model}, VLM), una familia de arquitecturas que proyecta imagen y texto hacia un mismo espacio de representación.
 Eso le permite razonar sobre el contenido visual en relación con descripciones en lenguaje natural.
 Dentro de esta familia conviven dos variantes con comportamiento distinto.
-Los VLM generativos, como LLaVA, integran el encoder visual con un modelo de lenguaje de gran escala y pueden producir una descripción abierta de la escena o responder preguntas sobre ella.
+Los VLM generativos, como LLaVA \parencite{Liu2023llava}, integran el encoder visual con un modelo de lenguaje de gran escala y pueden producir una descripción abierta de la escena o responder preguntas sobre ella.
 Los VLM contrastivos, como CLIP \parencite{Radford2021}, no generan texto, sino que entrenan un encoder de imagen y un encoder de texto para que las representaciones de una imagen y su descripción correcta queden cercanas en ese espacio compartido, y clasifican por similitud, comparando la imagen contra un conjunto acotado de descripciones candidatas y quedándose con la de mayor puntaje.
 En ambos casos, a diferencia de los modelos entrenados sobre un conjunto fijo de clases discriminativas, el sistema puede identificar no solo la postura del individuo, sino también los objetos presentes y la forma en que el usuario interactúa con ellos, por ejemplo si manipula medicamentos o utensilios de cocina, lo cual aporta el contexto necesario para distinguir actividades que la pose por sí sola no puede diferenciar.
 Esta flexibilidad interpretativa tiene, sin embargo, un costo computacional bastante mayor que el de un modelo de estimación de poses.
-Por eso, una estrategia habitual consiste en no ejecutar el VLM sobre cada frame, sino consultarlo de forma periódica, como complemento de la inferencia continua y de baja latencia del modelo de pose.
+Por eso, una alternativa consiste en no ejecutar el VLM sobre cada frame, sino consultarlo de forma periódica, como complemento de la inferencia continua y de baja latencia del modelo de pose.
 Dentro de esa estrategia, la variante contrastiva tiene un menor costo de inferencia en CPU, porque clasifica por similitud y no necesita generar texto.
 \textcite{Schonfeldt2025} muestran que, en tareas de clasificación de comportamiento sedentario, un VLM de código abierto puede alcanzar un desempeño comparable al de los modelos discriminativos especializados, lo que respalda su viabilidad como mecanismo de clasificación de actividades.
 

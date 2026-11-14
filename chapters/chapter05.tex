@@ -414,7 +414,7 @@ Estas pruebas verifican el camino que va del evento a la aplicación.
 La etapa anterior, la que convierte el video en eventos, se evaluó por separado en las secciones precedentes, porque unirlas sobre la rutina de una misma persona exige una grabación continua de alrededor de un mes.
 
 Por otro lado, las notificaciones push se probaron solo en Android.
-En iOS la aplicación no registra el celular para recibirlas, porque hace falta una cuenta paga de Apple Developer y un mecanismo de envío distinto, de modo que en esa plataforma el familiar ve las alertas al abrir la aplicación, que actualiza el listado cada 30 segundos.
+En iOS la aplicación no registra el celular para recibirlas, porque Firebase Cloud Messaging entrega los avisos en ese sistema a través del servicio de notificaciones de Apple (APNs), que requiere una cuenta paga de Apple Developer, de modo que en esa plataforma el familiar ve las alertas al abrir la aplicación, que actualiza el listado cada 30 segundos.
 
 Finalmente, la Raspberry Pi 5 ejecuta el sistema completo leyendo una cámara en vivo, con un tiempo de procesamiento promedio de 258 milisegundos por frame, por debajo del límite de 300 milisegundos de RNF4.
 
