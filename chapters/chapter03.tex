@@ -326,7 +326,7 @@ El Bloque 2 agrupa las funcionalidades expuestas al responsable a cargo desde la
 También incluye la gestión de las alertas y del acceso al hogar, ya que el responsable a cargo puede marcar una alerta como resuelta y administrar los familiares que acceden a la información (RF15).
 El Bloque 3 agrupa la administración y validación local de las cámaras desde el panel de operación local, de uso opcional para la familia.
 
-Además de la agrupación en bloques, las relaciones punteadas entre casos de uso representan dependencias \textit{include}, ya que todo evento detectado (caída, inmovilidad prolongada o desvío de rutina) incluye siempre su registro (RF5) y su notificación al responsable a cargo (RF8).
+Además de la agrupación en bloques, las relaciones punteadas entre casos de uso representan dependencias \textit{include}, ya que todo evento detectado (caída, inmovilidad prolongada o desvío de rutina) incluye siempre su registro (RF5) y, si corresponde, su notificación al responsable a cargo (RF8).
 La autenticación del usuario (RF12) se incluye en toda funcionalidad de la aplicación móvil.
 El panel de operación local, en cambio, no requiere autenticación, porque está pensado para usarse solo desde la red del hogar.
 
@@ -444,13 +444,14 @@ La Figura~\ref{fig:diagrama_bd_local} documenta el modelo de la controladora, so
 El esquema de la nube se versiona con migraciones de Alembic, de modo que cada cambio en el modelo queda registrado y se aplica de la misma forma en desarrollo y en producción.
 
 El modelo local es una única entidad, EVENTO, sin relaciones ni claves foráneas, lo que refleja el código de \texttt{events/schema.py} y \texttt{events/store.py}.
-El diagrama muestra los campos centrales, y la implementación suma tres auxiliares, \texttt{wall\_clock\_ts}, con la hora real del evento cuando proviene de una cámara en vivo, \texttt{cloud\_synced\_at}, que registra cuándo se confirmó su envío a la nube, y \texttt{event\_id}, un identificador único que la controladora genera al guardar el evento y repite en cada reenvío.
+Además de los campos centrales, el modelo incluye tres auxiliares, \texttt{wall\_clock\_ts}, con la hora real del evento cuando proviene de una cámara en vivo, \texttt{cloud\_synced\_at}, que registra cuándo se confirmó su envío a la nube, y \texttt{event\_id}, un identificador único que la controladora genera al guardar el evento y repite en cada reenvío.
 El campo \texttt{video\_id} guarda, en modo en vivo, el identificador local de la cámara que generó el evento, pero no tiene una clave foránea declarada dado que el sistema asume hoy un único residente por instalación (RNF11), la misma restricción que más adelante justifica la relación uno a uno entre HOGAR y RESIDENTE en el modelo de nube.
 El campo \texttt{metadata} es un JSON de forma variable según el \texttt{event\_type} (\texttt{fall}, \texttt{immobility}, \texttt{activity}), cada uno con sus propios campos internos, en lugar de columnas fijas para cada tipo de evento, ya que forzar un esquema rígido hubiera significado agregar columnas vacías para la mayoría de los eventos cada vez que se sume un tipo nuevo.
 
 El modelo de nube parte de HOGAR y RESIDENTE en una relación estrictamente uno a uno, no uno a muchos, porque RNF11 restringe el sistema a un único residente monitoreado por instalación.
 HOGAR guarda un nombre descriptivo, como ``Casa de Rosa'', la fecha de alta, que coincide con el momento en que se vincula el kit, y una dirección opcional, que la aplicación no exige porque no la necesita para funcionar y es un dato sensible más sobre el residente.
 RESIDENTE, por su parte, suma un teléfono opcional, que es el que usa el botón ``Llamar a Rosa'' del detalle de alerta.
+El modelo todavía no registra el consentimiento informado del residente ni su revocación, que la Sección~\ref{sec:viabilidad-legal} señala como obligatorios, y sumarlos, con la fecha en que se otorga el consentimiento y la de su eventual revocación, queda como mejora futura.
 
 KIT representa el aparato físico, la controladora junto con sus cámaras, y se modela como una entidad separada de HOGAR por dos razones.
 La primera es que la credencial con la que la controladora se autentica ante el backend (\texttt{device\_api\_key\_hash}) pertenece al aparato y no a la casa.
@@ -461,6 +462,7 @@ Guarda también \texttt{cantidad\_camaras}, el plan comprado, de una a tres cám
 
 Las cámaras dependen del kit y no directamente del hogar.
 Se crean en fábrica junto con él, tantas como indica \texttt{cantidad\_camaras} y ya emparejadas con la red privada de la controladora, y reciben el \texttt{hogar\_id} recién cuando el kit se vincula, por lo que esa clave foránea admite nulos.
+Ese \texttt{hogar\_id} repite un dato que ya se obtiene a través del kit, una desnormalización deliberada que permite consultar las cámaras de un hogar sin pasar por KIT, y el backend lo asigna en la misma transacción en la que vincula el kit, de modo que ambos valores no pueden quedar desalineados.
 Cada CAMARA conserva un identificador local que coincide con el que usa \texttt{cameras.yaml} en el borde (Sección~\ref{sec:diagrama_componentes}) y que es único dentro de su kit, una ubicación descriptiva que el familiar asigna desde la aplicación móvil, tal como exige RF10, y un estado activo que habilita darlas de alta o de baja.
 El backend hace cumplir que un kit nunca tenga más cámaras que su plan y rechaza cualquier cámara adicional que la controladora intente registrar, de modo que sumar una cámara requiere comprarla y actualizar el plan del kit.
 
@@ -482,7 +484,7 @@ El campo \texttt{rol} toma dos valores.
 El familiar que vinculó el kit queda como \texttt{responsable\_principal} y puede invitar y quitar a otros familiares, mientras que el resto queda como \texttt{familiar}, que consulta alertas y reportes y puede marcar una alerta como resuelta, pero no modifica la configuración del hogar.
 Por ahora la invitación alcanza solo a quienes ya crearon su cuenta, y dejar una invitación pendiente para alguien que todavía no la tiene requeriría una entidad propia, que queda como mejora futura.
 FAMILIAR guarda además el token de Firebase Cloud Messaging con el que el backend le envía las notificaciones push a su celular (RF8).
-El diseño prevé que la aplicación lo actualice cada vez que el familiar inicia sesión, ya que Firebase lo renueva periódicamente, un paso que todavía no está implementado del lado de la aplicación (Sección~\ref{sec:limitaciones}).
+La aplicación lo envía cada vez que el familiar inicia sesión y vuelve a enviarlo cuando Firebase lo renueva, y como se guarda un único token por familiar, las notificaciones llegan solo al último celular en el que inició sesión.
 
 Por último, LINEA\_BASE\_COMPORTAMIENTO corresponde al módulo \texttt{baseline/} (RF6, Secciones~\ref{sec:aprendizaje_adaptativo_marco} y~\ref{sec:rutinas}) y está prevista para guardar, por residente, los parámetros del clustering dinámico junto con la fecha de su última actualización.
 En la implementación actual la línea base no se almacena, sino que se recalcula cada día a partir del historial de eventos del residente, y lo que se guarda es su resultado, los desvíos de rutina, como registros de EVENTO.
