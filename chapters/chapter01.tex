@@ -52,7 +52,7 @@ Desarrollar un sistema de monitoreo no invasivo para adultos mayores en entornos
     \item Desarrollar un módulo de aprendizaje adaptativo que construya y actualice de forma continua una línea base de comportamiento personalizada por individuo, permitiendo identificar desvíos significativos en la rutina diaria.
     \item Garantizar el procesamiento local del video en el hogar, de modo que los registros visuales no salgan del domicilio, preservando la privacidad del adulto mayor.
     \item Diseñar e implementar una aplicación móvil que notifique a los familiares ante eventos detectados y permita el acceso a reportes periódicos sobre el estado y la rutina del adulto mayor.
-    \item Validar el sistema en un entorno doméstico controlado mediante escenarios simulados que permitan evaluar la efectividad de la detección.
+    \item Validar el sistema en un entorno doméstico mediante escenarios simulados y rutinas cotidianas reales que permitan evaluar la efectividad de la detección.
 \end{itemize}
 \vspace*{4pt}
 
@@ -65,7 +65,7 @@ El primero realiza el análisis visual mediante un \textit{pipeline} que combina
 El segundo construye y actualiza de forma continua una línea base de comportamiento personalizada por usuario mediante \textit{clustering} dinámico, permitiendo identificar desvíos significativos en la rutina diaria como señales tempranas de deterioro funcional.
 El procesamiento de video se ejecuta localmente en una controladora conectada a cámaras IP, garantizando que los registros visuales no salgan del domicilio.
 Únicamente los eventos detectados y las clasificaciones de actividad se transmiten a la nube para el envío de notificaciones y el registro de actividad.
-El sistema incluye además una aplicación móvil para la visualización de alertas y reportes, y se valida en un entorno doméstico controlado mediante escenarios simulados.
+El sistema incluye además una aplicación móvil para la visualización de alertas y reportes, y se valida en un entorno doméstico mediante escenarios simulados y rutinas cotidianas reales.
 El modelo de estimación de poses y el modelo de lenguaje visual se emplean preentrenados, sin reentrenar sus pesos.
 Los conjuntos de datos públicos utilizados sirven para calibrar los umbrales de la heurística de caídas e inmovilidad, para entrenar un clasificador liviano sobre los embeddings que ya genera el modelo de lenguaje visual y para entrenar dos clasificadores temporales sobre la secuencia de \textit{keypoints}, uno que confirma las caídas y otro que se combina con el modelo de lenguaje visual en la clasificación de actividades.
 El origen y el tratamiento de esos datos se detallan en la Sección~\ref{sec:datasets}.

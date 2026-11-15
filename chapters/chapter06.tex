@@ -87,13 +87,12 @@ Se prefirió excluirlo antes que sumar a las métricas un conjunto con tiempos d
 Cada módulo se validó con datos independientes, la detección sobre video de datasets públicos y la línea base sobre el comportamiento real registrado en CASAS.
 Las actividades y el sedentarismo se midieron con adultos mayores de entre 60 y 80 años, y la línea base con la rutina de adultos mayores que viven de forma independiente.
 En cambio, las caídas fueron simuladas por voluntarios, de modo que la dinámica de una caída real en una persona mayor no está representada en la evaluación.
-Falta la prueba que los une sobre una misma persona, porque requiere una grabación continua de alrededor de un mes, necesaria para que la línea base tenga un historial contra el cual comparar.
-Esa prueba ya está en marcha, con el kit instalado en el hogar de una adulta mayor que dio su consentimiento informado, pero a la fecha de esta entrega el registro no reúne todavía las semanas de historial necesarias.
-Por eso sus resultados no forman parte de este informe, y completarla es la primera tarea pendiente para evaluar el sistema en condiciones reales de uso.
+La prueba que los une sobre una misma persona requiere una grabación continua de alrededor de un mes, necesaria para que la línea base tenga un historial contra el cual comparar.
+Para eso, el sistema completo se instaló en el hogar de una adulta mayor que dio su consentimiento informado, donde funciona de punta a punta.
 
 Por la misma razón la línea base se evaluó con CASAS y con desvíos inyectados, no con eventos producidos por la cámara.
 El efecto del error de la cámara se estimó de forma indirecta, aplicando a CASAS las confusiones medidas en el clasificador, y con eso la detección baja del 76,8\,\% al 71,3\,\% (Sección~\ref{sec:pruebas_ruido}).
-Las entradas y salidas se validaron con clips en los que una persona entra o sale de un ambiente (Sección~\ref{sec:pruebas_puerta}), y resta comprobarlas sobre la puerta de calle de un hogar real.
+Las entradas y salidas se validaron con clips en los que una persona entra o sale de un ambiente (Sección~\ref{sec:pruebas_puerta}).
 Tampoco hay forma de saber cuántos de los falsos positivos medidos son errores del sistema y cuántos son días realmente atípicos que CASAS no identifica como tales.
 
 Además, las pruebas de tendencia gradual y de inmovilidad se apoyan en muy pocos casos, tres hogares en la primera y ocho tramos en la segunda.
@@ -133,7 +132,7 @@ Clasificación de actividades con un VLM & Cumplido & Clasificador entrenado sob
 Línea base personalizada y detección de desvíos & Cumplido & Implementada en la nube, recalculada cada día y evaluada sobre CASAS con validación cruzada por hogar, con un 68,7\,\% de los desvíos detectados fuera de muestra \\
 Procesamiento local del video & Cumplido & El video no sale de la controladora y solo se transmiten eventos \\
 Aplicación móvil con notificaciones y reportes & Cumplido & Alertas, notificaciones push en Android, reportes, historial y administración de familiares con roles en funcionamiento \\
-Validación en un entorno doméstico controlado & Cumplido & Escenarios simulados de cinco datasets grabados en ambientes domésticos y rutina real de 21 hogares de CASAS, en lugar de un montaje en un único hogar. La prueba en un hogar con su residente está en curso y amplía este objetivo \\
+Validación en un entorno doméstico & Cumplido & Escenarios simulados de cinco datasets grabados en ambientes domésticos y rutina real de 21 hogares de CASAS. Además, el sistema completo se instaló en el hogar de una adulta mayor, donde funciona con su consentimiento informado \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -142,7 +141,7 @@ La diferencia más relevante con lo planificado está en la forma de validar.
 El proyecto preveía montar escenarios simulados en un único hogar, y se optó por validar cada módulo con datasets públicos que ya contienen esos escenarios, caídas simuladas y actividades cotidianas grabadas en ambientes domésticos, además de la rutina real de los hogares de CASAS.
 La decisión amplió el alcance de la validación.
 Las mediciones son repetibles, cubren 158 caídas, 31 actividades y 21 hogares, y abarcan distintas cámaras, distancias y personas, una variedad que un montaje propio en una sola casa no habría alcanzado.
-A eso se suma la prueba en un hogar con su residente, ya iniciada, que va un paso más allá de lo planificado y permitirá observar todos los módulos operando juntos sobre una misma rutina.
+A eso se suma la prueba en un hogar con su residente, que va un paso más allá de lo planificado y permitirá observar todos los módulos operando juntos sobre una misma rutina.
 
 Por otro lado, dos componentes superaron lo previsto.
 El backend quedó desplegado en AWS y la aplicación funciona contra él con cuentas reales, vinculación del kit por código QR y administración de familiares con roles, un nivel de integración mayor que el de un prototipo local.

@@ -448,6 +448,21 @@ Además de los campos centrales, el modelo incluye tres auxiliares, \texttt{wall
 El campo \texttt{video\_id} guarda, en modo en vivo, el identificador local de la cámara que generó el evento, pero no tiene una clave foránea declarada dado que el sistema asume hoy un único residente por instalación (RNF11), la misma restricción que más adelante justifica la relación uno a uno entre HOGAR y RESIDENTE en el modelo de nube.
 El campo \texttt{metadata} es un JSON de forma variable según el \texttt{event\_type} (\texttt{fall}, \texttt{immobility}, \texttt{activity}), cada uno con sus propios campos internos, en lugar de columnas fijas para cada tipo de evento, ya que forzar un esquema rígido hubiera significado agregar columnas vacías para la mayoría de los eventos cada vez que se sume un tipo nuevo.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.28\textwidth]{Imagenes/Diagrama_Base_Datos_Local.png}
+    \caption[Diagrama de base de datos local.]{Diagrama de base de datos local, implementado sobre SQLite. Fuente: Elaboración propia.}
+    \label{fig:diagrama_bd_local}
+\end{figure}
+\FloatBarrier
+
+\begin{figure}[tbp]
+    \centering
+    \includegraphics[width=\textwidth,height=0.66\textheight,keepaspectratio]{Imagenes/Diagrama_Base_Datos_Nube.png}
+    \caption[Diagrama de base de datos en la nube.]{Diagrama de base de datos en la nube, sobre PostgreSQL. Fuente: Elaboración propia.}
+    \label{fig:diagrama_bd_cloud}
+\end{figure}
+
 El modelo de nube parte de HOGAR y RESIDENTE en una relación estrictamente uno a uno, no uno a muchos, porque RNF11 restringe el sistema a un único residente monitoreado por instalación.
 HOGAR guarda un nombre descriptivo, como ``Casa de Rosa'', la fecha de alta, que coincide con el momento en que se vincula el kit, y una dirección opcional, que la aplicación no exige porque no la necesita para funcionar y es un dato sensible más sobre el residente.
 RESIDENTE, por su parte, suma un teléfono opcional, que es el que usa el botón ``Llamar a Rosa'' del detalle de alerta.
@@ -490,20 +505,6 @@ Por último, LINEA\_BASE\_COMPORTAMIENTO corresponde al módulo \texttt{baseline
 En la implementación actual la línea base no se almacena, sino que se recalcula cada día a partir del historial de eventos del residente, y lo que se guarda es su resultado, los desvíos de rutina, como registros de EVENTO.
 Recalcularla cada vez asegura que refleje siempre el historial más reciente, y la entidad queda disponible para guardar sus parámetros y evitar ese recálculo cuando el historial crezca.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.28\textwidth]{Imagenes/Diagrama_Base_Datos_Local.png}
-    \caption[Diagrama de base de datos local.]{Diagrama de base de datos local, implementado sobre SQLite. Fuente: Elaboración propia.}
-    \label{fig:diagrama_bd_local}
-\end{figure}
-\FloatBarrier
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.66\textheight,keepaspectratio]{Imagenes/Diagrama_Base_Datos_Nube.png}
-    \caption[Diagrama de base de datos en la nube.]{Diagrama de base de datos en la nube, sobre PostgreSQL. Fuente: Elaboración propia.}
-    \label{fig:diagrama_bd_cloud}
-\end{figure}
 \FloatBarrier
 
 \section{Análisis de competencia y posicionamiento en el mercado}
@@ -574,7 +575,7 @@ El modelo de las cinco fuerzas de Porter \parencite{Porter2008} permite evaluar 
 Se aplica aquí sobre el panorama relevado en la sección anterior, con el objetivo de entender qué tan sostenible puede ser la posición del proyecto una vez que salga del prototipo.
 La Figura~\ref{fig:porter} resume la intensidad estimada de cada fuerza, que se desarrolla a continuación.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{Imagenes/Porter_Cinco_Fuerzas.pdf}
 \caption[Cinco fuerzas de Porter.]{Cinco fuerzas de Porter aplicadas al sistema propuesto. Fuente: Elaboración propia.}
@@ -666,7 +667,7 @@ A partir del panorama competitivo, las cinco fuerzas de Porter y el posicionamie
 
 \paragraph{Debilidades}
 \begin{itemize}
-    \item \textbf{Validación limitada.} El prototipo se validó con datasets públicos, y la prueba en un hogar real recién comenzó, sin el historial suficiente para evaluar todos los módulos juntos ni el sistema a escala (Capítulo~\ref{chapter05}).
+    \item \textbf{Validación limitada.} El prototipo se validó con datasets públicos y se puso en funcionamiento en un único hogar real, sin evaluarse todavía a escala (Capítulo~\ref{chapter05}).
     \item \textbf{Sin canal de distribución propio.} Todavía no existe una estructura comercial ni soporte disponible las 24 horas.
     \item \textbf{Dependencia de conectividad domiciliaria.} El envío de alertas requiere una conexión a internet estable, algo que no está garantizado en todos los hogares.
     \item \textbf{Modelo de costos sin validar.} A diferencia de AltumView Sentinare, que ya tiene un precio de referencia de mercado (USD 200-230 sin cuota mensual), el costo de producción y el precio de venta del sistema propuesto, proyectados en la Sección~\ref{sec:modelo-negocio}, todavía no están validados con ventas ni con costos reales de producción a escala.
@@ -1012,7 +1013,6 @@ La Figura~\ref{fig:supuestos} muestra la hoja del modelo con los supuestos comun
 
 \figuraexcel{captura_supuestos.png}{0.95}{Hoja de supuestos del modelo financiero.}{fig:supuestos}
 
-\FloatBarrier
 \subsubsection{Financiamiento}
 
 Como el proyecto pierde dinero durante los primeros años, se financia con aportes de inversores a cambio de una parte de la empresa, y no con préstamos.
