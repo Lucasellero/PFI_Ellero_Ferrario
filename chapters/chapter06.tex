@@ -35,9 +35,9 @@ El límite parece estar en lo que una única cámara de ambiente alcanza a ver y
 
 \subsection{Línea base}
 
-La línea base señala el 76,8\,\% de los desvíos inyectados, y el 80,1\,\% de aquellos en los que una actividad deja de ocurrir, un resultado sólido para un sistema que aprende la rutina de cada residente con solo siete días de historial y sin más configuración manual que marcar las zonas de cada cámara.
-La cifra estrictamente fuera de muestra es la de la validación cruzada, un 68,7\,\%, porque el juego adoptado se eligió con los mismos hogares sobre los que se mide.
-Esa cifra, obtenida con hogares que no intervinieron en el ajuste, permite esperar un comportamiento similar en un hogar nuevo.
+Con validación cruzada por hogar, la línea base señala el 68,7\,\% de los desvíos inyectados, y esa es la cifra que permite esperar un comportamiento similar en un hogar nuevo, porque se obtuvo con hogares que no intervinieron en el ajuste.
+Con el juego de parámetros adoptado, que se eligió con los mismos hogares sobre los que se mide, la cifra sube al 76,8\,\%, y al 80,1\,\% en los desvíos en los que una actividad deja de ocurrir.
+Es un resultado sólido para un sistema que aprende la rutina de cada residente con solo siete días de historial y sin más configuración manual que marcar las zonas de cada cámara.
 El punto débil son los falsos positivos, cerca del 16\,\% de los días normales, que equivalen a un aviso infundado cada seis días.
 Esa tasa es el principal aspecto a mejorar, y las mediciones muestran el camino, ya que exigir dos días seguidos sin salir o un período de aprendizaje de 14 días la llevan al 14\,\% con una pérdida moderada de detección.
 
@@ -98,6 +98,22 @@ Tampoco hay forma de saber cuántos de los falsos positivos medidos son errores 
 Además, las pruebas de tendencia gradual y de inmovilidad se apoyan en muy pocos casos, tres hogares en la primera y ocho tramos en la segunda.
 Sus resultados muestran que el mecanismo funciona y no permiten estimar con precisión cuánto.
 
+La medición de la cadena completa de caídas es optimista, porque el clasificador temporal y la confirmación con CLIP se ajustaron con eventos de los mismos clips sobre los que se midió.
+La cifra que la respalda fuera de muestra es la del clasificador temporal evaluado de forma aislada, y no la del sistema completo.
+Para obtener esa cifra hace falta reservar desde el principio un conjunto de clips, idealmente de un dataset que no haya intervenido en ningún ajuste, y medir sobre él la cadena completa una única vez.
+
+Algunos requerimientos no tienen una prueba específica, como resume la Tabla~\ref{tab:sintesis_pruebas}, y cada uno admite una prueba concreta.
+El registro de eventos (RF5) puede verificarse de punta a punta, comprobando que cada tipo de evento llega con su tipo, su marca temporal y sus metadatos tanto a la base local como a la de la nube.
+El panel local (RF11) puede medirse con tres fuentes simultáneas, registrando la demora con la que muestra cada una.
+El procesamiento local del video (RNF1) puede demostrarse capturando durante una jornada todo el tráfico que sale de la controladora y comprobando que solo contiene solicitudes a la API, con un volumen compatible con metadatos y no con imágenes.
+Para el residente único (RNF11) corresponde una prueba con clips de dos personas que documente qué eventos genera el sistema en esa situación, aunque esté fuera del alcance.
+
+La aceptación con usuarios se apoyó en dos cuidadores y fue cualitativa, por lo que confirma la dirección del diseño pero no permite comparar la usabilidad con la de otras aplicaciones.
+Una prueba con más participantes y tareas definidas, cerrada con el cuestionario System Usability Scale \parencite{Brooke1996}, daría una medida estandarizada y comparable.
+
+Por último, la prueba en el hogar de la residente sigue en curso, de modo que la unión del video con la aplicación sobre una rutina real todavía no tiene resultados que informar.
+Sus primeras semanas servirán además como primera medición de las falsas alertas en un hogar, el dato que más condiciona la confianza de la familia.
+
 \subsection{Limitaciones del prototipo}
 
 Las notificaciones push funcionan solo en Android.
@@ -107,9 +123,41 @@ Además, el ahorro de batería de algunos fabricantes, como Samsung, bloquea las
 Además, durante los primeros siete días de uso el sistema no informa desvíos de rutina, porque no tiene historial suficiente, y el detector de tendencia gradual necesita alrededor de once semanas.
 Extender ese período inicial reduce los avisos infundados, pero también la detección (Sección~\ref{sec:pruebas_aprendizaje}).
 Las zonas del hogar que mejoran la clasificación se cargan a mano en un archivo de configuración, sin una pantalla que permita hacerlo a la familia.
-La comunicación de la aplicación y de la controladora con el backend del prototipo no usa todavía una conexión cifrada, un paso obligatorio antes de cualquier uso con datos de una familia real.
+Por otra parte, la controladora envía los eventos a la nube en lotes cada 30 segundos, de modo que la notificación de una caída puede llegar al celular hasta unos 30 segundos después de generado el evento, y si el envío de una notificación falla, no se reintenta.
+Ambos aspectos pueden resolverse enviando las alertas en el momento en que se generan y reintentando las notificaciones fallidas.
+
+La limitación más crítica del prototipo es que la comunicación de la aplicación y de la controladora con el backend no está cifrada.
+Por HTTP viajan en texto plano la clave con la que se identifica cada kit, el token del familiar y eventos que son datos de salud, por lo que alguien con acceso a la red podría leerlos o hacerse pasar por un kit.
+La Ley 25.326 obliga a quien trata datos personales a adoptar las medidas de seguridad que garanticen su confidencialidad (artículo 9) \parencite{Argentina2000}, una exigencia que pesa más cuando se trata de datos sensibles.
+Por eso el cifrado es una condición para cualquier uso con una familia real, y no una mejora opcional.
+La mitigación no cambia la arquitectura, ya que la API puede servirse por HTTPS con un certificado de AWS Certificate Manager instalado en el entorno de Elastic Beanstalk, y la controladora y la aplicación solo tienen que apuntar a esa dirección y validar el certificado.
+A eso se suma poder rotar la clave del kit, que hoy se genera una sola vez en el alta, para invalidarla si se expone.
 
 Se mantiene además la restricción de un único residente por hogar que ya se había fijado en el alcance (Sección~\ref{sec:limitaciones-exclusiones}).
+
+\subsection{Limitaciones de la investigación con usuarios}
+
+La encuesta y las entrevistas se basaron en una muestra no probabilística.
+La encuesta circuló por grupos de mensajería y redes sociales, y las tres personas entrevistadas se contactaron a través del entorno cercano del equipo.
+Ese tipo de muestra por conveniencia permite explorar el problema, pero sus resultados no pueden generalizarse a la población de cuidadores \parencite{Etikan2016}.
+
+Además, solo una de las entrevistas fue a una persona mayor, y esa persona vive con su marido, un caso que el prototipo excluye por alcance (RNF11).
+Su testimonio aporta la mirada de quien sería monitoreado, pero no la de quien vive solo, que es el usuario al que apunta el sistema.
+El consentimiento de los participantes se pidió de palabra, antes de cada entrevista, y no quedó registrado por escrito.
+
+En cuanto a la encuesta, la utilidad del sistema se preguntó después de presentar la propuesta.
+En esas condiciones los participantes tienden a responder lo que creen que el investigador espera, sobre todo si conocen a quien pregunta \parencite{Dell2012}, de modo que el 89\,\% de valoración positiva mide el interés por la idea más que la intención real de adoptarla.
+La encuesta tampoco preguntó cuánto estarían dispuestos a pagar los cuidadores.
+
+Ninguna de estas limitaciones cambia la dirección del diseño, porque los hallazgos centrales, la preocupación por una caída que pasa inadvertida y el rechazo a los dispositivos que la persona tiene que usar, coinciden con la literatura revisada en el Capítulo~\ref{chapter02}.
+Sí limitan la confianza en las cifras y dejan pasos concretos para mitigarlas, como entrevistar a adultos mayores que viven solos, ampliar la encuesta a canales que no dependan del entorno del equipo, registrar el consentimiento por escrito y medir la disposición a pagar con un método reconocido.
+
+\subsection{Limitaciones del modelo de negocio}
+
+El precio del kit y de la suscripción no se contrastó con la disposición a pagar de los cuidadores, y queda por encima de varias de las alternativas relevadas.
+Además, el escenario Base supone un canal de venta que todavía no se probó, y de él dependen tanto la cantidad de clientes como el costo de conseguirlos.
+Ambos supuestos pueden contrastarse con un piloto que mida la disposición a pagar con el método de \textcite{VanWestendorp1976} y registre la conversión del canal antes de escalar.
+Por último, los modelos entrenados con datasets de licencia no comercial no pueden incluirse en un producto comercial sin una autorización o un reentrenamiento, como se analiza en la Sección~\ref{sec:licencias}.
 
 \section{Alcance planificado y alcance logrado}
 \label{sec:alcance_logrado}
@@ -127,12 +175,12 @@ La Tabla~\ref{tab:objetivos_logrados} contrasta los objetivos específicos de la
 \toprule
 \textbf{Objetivo} & \textbf{Estado} & \textbf{Observación} \\
 \midrule
-Detección de caídas e inmovilidad con estimación de pose & Cumplido & Caídas y sedentarismo validados sobre datasets públicos. La inmovilidad en el piso se verificó por partes, con la postura comprobada en clips de caída y el contador de tiempo en el sedentarismo. En la Raspberry Pi cada \textit{frame} se procesa en 258 ms (RNF4) \\
+Detección de caídas e inmovilidad con estimación de pose & Cumplido & Módulo implementado. Caídas y sedentarismo validados sobre datasets públicos. La inmovilidad en el piso se verificó por partes, con la postura comprobada en clips de caída y el contador de tiempo en el sedentarismo, porque no existe un dataset con personas que permanezcan varios minutos en el piso. En la Raspberry Pi cada \textit{frame} se procesa en 258 ms (RNF4) \\
 Clasificación de actividades con un VLM & Cumplido & Clasificador entrenado sobre CLIP, combinado con el esqueleto y con las zonas del hogar \\
-Línea base personalizada y detección de desvíos & Cumplido & Implementada en la nube, recalculada cada día y evaluada sobre CASAS con validación cruzada por hogar, con un 68,7\,\% de los desvíos detectados fuera de muestra \\
+Línea base personalizada y detección de desvíos & Cumplido & Implementada en la nube, recalculada cada día y evaluada sobre CASAS con validación cruzada por hogar, con un 68,7\,\% de los desvíos detectados fuera de muestra y un 76,8\,\% con los parámetros adoptados \\
 Procesamiento local del video & Cumplido & El video no sale de la controladora y solo se transmiten eventos \\
 Aplicación móvil con notificaciones y reportes & Cumplido & Alertas, notificaciones push en Android, reportes, historial y administración de familiares con roles en funcionamiento \\
-Validación en un entorno doméstico & Cumplido & Escenarios simulados de cinco datasets grabados en ambientes domésticos y rutina real de 21 hogares de CASAS. Además, el sistema completo se instaló en el hogar de una adulta mayor, donde funciona con su consentimiento informado \\
+Validación en un entorno doméstico & Cumplido & Escenarios simulados de cinco datasets grabados en ambientes domésticos y rutina real de 21 hogares de CASAS. Además, el sistema completo se instaló en el hogar de una adulta mayor, donde funciona con su consentimiento informado y la prueba integrada está en curso \\
 \bottomrule
 \end{tabular}
 \end{table}

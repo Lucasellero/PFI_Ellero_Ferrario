@@ -302,6 +302,10 @@ En las cuatro pantallas se repite el criterio de RNF8, con un único botón prin
 El modo oscuro que se elige desde el perfil se aplica a toda la aplicación, como muestra la Figura~\ref{fig:mockup_oscuro} con las pantallas principales, y conserva el mismo código de color de severidad.
 De ese modo, una alerta urgente se reconoce igual sin importar la apariencia elegida.
 La aplicación implementada sigue estos diseños, y la Sección~\ref{sec:demo_app} describe su funcionamiento conectada al backend.
+Al implementarla hubo algunos cambios respecto de los mockups, que surgieron al conectar la interfaz con el backend real y con los roles de cada familiar.
+Además del indicador de movilidad ya mencionado, la pantalla de reportes sumó un historial de eventos que se filtra por período y por tipo.
+Se agregó una pantalla para administrar a los familiares del hogar con sus roles (RF12), y el alta de cuenta pasó a preguntar si el familiar tiene un kit para vincular o si otro familiar ya usa el sistema y lo va a invitar.
+El resto del recorrido, el código de color de severidad y la jerarquía de las acciones se mantuvieron sin cambios.
 
 \begin{figure}[htb]
     \centering
@@ -361,6 +365,38 @@ Esta bifurcación es intencional, ya que el responsable a cargo debe poder consu
     \includegraphics[width=\textwidth,height=20cm,keepaspectratio]{Imagenes/Diagrama_Flujo_Informacion.png}
     \caption[Diagrama de Flujo de Información del sistema.]{Diagrama de Flujo de Información del sistema, desde la captura de video hasta la notificación y el reporte. Fuente: Elaboración propia.}
     \label{fig:flujo_informacion}
+\end{figure}
+\FloatBarrier
+
+\subsection{Diagrama de secuencia de una caída}
+\label{sec:diagrama_secuencia}
+
+El diagrama de flujo de información muestra qué transformaciones atraviesa un frame, y el diagrama de secuencia de la Figura~\ref{fig:secuencia_caida} muestra en qué orden intervienen los componentes cuando ese frame contiene una caída.
+Se eligió la caída porque es el evento que recorre todas las piezas del sistema, desde la cámara hasta el celular del familiar, y el que exige una reacción más inmediata (RF1, RF8).
+Cuando el filtro de movimiento mantiene activa la cámara, \texttt{runner/} entrega cada frame a \texttt{vision/}, que estima la pose y aplica la heurística geométrica.
+Si la heurística marca una posible caída y la persona se ve completa, \texttt{runner/} consulta primero al clasificador temporal de \texttt{fusion/} sobre los últimos segundos de esqueleto.
+Ese clasificador confirma el evento cuando el puntaje de caída alcanza 0,45 y lo descarta cuando no supera 0,15, y en ese caso el evento no se guarda.
+Si no hay esqueleto suficiente o el puntaje queda entre ambos valores, decide CLIP sobre el recorte de la persona.
+Cuando la persona aparece cortada contra el borde de la imagen, el evento se guarda como sospecha sin pasar por esas etapas, y solo se convierte en alerta si \texttt{vision/} observa después más de 45 segundos de inmovilidad.
+Antes de guardar, \texttt{runner/} publica como máximo una caída por cámara y por minuto, salvo que una confirmada llegue después de una sospecha.
+El evento se escribe entonces en la base local con un identificador propio y el formato que exige RF5, y la detección termina en ese punto, en promedio 1,9 segundos después del inicio de la caída (RNF2).
+El envío a la nube es una tarea aparte, que cada 30 segundos toma los eventos pendientes y los manda en un lote a la API.
+Si no hay conexión, los eventos permanecen en la base local y se reenvían en el ciclo siguiente, lo que sostiene RNF6 y RNF7.
+La API autentica a la controladora con la clave del kit y descarta los eventos cuyo identificador ya había recibido, de modo que un lote reenviado no duplica la alerta ni la notificación.
+Al guardar un evento nuevo, la API decide si es una alerta, y en ese caso envía la notificación a través de Firebase Cloud Messaging a todos los familiares del hogar.
+Por lo tanto, a la demora de la detección se suma la del ciclo de envío, de hasta 30 segundos, más lo que tarde el servicio de notificaciones en llegar al celular.
+Al tocar la notificación, la aplicación abre la pantalla de notificaciones, consulta los eventos del hogar y muestra el detalle de esa alerta.
+La secuencia deja ver que la controladora no espera a la nube para detectar ni para guardar, y que la nube no vuelve a analizar el evento, sino que lo registra, lo clasifica como alerta y lo notifica.
+
+\begin{figure}[htbp]
+    \centering
+    \IfFileExists{Imagenes/Diagrama_Secuencia_Caida.png}{%
+    \includegraphics[width=\textwidth,height=20cm,keepaspectratio]{Imagenes/Diagrama_Secuencia_Caida.png}%
+    }{%
+    \fbox{\parbox[c][6cm][c]{0.9\textwidth}{\centering Diagrama de secuencia pendiente de exportar desde Lucidchart (Imagenes/Diagrama\_Secuencia\_Caida.png)}}%
+    }
+    \caption[Diagrama de secuencia de una caída.]{Diagrama de secuencia de una caída, desde el frame de la cámara hasta la notificación al familiar. Fuente: Elaboración propia.}
+    \label{fig:secuencia_caida}
 \end{figure}
 \FloatBarrier
 
@@ -734,6 +770,78 @@ La detección de caídas y de desvíos de rutina depende del correcto funcionami
 Por lo tanto, el sistema no garantiza una respuesta inmediata ante una emergencia ni sustituye los mecanismos de asistencia médica de urgencia.
 Esta limitación se comunica de manera explícita al usuario y a su familia al momento de la instalación, como parte del proceso de consentimiento informado.
 
+\subsection{Encuadre frente a la normativa de productos médicos}
+\label{sec:encuadre_producto_medico}
+
+El descargo anterior responde a una pregunta regulatoria concreta, la de si el sistema es o no un producto médico.
+En la Argentina el registro de productos médicos lo exige la ANMAT, que mediante la Disposición 64/2025 incorporó la Resolución GMC 25/21 del Mercosur y derogó la Disposición 2318/02 que regía hasta entonces \parencite{ANMAT2025}.
+Esa resolución adopta la noción de software como producto médico (SaMD, por sus siglas en inglés) del International Medical Device Regulators Forum, según la cual un programa es producto médico cuando su fabricante lo destina a fines como diagnosticar, prevenir, monitorear o tratar una enfermedad \parencite{IMDRF2013}.
+El criterio decisivo es, por lo tanto, el uso previsto que declara el fabricante y no la técnica empleada.
+
+Las referencias internacionales siguen la misma lógica.
+En la Unión Europea, el Reglamento 2017/745 excluye el software destinado al bienestar o al estilo de vida, y la guía MDCG 2019-11 condiciona la calificación a que el programa produzca información con un fin médico para un paciente individual \parencite{UE2017, MDCG2019}.
+En Estados Unidos, la guía de bienestar general de la FDA deja fuera de su control a los productos de bajo riesgo destinados a sostener un estilo de vida saludable \parencite{FDA2026}.
+A su vez, el marco del IMDRF gradúa el riesgo del software según la gravedad de la situación de salud y el peso de la información en la decisión \parencite{IMDRF2014}.
+
+Con el uso previsto que declara este proyecto, una herramienta de apoyo al cuidado que avisa a la familia de una caída, de una inmovilidad o de un cambio en la rutina, sin diagnosticar, sin indicar tratamientos y sin integrarse con sistemas médicos (Sección~\ref{sec:limitaciones-exclusiones}), el sistema quedaría en principio fuera de la categoría de producto médico.
+Se trata de una lectura prudente y no de una determinación, porque la frontera entre el monitoreo de bienestar y el monitoreo con fin médico no está fijada con precisión en ninguna de estas normas y la ANMAT puede pronunciarse sobre el caso concreto.
+Por esa razón, la comunicación del producto tiene que ser coherente con ese uso previsto y evitar afirmaciones como que el sistema previene caídas, detecta deterioro cognitivo o reemplaza una evaluación médica.
+
+El encuadre cambiaría si el uso previsto se ampliara.
+Presentar los desvíos de rutina como indicadores de una patología, enviar los datos a un médico para que tome decisiones clínicas, integrarse con servicios de emergencia o comercializar el sistema para instituciones de salud son usos que lo acercarían a un SaMD.
+En ese caso correspondería registrarlo ante la ANMAT con la clase de riesgo que resulte de la clasificación y cumplir los requisitos de validación clínica y de tecnovigilancia que eso implica, una evolución que debería evaluarse con asesoramiento regulatorio.
+
+\subsection{Licencias de los datasets y del software}
+\label{sec:licencias}
+
+El uso de los datasets y del software de terceros también condiciona el paso del prototipo a un producto comercial.
+En el marco académico de este proyecto todas las licencias se respetan, pero algunos de los datos de entrenamiento y un componente de software impiden, tal como están, vender el kit.
+
+Toyota Smarthome se distribuye solo para investigación académica \parencite{Inria2019}, y URFD bajo una licencia Creative Commons Atribución, No Comercial, Compartir Igual 4.0, cuyos autores piden ser contactados para cualquier uso comercial \parencite{Kepski2014}.
+Con el primero se entrenaron el clasificador sobre las representaciones de CLIP y el clasificador temporal del esqueleto, y el segundo aportó, junto con GMDCSA-24 y CAUCAFall, las caídas con las que se entrenó el clasificador temporal de caídas.
+Las anotaciones de OmniFall que refuerzan el clasificador sobre CLIP también tienen una licencia no comercial \parencite{OmniFall2025}.
+Si los pesos de un modelo constituyen una obra derivada de sus datos de entrenamiento es una cuestión abierta, que la doctrina todavía discute \parencite{Lee2024}.
+Creative Commons sostiene, con un criterio que ella misma califica de conservador, que la restricción no comercial alcanza a todas las etapas en que se usa el material, desde el entrenamiento hasta la distribución del modelo \parencite{CreativeCommons2025}.
+Ante esa incertidumbre se adopta esa misma lectura, según la cual los tres clasificadores mencionados no pueden incluirse en un producto comercial sin una autorización.
+
+La mitigación tiene tres caminos, que pueden combinarse.
+El primero es solicitar una licencia comercial a los titulares de Toyota Smarthome y de URFD.
+El segundo es reentrenar los clasificadores con datos propios, grabados con el consentimiento de los participantes, o con datasets de licencia permisiva.
+Los tres clasificadores son livianos y su entrenamiento ya está automatizado, de modo que el esfuerzo está en reunir los datos y no en el modelo.
+El tercero, que es la situación actual, es mantener esos modelos en el ámbito académico hasta resolver alguno de los dos anteriores.
+GMDCSA-24, CAUCAFall y CASAS se publican bajo la licencia Creative Commons Atribución 4.0, que permite el uso comercial con la sola obligación de citar a sus autores.
+
+En cuanto al software, la Tabla~\ref{tab:licencias_software} resume las licencias de los componentes principales.
+La mayoría usa licencias permisivas, que admiten el uso comercial con la obligación de conservar el aviso de derechos de autor.
+La excepción es Ultralytics YOLO, que se distribuye bajo la licencia AGPL-3.0 \parencite{Ultralytics2026}.
+Esa licencia obliga a publicar bajo los mismos términos el código del sistema que la integra, por lo que un kit comercial de código cerrado requiere la licencia empresarial que ofrece el fabricante.
+La alternativa es reemplazar la estimación de pose por un modelo con licencia permisiva, lo que obligaría a repetir la calibración de la heurística de caídas y el entrenamiento de los clasificadores del esqueleto.
+Por su parte, CLIP se publica bajo la licencia MIT, aunque su ficha técnica desaconseja desplegarlo sin pruebas específicas del dominio \parencite{OpenAI2021}, algo que en este proyecto cumplen las evaluaciones del Capítulo~\ref{chapter05}.
+
+\begin{table}[H]
+\centering
+\caption[Licencias de los datasets y del software de terceros.]{Licencias de los datasets y del software de terceros y su implicancia para un uso comercial. Fuente: Elaboración propia a partir de las fuentes citadas y de los repositorios oficiales de cada componente.}
+\label{tab:licencias_software}
+\small
+\begin{tabular}{@{}p{3.6cm}p{3.4cm}p{7.4cm}@{}}
+\toprule
+\textbf{Componente} & \textbf{Licencia} & \textbf{Implicancia para un uso comercial} \\
+\midrule
+Toyota Smarthome & Solo investigación académica & Licencia de los titulares o reentrenamiento de los clasificadores de actividad \\
+URFD & CC BY-NC-SA 4.0 & Licencia de los autores o reentrenamiento del clasificador temporal de caídas \\
+Anotaciones de OmniFall & No comercial & Reentrenamiento del clasificador sobre CLIP sin esas muestras \\
+GMDCSA-24, CAUCAFall, CASAS & CC BY 4.0 & Uso permitido con atribución \\
+Ultralytics YOLO11 & AGPL-3.0 o licencia empresarial & Licencia empresarial o publicación del código del sistema \\
+CLIP de OpenAI & MIT & Uso permitido, con pruebas en el dominio \\
+PyTorch, scikit-learn, pandas & BSD-3-Clause & Uso permitido con aviso de derechos \\
+ONNX Runtime, FastAPI, Expo, React Native & MIT & Uso permitido con aviso de derechos \\
+OpenCV & Apache 2.0 & Uso permitido con aviso de derechos \\
+PostgreSQL & Licencia PostgreSQL & Uso permitido con aviso de derechos \\
+Firebase & Términos de servicio de Google & Servicio contratado, sujeto a las condiciones del proveedor \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 Finalmente, el presente trabajo constituye un prototipo académico y no un producto comercial.
 Un eventual lanzamiento comercial del sistema requeriría la redacción de Términos y Condiciones de uso y una Política de Privacidad formal, elaborados con asesoramiento legal profesional, que quedan fuera del alcance de este proyecto pero se dejan señalados como trabajo futuro.
 
@@ -869,8 +977,8 @@ El costo de nube pesa poco porque el video no sale del hogar.
 \subsection{Modelo de negocio}
 \label{sec:modelo}
 
-En esta parte se traduce el canvas a decisiones concretas.
-Se define qué se vende y a qué precio, a cuánta gente se puede llegar y cuánto cuesta conseguir a cada cliente.
+Este apartado traduce el canvas en decisiones concretas.
+Se definen la oferta y sus precios, el tamaño del mercado y el costo de adquisición de cada cliente.
 
 \subsubsection{Oferta y estructura de ingresos}
 \label{sec:oferta-ingresos}
@@ -893,16 +1001,16 @@ En el mercado local también hay un servicio de asistencia para adultos mayores 
 Esto muestra que ya hay familias que pagan una cuota mensual por este tipo de cuidado.
 Aun así, el precio sigue siendo un supuesto que debe validarse en etapas posteriores.
 
-La lógica del negocio se entiende mejor mirando a un cliente promedio del escenario Base.
-El kit cuesta USD 230 en componentes puestos en el taller, a lo que se suman USD 25 por armarlo y enviarlo al domicilio del cliente y USD 12 de garantía.
-Además hay que sumar el costo de conseguir al cliente, que en el primer año es de USD 130.
-En total se gastan unos USD 397 por cada cliente nuevo.
-Por el kit se cobran USD 250 con IVA incluido, y lo que queda para el negocio después de descontar el IVA, la comisión de cobro y la estructura comercial es de unos USD 145.
+La lógica del negocio se ilustra con la economía unitaria de un cliente promedio del escenario Base.
+El kit tiene un costo de USD 230 en componentes, al que se suman USD 25 de armado y envío al domicilio del cliente y USD 12 de garantía.
+A ese monto se agrega el costo de adquisición del cliente, de USD 130 en el primer año.
+El desembolso total por cliente nuevo asciende así a unos USD 397.
+Por el kit se cobran USD 250 con IVA incluido, y el ingreso neto de la venta, una vez descontados el IVA, la comisión de cobro y la estructura comercial, es de unos USD 145.
 La inversión neta por cliente es entonces de unos USD 252, como muestra la Tabla~\ref{tab:cuenta-cliente}.
 
 \begin{table}[H]
 \centering
-\caption[Cuenta simple por cliente nuevo en el escenario Base.]{Cuenta simple por cliente nuevo en el escenario Base (USD, aproximada). Fuente: Elaboración propia.}
+\caption[Economía unitaria de un cliente nuevo en el escenario Base.]{Economía unitaria de un cliente nuevo en el escenario Base (USD, valores aproximados). Fuente: Elaboración propia.}
 \label{tab:cuenta-cliente}
 \begin{tabular}{|p{8.2cm}|r|}
 \hline
@@ -916,30 +1024,30 @@ Garantía (5\,\% del costo del kit) & 12 \\
 \hline
 Costo de conseguir al cliente (año 1) & 130 \\
 \hline
-\textbf{Total que sale por cliente nuevo} & \textbf{397} \\
+\textbf{Desembolso total por cliente nuevo} & \textbf{397} \\
 \hline
-Se resta el ingreso neto de la venta del kit (sin IVA, comisiones ni estructura comercial) & 145 \\
+Menos el ingreso neto por la venta del kit (sin IVA, comisiones ni estructura comercial) & 145 \\
 \hline
 \textbf{Inversión neta por cliente} & \textbf{252} \\
 \hline
 \end{tabular}
 \end{table}
 
-Cada mes de suscripción deja unos USD 17 luego de descontar la comisión de cobro, la estructura comercial, la nube y el soporte.
-Con ese margen, lo invertido en cada cliente se recupera en unos quince meses y desde ese momento genera ganancia.
-En otras palabras, el kit se vende por debajo de su costo para facilitar la compra, y la ganancia proviene de la suscripción.
-La cuenta es orientativa, ya que no incluye al equipo ni los gastos fijos, que sí forman parte del modelo completo.
+Cada mes de suscripción aporta un margen de unos USD 17, una vez descontados la comisión de cobro, la estructura comercial, la nube y el soporte.
+Con ese margen, la inversión en cada cliente se recupera en unos quince meses, y a partir de ese momento el cliente genera un margen positivo.
+El kit se vende por debajo de su costo para reducir la barrera de entrada, y la rentabilidad proviene de la suscripción.
+El cálculo es orientativo, ya que no incluye los costos del equipo ni los gastos fijos, que sí forman parte del modelo completo.
 
-Ese plazo de recuperación es el punto sensible del negocio, porque un cliente que cancela antes de cumplirlo deja una pérdida.
+Ese plazo de recuperación es el punto sensible del negocio, porque la baja de un cliente antes de ese plazo genera una pérdida.
 Por eso la suscripción se ofrece con una permanencia mínima de 12 meses.
-En la práctica, el cliente acepta esa permanencia al contratar y, si se da de baja antes, abona un cargo proporcional a lo que resta de los 12 meses.
+El cliente acepta esa permanencia al contratar y, si se da de baja antes, abona un cargo proporcional a lo que resta de los 12 meses.
 De este modo el riesgo de bajas tempranas queda cubierto durante casi todo el período de recuperación.
 La forma concreta de instrumentarla, en particular su compatibilidad con el derecho a dar de baja un servicio contratado a distancia en cualquier momento que establece el artículo 10 ter de la Ley N.º 24.240 de Defensa del Consumidor y su reglamentación \parencite{Argentina2018}, debe definirse con asesoramiento legal profesional.
 
-Si se toma solo el costo de conseguir al cliente, sin contar lo que se pierde en el kit, ese gasto se recupera con unos 8 meses de cuota en el escenario Base (9 en Bear y 7 en Bull).
-Con la tasa de bajas del escenario Base, que se presenta más adelante, un cliente deja a lo largo de toda su permanencia unos USD 1.900, unas 15 veces lo que cuesta conseguirlo.
+Considerando solo el costo de adquisición, sin la pérdida en la venta del kit, ese gasto se recupera con unos 8 meses de suscripción en el escenario Base (9 en Bear y 7 en Bull).
+Con la tasa de bajas del escenario Base, que se presenta más adelante, el margen que genera un cliente durante toda su permanencia es de unos USD 1.900, unas 15 veces su costo de adquisición.
 En negocios de suscripción se suele considerar sano que esa relación sea de 3 veces o más \parencite{Skok2013}.
-Es una cuenta simple y se presenta solo como orden de magnitud.
+Se trata de una estimación simplificada, que se presenta solo como orden de magnitud.
 
 \subsubsection{Mercado objetivo}
 \label{sec:mercado-objetivo}
@@ -952,10 +1060,15 @@ Los tres escenarios se distinguen sobre todo por la penetración, es decir, el p
 Es del 1\,\% en el escenario Bear, del 2,5\,\% en el escenario Base y del 4,4\,\% en el escenario Bull, lo que equivale a 13.600, 34.000 y 60.000 kits vendidos (Figura~\ref{fig:supuestos}).
 En el escenario Bull la cifra corresponde al objetivo del equipo.
 
+Para dimensionar el escenario Base resulta útil compararlo con un servicio de la misma naturaleza en un mercado maduro.
+En España, la teleasistencia atendía a fines de 2023 a 1.078.338 personas, el 11,13\,\% de la población de 65 años o más \parencite{Imserso2024}.
+Los 34.000 kits del escenario Base equivalen, en cambio, a menos del 1\,\% de la población argentina de esa edad.
+La comparación es solo orientativa, porque el servicio español es mayormente público y se dirige sobre todo a personas de 80 años o más, mientras que el sistema propuesto es un servicio pago que contrata la familia.
+
 Las ventas no se reparten de forma pareja a lo largo de los años.
-Siguen la curva de adopción de nuevas tecnologías \parencite{Rogers2003}, en la que primero compran pocos usuarios, luego se suma la mayoría y hacia el final el mercado se satura.
+Siguen la curva de adopción de nuevas tecnologías \parencite{Rogers2003}, según la cual la adopción comienza en un grupo reducido de usuarios, se extiende luego a la mayoría y finalmente se satura.
 En el modelo se vende el 5\,\% de los kits en el primer año y el 16\,\%, 28\,\%, 32\,\% y 19\,\% en los años siguientes.
-En el escenario Base esto da 1.700, 5.440, 9.520, 10.880 y 6.460 kits por año.
+En el escenario Base, esa distribución equivale a 1.700, 5.440, 9.520, 10.880 y 6.460 kits por año.
 
 Cada kit vendido suma una suscripción, y cada año una parte de los clientes se da de baja.
 Las bajas son del 15\,\% anual en el escenario Bear, del 10\,\% en el Base y del 6\,\% en el Bull.
@@ -963,7 +1076,7 @@ Entre 2010 y 2019 murieron por año entre 3,9 y 4,3 de cada 100 personas de 60 a
 Por lo tanto, las tasas elegidas son un supuesto propio que debe validarse con un piloto.
 Las bajas reducen los ingresos por cuota, pero no cambian la cantidad de kits vendidos.
 
-Del mercado de partida no todos son alcanzables.
+No todo el mercado de partida es alcanzable.
 El 88\,\% de las personas de 60 años o más usa teléfono celular \parencite{INDEC2025}, pero el uso de internet es menor, sobre todo entre quienes no completaron el secundario.
 Dimensionar con precisión el mercado alcanzable, es decir, los hogares con conexión y capacidad de pago, queda como tarea pendiente, y la penetración se expresa por ahora sobre el total.
 El segmento institucional, formado por obras sociales y PAMI, no se modela por separado.
@@ -974,8 +1087,8 @@ Su efecto queda incluido en la penetración y en el costo de conseguir clientes,
 
 El costo de adquisición de clientes, conocido como CAC, es el gasto promedio necesario para conseguir un cliente nuevo.
 No se mantiene constante, sino que disminuye cada año.
-La razón de fondo es que la propuesta depende de la confianza, y esa confianza se construye con el uso, no con la promesa.
-Los primeros cuidadores que contratan el sistema no tienen ninguna referencia previa de que funcione, y la adquisición en esa etapa temprana es más cara porque el equipo tiene que convencer sin poder mostrar un caso de uso real.
+La propuesta depende de la confianza del cliente, que se construye con el uso del sistema más que con la promesa comercial.
+Los primeros cuidadores que contratan el sistema no tienen ninguna referencia previa de que funcione, y la adquisición en esa etapa temprana es más cara porque no se dispone todavía de casos de uso reales que respalden la propuesta.
 A medida que esas primeras familias comprueban, mes a mes, que las alertas de caída corresponden a eventos reales y no a falsas alarmas, que los reportes de rutina reflejan lo que efectivamente pasa en el hogar, y que el video en ningún momento sale del hogar, empiezan a recomendar el sistema dentro de su propia red de contactos, otros cuidadores en situaciones parecidas, grupos familiares, círculos de conocidos, lo que reduce el costo de conseguir al siguiente cliente sin que el equipo tenga que gastar más en marketing para lograrlo.
 Ese boca a boca basado en experiencia concreta, reforzado por las alianzas institucionales descriptas en el apartado de Canales, es lo que explica la baja progresiva del CAC.
 En el modelo el CAC baja un porcentaje fijo por año, y en el escenario Base pasa de USD 130 a USD 85 en el año 5 (Figura~\ref{fig:supuestos}).
@@ -1015,10 +1128,15 @@ La Figura~\ref{fig:supuestos} muestra la hoja del modelo con los supuestos comun
 
 \subsubsection{Financiamiento}
 
-Como el proyecto pierde dinero durante los primeros años, se financia con aportes de inversores a cambio de una parte de la empresa, y no con préstamos.
+Dado que el proyecto registra pérdidas en los primeros años, se financia con aportes de capital de inversores a cambio de una participación en la empresa, y no con préstamos.
 Se supone una primera ronda de inversión, llamada pre-seed, en el año 0 y una segunda, llamada seed, al inicio del año 2, con montos que crecen según el escenario (Tabla~\ref{tab:rondas}).
 En los tres casos lo que aportan los inversores supera lo máximo que el proyecto llega a necesitar, lo que deja un margen de seguridad.
 Con esos aportes, la caja nunca baja de USD 214.000 en Bear, USD 285.000 en Base y USD 271.000 en Bull.
+
+Los montos son exigentes para el ecosistema regional.
+En 2024 la mediana de las rondas semilla en América Latina fue de USD 0,5 millones y su promedio de USD 1,2 millones \parencite{LAVCA2025}.
+La ronda inicial del escenario Base iguala ese promedio aun siendo previa a una ronda semilla, por lo que obtenerla requiere llegar a esa instancia con evidencia de tracción, como los resultados de un piloto con familias.
+El mismo informe registra un intervalo medio de 20 meses entre rondas sucesivas, del mismo orden que el que el modelo prevé entre la primera y la segunda.
 
 \begin{table}[H]
 \centering
@@ -1042,14 +1160,14 @@ Financiamiento máximo necesario & 1.286.000 & 1.915.000 & 2.376.000 \\
 \subsubsection{Tasa de descuento}
 \label{sec:wacc}
 
-Un dólar dentro de cinco años vale menos que un dólar hoy, y todavía menos si el negocio es riesgoso.
+Los flujos futuros valen menos que los actuales, y la diferencia aumenta con el riesgo del proyecto.
 La tasa de descuento es el rendimiento mínimo que un inversor le exigiría a este proyecto, comparado con lo que podría ganar poniendo su dinero en otra inversión.
-Se arma sumando cuatro partes.
-La primera es lo que rinde una inversión casi sin riesgo, el bono del Tesoro de Estados Unidos a 10 años, que al 29 de septiembre de 2026 rendía 5,25\,\% \parencite{Treasury2026}.
-La segunda es el riesgo propio del rubro, que se estima con el modelo CAPM \parencite{Sharpe1964} a partir de datos de empresas de software, de tecnología para la salud y de electrónica de consumo \parencite{Damodaran2026}.
+Se compone de cuatro elementos.
+El primero es la tasa libre de riesgo, representada por el bono del Tesoro de Estados Unidos a 10 años, que al 29 de septiembre de 2026 rendía 5,25\,\% \parencite{Treasury2026}.
+El segundo es el riesgo propio del rubro, que se estima con el modelo CAPM \parencite{Sharpe1964} a partir de datos de empresas de software, de tecnología para la salud y de electrónica de consumo \parencite{Damodaran2026}.
 Con una beta desapalancada promedio de 1,02 y una prima de riesgo de mercado de 4,23\,\%, ese componente agrega 4,30\,\%.
-La tercera es el riesgo de invertir en Argentina, medido por el riesgo país, que el 28 de septiembre de 2026 cerró en 628 puntos básicos, es decir, 6,28\,\% \parencite{Infobae2026}.
-La cuarta es un 4\,\% adicional por tratarse de un proyecto chico y en etapa temprana, que es un supuesto propio.
+El tercero es el riesgo de invertir en Argentina, medido por el riesgo país, que el 28 de septiembre de 2026 cerró en 628 puntos básicos, es decir, 6,28\,\% \parencite{Infobae2026}.
+El cuarto es una prima adicional del 4\,\% por el tamaño reducido y la etapa temprana del proyecto, que es un supuesto propio.
 El resultado es una tasa de 19,83\,\%, que se usa en todo el análisis (Figura~\ref{fig:wacc}).
 Como el proyecto se financia solo con rondas de capital, sin deuda, esa tasa es el costo del capital propio y coincide con el costo promedio ponderado del capital (WACC) que muestra la figura.
 
@@ -1061,15 +1179,15 @@ Cada escenario tiene su propia hoja en el modelo, con el mismo orden.
 Primero se calculan los kits vendidos y las suscripciones de cada año, luego los ingresos, después los egresos y por último el flujo de caja, que es la diferencia entre ambos.
 Con ese flujo se calculan los indicadores que permiten evaluar si el proyecto conviene.
 
-El valor actual neto (VAN) suma lo que el proyecto gana o pierde cada año, llevado a valor de hoy con la tasa de descuento.
+El valor actual neto (VAN) es la suma de los flujos de caja anuales descontados a valor presente con la tasa de descuento.
 Si es positivo, el proyecto rinde más de lo que exige el inversor.
-La tasa interna de retorno (TIR) es el rendimiento anual del proyecto, y el proyecto conviene cuando supera el 19,83\,\%.
+La tasa interna de retorno (TIR) es el rendimiento anual del proyecto, y el proyecto resulta conveniente cuando supera el 19,83\,\%.
 El payback es el tiempo que tarda en recuperarse el dinero invertido, y el payback descontado hace la misma cuenta con valores de hoy, por lo que siempre da un plazo más largo.
-También se calcula el financiamiento máximo necesario, que es la mayor cantidad de dinero que el proyecto consume antes de empezar a recuperarse, y el resultado antes de intereses, impuestos, depreciaciones y amortizaciones, conocido como EBITDA.
-El punto de equilibrio es la cantidad de suscripciones que hace falta para cubrir los gastos fijos de cada mes, como los sueldos del equipo, la nube y los gastos generales, con los USD 16,75 que deja cada una.
+También se calcula el financiamiento máximo necesario, que es el máximo saldo negativo acumulado antes de que el proyecto comience a recuperar la inversión, y el resultado antes de intereses, impuestos, depreciaciones y amortizaciones, conocido como EBITDA.
+El punto de equilibrio es la cantidad de suscripciones que hace falta para cubrir los gastos fijos de cada mes, como los sueldos del equipo, la nube y los gastos generales, con el margen de USD 16,75 que aporta cada una.
 Con el equipo del año 1 esos gastos son de unos USD 5.800 por mes y hacen falta 347 suscripciones, y con el equipo del año 5 son de unos USD 13.300 por mes y hacen falta 795.
 En el escenario Base esa cantidad se supera dentro del primer año, pero el resultado operativo recién es positivo en el año 4, porque mientras el negocio crece pesan más la compra anticipada de hardware y el costo de conseguir clientes nuevos.
-Los tres escenarios comparten los mismos precios y costos unitarios, y lo que cambia entre ellos es cuánta gente compra, cuánto cuesta conseguirla, cuántos clientes se van y a qué precio se compra el hardware.
+Los tres escenarios comparten los mismos precios y costos unitarios, y lo que varía entre ellos es la penetración, el costo de adquisición, la tasa de bajas y el costo del hardware.
 Cada escenario informa además las personas alcanzadas, cuyo criterio de cálculo se explica en la subsección de impacto social, después de los tres escenarios.
 
 \subsubsection{Escenario Bear}
@@ -1079,7 +1197,7 @@ El resultado operativo es negativo hasta el año 3 y recién pasa a ser positivo
 El flujo acumulado toca su punto más bajo en USD $-$1,29 millones, que es el financiamiento máximo necesario, y se vuelve positivo en el año 5, con USD 277.000 (Figura~\ref{fig:bear}).
 El VAN es de USD $-$274.538 y la TIR de 6,8\,\%, muy por debajo de la tasa de descuento, por lo que el proyecto no alcanza el rendimiento exigido.
 Además llega a 40.800 personas, por debajo de la meta de 100.000.
-Con poca adopción, un hardware caro, clientes difíciles de conseguir y mucha rotación, el negocio sobrevive pero no compensa el riesgo asumido.
+Con baja adopción, un hardware más costoso, un costo de adquisición elevado y una alta rotación, el negocio se sostiene pero no compensa el riesgo asumido.
 
 \figuraexcel{captura_bear_flujo.png}{0.78}{Flujo de caja y resultados del escenario Bear.}{fig:bear}
 
@@ -1088,7 +1206,7 @@ Con poca adopción, un hardware caro, clientes difíciles de conseguir y mucha r
 
 El escenario Base es el principal.
 Supone una penetración del 2,5\,\% (34.000 kits), un kit que cuesta USD 230 en componentes y un CAC que parte de USD 130 y baja 10\,\% por año hasta USD 85, con bajas del 10\,\% anual (Figura~\ref{fig:base-datos}).
-Los años 1 a 3 son de pérdida, porque se compra hardware por adelantado y se consiguen clientes antes de cobrar las suscripciones.
+Los años 1 a 3 registran pérdidas, porque el hardware se compra por adelantado y la adquisición de clientes precede a los ingresos por suscripción.
 En el año 4 el resultado operativo pasa a ser positivo, con un margen del 16\,\% sobre las ventas, y en el año 5 llega a USD 3,7 millones, con un margen del 36\,\%.
 El flujo acumulado toca su punto más bajo en USD $-$1,92 millones y la inversión se recupera en 4,1 años, o en 4,6 años si se descuentan los flujos (Figuras~\ref{fig:base-indicadores} y~\ref{fig:base-flujo}).
 El VAN es de USD 502.898 y la TIR de 31,6\,\%, por encima del 19,83\,\% exigido, y el escenario alcanza 102.000 personas, con lo que cumple la meta social.
@@ -1109,8 +1227,8 @@ Las bajas son del 6\,\% anual.
 El resultado operativo es positivo desde el año 3 y el flujo acumulado supera el cero en el año 4, con un payback de 3,7 años.
 En el año 5 el margen operativo es de 39\,\%.
 El VAN es de USD 2.127.081 y la TIR de 51,1\,\%, claramente por encima de la tasa de descuento, y el escenario alcanza 240.000 personas (Figura~\ref{fig:bull}).
-Si la adopción crece según lo previsto, el negocio no solo se paga sino que deja retorno de sobra.
-Por ser más grande, también necesita más capital, con un financiamiento máximo de USD 2,38 millones.
+Si la adopción crece según lo previsto, el negocio recupera la inversión con un retorno holgadamente superior al exigido.
+Por su mayor escala, también requiere más capital, con un financiamiento máximo de USD 2,38 millones.
 
 \figuraexcel{captura_bull_flujo.png}{0.78}{Flujo de caja y resultados del escenario Bull.}{fig:bull}
 
@@ -1118,15 +1236,19 @@ Por ser más grande, también necesita más capital, con un financiamiento máxi
 \subsubsection{Impacto social}
 
 Además del resultado económico, el proyecto se propone alcanzar al menos 100.000 personas.
-Por cada kit vendido se cuentan el adulto mayor, que es el beneficiario directo, el cuidador, que es el usuario directo, y una persona indirecta, como otro familiar que se entera del estado del adulto mayor.
-En el escenario Bull se cuentan dos personas indirectas por kit.
-Aunque el monitoreo se realiza sobre un único adulto mayor por instalación, como se estableció en el Alcance, el impacto de cada kit alcanza a más de una persona, ya que además del cuidador principal suele haber otros familiares que también reciben la información del sistema, tal como surge de la entrevistada que se turna con sus hermanos para visitar a su madre y del User Persona de la cuidadora a distancia, que necesita coordinarse con sus hermanos con información objetiva (Anexo~\ref{anexo:entrevistas}; Anexo~\ref{anexo:user_persona}).
-Con este criterio, el escenario Base alcanza 102.000 personas, que surgen de multiplicar por tres los 34.000 kits vendidos.
+Para que esa cifra pueda verificarse, se distinguen dos grupos.
+Los beneficiarios directos son, por cada kit, el adulto mayor monitoreado y el cuidador que administra el hogar en la aplicación, lo que en el escenario Base suma 68.000 personas.
+A ellos se agrega una persona alcanzada de forma indirecta por kit, otro familiar que recibe la información del sistema, y en el escenario Bull se cuentan dos.
+Aunque el monitoreo se realiza sobre un único adulto mayor por instalación, como se estableció en el Alcance, el supuesto se apoya en que el cuidado se reparte dentro de la familia.
+Según la ENCaViAM, el 77,4\,\% de la ayuda que reciben los adultos mayores con alguna dependencia básica proviene del entorno familiar, y entre quienes reciben ayuda habitual de un familiar o conocido que no vive con ellos, la principal la brinda una hija en el 38,2\,\% de los casos, un hijo en el 26,1\,\% y un nieto, vecino o amigo en el 22,8\,\% \parencite{INDEC2014}.
+La entrevistada que se turna con sus hermanos para visitar a su madre y el User Persona de la cuidadora a distancia reflejan la misma situación (Anexo~\ref{anexo:entrevistas}; Anexo~\ref{anexo:user_persona}).
+Con este criterio, el escenario Base alcanza 102.000 personas, y la meta de 100.000 se cumple solo al contar la persona indirecta, ya que los beneficiarios directos suman 68.000.
+El supuesto puede contrastarse con el propio sistema, porque la aplicación admite varios familiares por hogar (RF12), y un piloto permitiría medir cuántos se vinculan en promedio a cada kit.
 
 \subsubsection{Comparación de escenarios}
 
-Los tres escenarios comparten la misma forma, con pérdidas en los primeros años, recuperación hacia el año 4 o 5 y un retorno que depende sobre todo de cuánta gente compra.
-Para pasar de un VAN negativo, como en Bear, a uno positivo, como en Base, alcanza con más ventas, un CAC que baje más rápido, menos bajas de clientes y un hardware algo más barato.
+Los tres escenarios presentan el mismo perfil, con pérdidas en los primeros años, recuperación hacia el año 4 o 5 y un retorno que depende principalmente de la penetración.
+El paso de un VAN negativo, como en Bear, a uno positivo, como en Base, se explica por mayores ventas, un CAC que desciende más rápido, menos bajas de clientes y un hardware algo más barato.
 La Tabla~\ref{tab:resumen} reúne las variables principales y la Figura~\ref{fig:flujo-acumulado} muestra el flujo de caja acumulado de cada escenario.
 
 \begin{table}[H]
@@ -1165,11 +1287,13 @@ Payback (años) & 4,8 & 4,1 & 3,7 \\
 \hline
 Payback descontado (años) & No recupera & 4,6 & 4,1 \\
 \hline
-Lo que deja un cliente / costo de conseguirlo & 8,3 & 14,7 & 29,6 \\
+Margen por cliente / costo de adquisición & 8,3 & 14,7 & 29,6 \\
 \hline
-Meses para recuperar lo invertido en un cliente & 17,5 & 15,0 & 13,2 \\
+Meses para recuperar la inversión por cliente & 17,5 & 15,0 & 13,2 \\
 \hline
 Punto de equilibrio con el equipo del año 1 / año 5 (suscripciones) & 257 / 347 & 347 / 795 & 436 / 1.153 \\
+\hline
+Beneficiarios directos (adulto mayor y cuidador) & 27.200 & 68.000 & 120.000 \\
 \hline
 Personas alcanzadas & 40.800 & 102.000 & 240.000 \\
 \hline
@@ -1181,8 +1305,12 @@ Cumple la meta de 100.000 personas & No & Sí & Sí \\
 \figuraexcel{flujo_acumulado_escenarios.png}{0.7}{Flujo de caja acumulado por escenario, en millones de USD.}{fig:flujo-acumulado}
 
 Estos resultados deben leerse con algunas precauciones.
-En primer lugar, todo depende de la penetración y del canal de venta.
+En primer lugar, los resultados dependen de la penetración y del canal de venta.
 En el escenario Base se venden 1.700 kits en el primer año y casi 11.000 en el cuarto, y sostener ese ritmo requiere que la adopción efectivamente acelere año a año como prevé el modelo, algo que todavía debe validarse.
+Ese ritmo supone que se concreten las alianzas con obras sociales, prepagas y municipios previstas en el canvas, ya que es poco probable que la venta directa de una marca nueva alcance por sí sola esos volúmenes.
+Por eso el escenario Base queda condicionado a hitos que un piloto permitiría verificar, como una tasa de conversión del canal digital compatible con el CAC supuesto, al menos un acuerdo institucional que funcione como canal de distribución y una permanencia de los primeros clientes coherente con bajas del 10\,\% anual.
+Si el canal no rinde lo previsto, el escenario Bear muestra la consecuencia, ya que con una penetración del 1\,\% y un CAC más alto el VAN resulta negativo.
+Como los escenarios modifican varias variables a la vez, el modelo no aísla el efecto de la penetración, y una sensibilidad del escenario Base a esa sola variable queda como extensión recomendada del análisis.
 En segundo lugar, el precio de la suscripción es la variable que más mueve el resultado, ya que con USD 30 en lugar de USD 35 el VAN del escenario Base pasa a ser de USD $-$217.534.
 Con un costo de kit de USD 250 frente a USD 230 el VAN baja a USD 197.666.
 Por eso resulta importante validar la disposición a pagar y asegurar precios de volumen con los proveedores.
@@ -1220,16 +1348,16 @@ Se trata de una aproximación para comparar escenarios y no de un pronóstico.
 
 \subsection{Conclusión del análisis económico}
 
-El modelo mixto de kit y suscripción resulta viable en el escenario esperado y muy atractivo en el optimista, aunque requiere capital inicial y depende de alcanzar el volumen de ventas previsto.
+El modelo mixto de kit y suscripción resulta viable en el escenario esperado y con un retorno elevado en el optimista, aunque requiere capital inicial y depende de alcanzar el volumen de ventas previsto.
 Con los supuestos adoptados, el escenario Base supera la tasa de descuento con una TIR de 31,6\,\%, recupera la inversión en 4,1 años y alcanza a 102.000 personas.
 El escenario Bear, en cambio, no es rentable, lo que muestra que la adopción, el costo de conseguir clientes y la permanencia de esos clientes son los factores críticos.
 La viabilidad del escenario Base depende de cuántos clientes se quedan y del precio, porque el VAN se anula con bajas de alrededor de 20\,\% anual (Tabla~\ref{tab:bajas}) y pasa a ser negativo con una suscripción de USD 30 en lugar de USD 35.
 Retener a los clientes y sostener el precio es tan determinante como conseguirlos.
 Los próximos pasos para reducir la incertidumbre son obtener cotizaciones firmes de los componentes, relevar la disposición a pagar de los cuidadores y validar con un piloto que el boca a boca reduce el costo de adquisición y que las bajas son las supuestas.
 
-Pasar del prototipo a un producto vendible requiere varios pasos que el modelo financiero no cubre en detalle.
-Hay que hacer reproducible el hardware, homologar el equipo ante el ente regulador de comunicaciones y definir un esquema de actualización remota del software.
-Hay que inscribir la base de datos personales y redactar la política de privacidad, y preparar la nube para escalar con la cantidad de hogares.
+La transición del prototipo a un producto comercial requiere varios pasos que el modelo financiero no cubre en detalle.
+Es necesario hacer reproducible el hardware, homologar el equipo ante el ente regulador de comunicaciones y definir un esquema de actualización remota del software.
+También es necesario inscribir la base de datos personales, redactar la política de privacidad y preparar la nube para escalar con la cantidad de hogares.
 Antes de vender, se necesita validar el sistema en hogares reales, medir la tasa de falsas alarmas y armar el esquema de soporte y reemplazo de equipos.
 
 

@@ -14,6 +14,7 @@ Los resultados obtenidos respaldan las decisiones de diseño tomadas a lo largo 
 \subsection{Cumplimiento de los objetivos}
 
 El proyecto cumplió el objetivo general y los seis objetivos específicos planteados en la Introducción, como resume la Tabla~\ref{tab:objetivos_logrados}.
+En dos de ellos la tabla deja constancia de lo que resta validar, la duración real de la inmovilidad en el piso, que se verificó por partes, y la prueba integrada en un hogar, que está en curso.
 El sistema mantiene a la familia informada sobre el estado y la rutina del adulto mayor sin pedirle a este ninguna acción.
 
 El primer objetivo era detectar caídas e inmovilidad a partir de la pose.
@@ -22,10 +23,11 @@ El evento se genera en promedio 1,9 segundos después del inicio de la caída.
 El detector de sedentarismo acertó en los ocho tramos de validación que llegaron a la ventana de inmovilidad, y la inmovilidad en el piso se verificó por partes.
 
 El segundo objetivo era clasificar las actividades de la vida diaria con un modelo de lenguaje visual.
-El clasificador entrenado sobre CLIP, combinado con el movimiento del esqueleto, acierta el 82,8\,\% en las cuatro categorías en que se midieron juntos, y con la zona del hogar llega al 67,1\,\% sobre las seis categorías.
+El clasificador entrenado sobre CLIP, con la zona del hogar, acierta el 67,1\,\% sobre las seis categorías con participantes que no intervinieron en el entrenamiento, y combinado con el movimiento del esqueleto llega al 82,8\,\% en las cuatro categorías en que se midieron juntos.
 
 El tercer objetivo era construir una línea base personalizada que detecte desvíos en la rutina.
-La línea base se recalcula cada día en la nube y señala el 76,8\,\% de los desvíos inyectados en hogares de CASAS, y el 71,3\,\% cuando se le aplica el error del clasificador de actividades.
+La línea base se recalcula cada día en la nube y, con validación cruzada por hogar, señala el 68,7\,\% de los desvíos inyectados en hogares de CASAS.
+Con el juego de parámetros adoptado, que se eligió con esos mismos hogares, la cifra es del 76,8\,\%, y baja al 71,3\,\% cuando se le aplica el error del clasificador de actividades.
 
 El cuarto objetivo era procesar el video dentro del hogar.
 El video nunca sale de la controladora, y hacia la nube solo viajan los metadatos de cada evento.
@@ -76,7 +78,8 @@ El análisis económico muestra que el esquema de kit y suscripción es rentable
 
 \section{Trabajo futuro}
 
-Para llevar el prototipo al uso con familias, el próximo paso es cifrar la comunicación de la aplicación y de la controladora con el backend.
+Para llevar el prototipo al uso con familias, el próximo paso es cifrar la comunicación de la aplicación y de la controladora con el backend, sirviendo la API por HTTPS, y permitir la rotación de la clave de cada kit.
+También conviene que las alertas se envíen a la nube en el momento en que se generan, sin esperar el ciclo de sincronización, y que las notificaciones fallidas se reintenten.
 En la aplicación se prevé sumar una pantalla para que la familia marque las zonas de cada cámara, la baja del hogar, que hoy está disponible en la API, la verificación del correo y la invitación a familiares que todavía no tienen cuenta.
 
 En la detección, el margen de mejora está en el disparador de caídas, para cubrir las caídas hacia la cámara y las que terminan sobre la cama, y en un modelo de pose de mayor tamaño que reconozca mejor a una persona acostada en un sillón, cuyo costo de cómputo habría que medir sobre la Raspberry Pi.
@@ -86,8 +89,13 @@ Distinguir comer de tomar la medicación parece requerir una fuente de informaci
 En la línea base, el objetivo es reducir los avisos infundados, y las mediciones ya muestran dos formas de hacerlo, exigir dos días seguidos sin salir o extender el período de aprendizaje a 14 días.
 El detector de tendencia gradual podría calibrarse con más hogares, y siguiendo a \textcite{Snoun2024} podría incorporar el contexto, como los feriados o la época del año, para no confundir una variación esperable con un desvío.
 
+En la validación, el paso inmediato es completar la prueba en el hogar de la residente, que permitirá observar todos los módulos sobre una misma rutina y medir las falsas alertas en un hogar real.
+A eso se suman medir la cadena completa de caídas sobre un conjunto de clips reservado, cubrir con pruebas específicas los requerimientos que hoy no las tienen y repetir la aceptación con más cuidadores y el cuestionario System Usability Scale.
+Del lado de la investigación con usuarios, conviene entrevistar a adultos mayores que viven solos y ampliar la encuesta fuera del entorno del equipo, con el consentimiento registrado por escrito.
+
 Por último, pasar del prototipo a un producto comercial requeriría hacer reproducible el hardware, homologar el equipo, actualizar el software a distancia, inscribir la base de datos personales y redactar los términos y la política de privacidad.
-Un piloto con familias permitiría además validar el precio, la tasa de bajas y el costo de conseguir clientes que hoy supone el modelo económico.
+También requeriría obtener una licencia o reentrenar los modelos que usan datos de uso no comercial, y la licencia empresarial de la estimación de pose o su reemplazo por un modelo de licencia permisiva.
+Un piloto con familias permitiría además medir la disposición a pagar, validar el precio, la tasa de bajas y el costo de conseguir clientes que hoy supone el modelo económico, y comprobar si el canal de venta alcanza el ritmo que prevé el escenario Base.
 
 \section{Consideraciones finales}
 

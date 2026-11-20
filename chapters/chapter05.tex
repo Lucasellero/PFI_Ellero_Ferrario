@@ -475,10 +475,10 @@ La Tabla~\ref{tab:sintesis_pruebas} reúne el resultado de cada prueba frente al
 \textbf{Requerimiento} & \textbf{Prueba} & \textbf{Resultado} \\
 \midrule
 RF1, RNF2 & Caídas sobre 292 clips & 83,5\,\% de las caídas con evento y 75,9\,\% con alerta directa, 9 falsas alertas, ninguna de ellas en 1,40 horas de video doméstico continuo, y 1,9 segundos de demora promedio \\
-RF2 & Clasificación de actividades & 82,8\,\% de aciertos en cuatro categorías y 67,1\,\% en seis \\
+RF2 & Clasificación de actividades & 67,1\,\% de aciertos en seis categorías y 82,8\,\% en las cuatro en que se combinó con el esqueleto \\
 RF3, RNF3 & Sedentarismo en doce tramos & Ocho de ocho correctos en los tramos que llegaron a la ventana, y cuatro que derivaron antes en una falsa caída \\
 RF4 & Inmovilidad en el piso & Postura verificada en clips de caída, sin validar la duración completa \\
-RF6, RF7 & Desvíos inyectados en CASAS & 76,8\,\% de los desvíos señalados por el sistema y 72,0\,\% como alerta, con 16,2\,\% de falsos positivos, y 71,3\,\% al sumar el error del clasificador \\
+RF6, RF7 & Desvíos inyectados en CASAS & 68,7\,\% de los desvíos señalados con validación cruzada por hogar. Con los parámetros adoptados, 76,8\,\% señalados por el sistema y 72,0\,\% como alerta, con 16,2\,\% de falsos positivos, y 71,3\,\% al sumar el error del clasificador \\
 RNF6, RNF7 & Corte y reconexión & 855 eventos en cinco escenarios, todos entregados y sin duplicados \\
 RF8 & Notificaciones push en un celular Android & Caída, inmovilidad y desvío de rutina notificados en el celular, y eventos que no son alerta sin notificación \\
 RF5 & Registro de eventos & Sin prueba específica, el registro con tipo, marca temporal y metadatos se ejercita en las pruebas automatizadas del almacenamiento local \\
